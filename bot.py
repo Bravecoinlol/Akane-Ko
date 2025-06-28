@@ -10,6 +10,9 @@ from discord import app_commands
 import logging.handlers
 from datetime import datetime
 
+# 載入 .env 檔案
+load_dotenv()
+
 # 設定 logging
 def setup_logging():
     """設定詳細的 logging 配置"""
@@ -85,14 +88,14 @@ def load_config():
     except FileNotFoundError:
         logger.warning("setting.json 不存在，使用預設配置")
         return {
-            "token": os.getenv('DISCORD_TOKEN'),
+            "token": os.getenv('TOKEN') or os.getenv('DISCORD_TOKEN'),
             "prefix": "!",
             "intents": ["message_content", "members", "guilds"]
         }
     except Exception as e:
         logger.error(f"載入設定檔案失敗: {e}")
         return {
-            "token": os.getenv('DISCORD_TOKEN'),
+            "token": os.getenv('TOKEN') or os.getenv('DISCORD_TOKEN'),
             "prefix": "!",
             "intents": ["message_content", "members", "guilds"]
         }
@@ -114,8 +117,21 @@ async def keep_alive():
     while True:
         try:
             async with aiohttp.ClientSession() as session:
-                await session.get("https://discord.com")
-                logger.debug("保活 ping 成功")
+                # 嘗試多個外部服務
+                urls = [
+                    "https://discord.com",
+                    "https://httpbin.org/get",
+                    "https://api.github.com"
+                ]
+                
+                for url in urls:
+                    try:
+                        await session.get(url, timeout=10)
+                        logger.debug(f"保活 ping 成功: {url}")
+                        break  # 成功一個就跳出
+                    except:
+                        continue
+                        
         except Exception as e:
             logger.error(f"保活 ping 失敗: {e}")
         await asyncio.sleep(240)
@@ -164,25 +180,44 @@ async def on_command_error(ctx, error):
 
 # 載入 cogs
 async def load_cogs():
-    """載入所有 cogs"""
-    cog_files = [
-        'cogs.antiraid',
-        'cogs.chat_responses', 
-        'cogs.Extensions',
-        'cogs.member',
-        'cogs.minigames',
-        'cogs.music',
-        'cogs.ping_number',
-        'cogs.QuestionCog',
-        'cogs.slash'
-    ]
+    """自動載入所有 cogs"""
+    import os
+    
+    # 掃描 cogs 資料夾
+    cogs_dir = 'cogs'
+    if not os.path.exists(cogs_dir):
+        logger.warning(f"cogs 資料夾不存在: {cogs_dir}")
+        return
+    
+    # 獲取所有 .py 檔案
+    cog_files = []
+    for filename in os.listdir(cogs_dir):
+        if filename.endswith('.py') and not filename.startswith('__'):
+            cog_name = filename[:-3]  # 移除 .py 副檔名
+            cog_files.append(f'cogs.{cog_name}')
+    
+    logger.info(f"發現 {len(cog_files)} 個 cog 檔案: {cog_files}")
+    
+    # 載入每個 cog
+    loaded_cogs = []
+    failed_cogs = []
     
     for cog in cog_files:
         try:
             await bot.load_extension(cog)
-            logger.info(f"已載入 cog: {cog}")
+            loaded_cogs.append(cog)
+            logger.info(f"✅ 已載入 cog: {cog}")
         except Exception as e:
-            logger.error(f"載入 cog {cog} 失敗: {e}")
+            failed_cogs.append((cog, str(e)))
+            logger.error(f"❌ 載入 cog {cog} 失敗: {e}")
+    
+    # 顯示載入結果
+    logger.info(f"📊 Cog 載入完成: {len(loaded_cogs)} 成功, {len(failed_cogs)} 失敗")
+    
+    if failed_cogs:
+        logger.warning("失敗的 cogs:")
+        for cog, error in failed_cogs:
+            logger.warning(f"  - {cog}: {error}")
 
 # 啟動 bot
 async def main():
@@ -192,11 +227,14 @@ async def main():
     # 載入 cogs
     await load_cogs()
     
-    # 啟動 bot
-    token = config.get('token') or os.getenv('DISCORD_TOKEN')
+    # 啟動 bot - 直接從環境變數獲取 TOKEN
+    token = os.getenv('TOKEN') or os.getenv('DISCORD_TOKEN')
     if not token:
         logger.error("未找到 Discord Token")
+        logger.error("請在 .env 檔案中設定 TOKEN 或 DISCORD_TOKEN")
         return
+    
+    logger.info("✅ Discord Token 已找到")
     
     try:
         await bot.start(token)

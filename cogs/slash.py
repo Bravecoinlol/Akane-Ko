@@ -65,29 +65,63 @@ class slash(commands.Cog):
         embed.add_field(name="/hello_mtfk", value="你可以罵機器人髒話 然後他就會罵回去", inline=False)
         embed.add_field(name="/how_to_start", value="不知道怎麼開始用?可以用這個指令!", inline=False)
         pages.append(embed)
-        # ========== 遊戲/互動 ==========
-        embed = discord.Embed(title="📚 幫助指令列表 - 遊戲/互動", color=discord.Color.green())
+        
+        # ========== 進階遊戲系統 ==========
+        embed = discord.Embed(title="📚 幫助指令列表 - 進階遊戲系統", color=discord.Color.green())
+        embed.add_field(name="/每日簽到", value="每日簽到獲得金幣", inline=False)
+        embed.add_field(name="/餘額", value="查看你的金幣餘額", inline=False)
+        embed.add_field(name="/轉帳", value="轉帳給其他用戶", inline=False)
+        embed.add_field(name="/賭博", value="賭博遊戲 - 猜大小", inline=False)
+        embed.add_field(name="/排行榜", value="查看金幣排行榜", inline=False)
+        embed.add_field(name="/工作", value="工作賺取金幣", inline=False)
+        pages.append(embed)
+        
+        # ========== 圖片工具 ==========
+        embed = discord.Embed(title="📚 幫助指令列表 - 圖片工具", color=discord.Color.purple())
+        embed.add_field(name="/頭像", value="顯示用戶的頭像", inline=False)
+        embed.add_field(name="/頭像效果", value="為頭像添加特效（模糊、銳化、黑白等）", inline=False)
+        embed.add_field(name="/迷因生成", value="生成迷因圖片", inline=False)
+        embed.add_field(name="/圖片資訊", value="顯示圖片的基本資訊", inline=False)
+        pages.append(embed)
+        
+        # ========== 實用工具 ==========
+        embed = discord.Embed(title="📚 幫助指令列表 - 實用工具", color=discord.Color.orange())
+        embed.add_field(name="/translate", value="翻譯文字（支援多種語言）", inline=False)
+        embed.add_field(name="/weather", value="查詢天氣資訊", inline=False)
+        embed.add_field(name="/calculator", value="簡單的數學計算", inline=False)
+        embed.add_field(name="/random", value="生成隨機數字", inline=False)
+        embed.add_field(name="/time", value="顯示當前時間", inline=False)
+        embed.add_field(name="/countdown", value="設定倒數計時器", inline=False)
+        embed.add_field(name="/qrcode", value="生成 QR 碼", inline=False)
+        embed.add_field(name="/password", value="生成隨機密碼", inline=False)
+        pages.append(embed)
+        
+        # ========== 基礎遊戲/互動 ==========
+        embed = discord.Embed(title="📚 幫助指令列表 - 基礎遊戲/互動", color=discord.Color.teal())
         embed.add_field(name="/猜數字", value="開始一場猜數字遊戲", inline=False)
         embed.add_field(name="/猜", value="猜一個數字", inline=False)
         embed.add_field(name="/剪刀石頭布", value="來場剪刀石頭布吧！", inline=False)
         embed.add_field(name="/圈圈叉叉", value="開始一場圈圈叉叉", inline=False)
         embed.add_field(name="/踩地雷", value="開始踩地雷遊戲（單人或對戰）", inline=False)
         pages.append(embed)
+        
         # ========== 排行榜 ==========
         embed = discord.Embed(title="📚 幫助指令列表 - 排行榜", color=discord.Color.gold())
         embed.add_field(name="/猜數字排行", value="猜數字排行榜（前10名）", inline=False)
         embed.add_field(name="/剪刀石頭布排行", value="剪刀石頭布排行榜（前10名）", inline=False)
         embed.add_field(name="/踩地雷排行", value="踩地雷排行榜（前10名）", inline=False)
         pages.append(embed)
+        
         # ========== 金幣/問題 ==========
-        embed = discord.Embed(title="📚 幫助指令列表 - 金幣/問題", color=discord.Color.orange())
+        embed = discord.Embed(title="📚 幫助指令列表 - 金幣/問題", color=discord.Color.dark_gold())
         embed.add_field(name="/coin", value="查看自己的金幣餘額", inline=False)
         embed.add_field(name="/question", value="設定一個問題並提供答案和獎勳金幣", inline=False)
         embed.add_field(name="/give", value="將自己的金幣轉給其他人", inline=False)
         embed.add_field(name="/clean_coin", value="清空金幣數量（管理員限定）", inline=False)
         pages.append(embed)
+        
         # ========== 音樂 ==========
-        embed = discord.Embed(title="📚 幫助指令列表 - 音樂", color=discord.Color.purple())
+        embed = discord.Embed(title="📚 幫助指令列表 - 音樂", color=discord.Color.dark_purple())
         embed.add_field(name="/play", value="播放音樂 (支援連結與關鍵字)", inline=False)
         embed.add_field(name="/volume", value="設定音量 (1-100)", inline=False)
         embed.add_field(name="/pause", value="暫停播放", inline=False)
@@ -104,6 +138,7 @@ class slash(commands.Cog):
         embed.add_field(name="/status", value="顯示音樂系統狀態", inline=False)
         embed.add_field(name="/reload_ffmpeg", value="重新載入 FFmpeg 配置（管理員限定）", inline=False)
         pages.append(embed)
+        
         # ========== 防護/管理 ==========
         embed = discord.Embed(title="📚 幫助指令列表 - 防護/管理", color=discord.Color.red())
         embed.add_field(name="/antiraid", value="防炸群系統控制（管理員限定）", inline=False)
@@ -118,6 +153,7 @@ class slash(commands.Cog):
         embed.add_field(name="/listautorole", value="顯示目前自動分配的角色清單（管理員限定）", inline=False)
         embed.add_field(name="/togglewelcomecard", value="啟用或停用歡迎卡片（管理員限定）", inline=False)
         pages.append(embed)
+        
         # ========== 無前綴指令回復 ==========
         embed = discord.Embed(title="📚 幫助指令列表 - 無前綴指令回復", color=discord.Color.dark_teal())
         embed.add_field(name="hello", value="Hello~ 我是一個日本女高中生 今年17 請多多指教❤️", inline=False)

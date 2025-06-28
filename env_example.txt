@@ -1,0 +1,22 @@
+# Discord Bot 伺服器配置範例
+# 複製此檔案為 .env 並修改相應的值
+
+# 伺服器配置
+SERVER_URL=http://awa.freeserver.tw:22405
+
+# 日誌配置
+LOG_LEVEL=INFO
+
+# 保活配置
+PING_INTERVAL=25
+HEALTH_CHECK_INTERVAL=60
+MAX_RETRIES=5
+RETRY_DELAY=10
+
+# Discord Bot 配置
+# 在此 .env 檔案中設定 TOKEN 或 DISCORD_TOKEN
+TOKEN=your_discord_bot_token_here
+# DISCORD_TOKEN=your_discord_bot_token_here
+
+# 開發配置
+DEBUG=False 

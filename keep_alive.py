@@ -10,11 +10,12 @@ import logging
 import json
 from datetime import datetime
 import os
+from config import config
 
 # 設定日誌
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
+    level=getattr(logging, config.LOG_LEVEL.upper()),
+    format=config.LOG_FORMAT,
     handlers=[
         logging.FileHandler('keep_alive.log'),
         logging.StreamHandler()
@@ -24,11 +25,14 @@ logger = logging.getLogger(__name__)
 
 class KeepAlive:
     def __init__(self):
-        self.server_url = os.environ.get("SERVER_URL", "http://localhost:5000")
-        self.ping_interval = int(os.environ.get("PING_INTERVAL", 25))  # 25秒
-        self.health_check_interval = int(os.environ.get("HEALTH_CHECK_INTERVAL", 60))  # 60秒
-        self.max_retries = int(os.environ.get("MAX_RETRIES", 5))
-        self.retry_delay = int(os.environ.get("RETRY_DELAY", 10))
+        # 使用配置系統
+        keep_alive_config = config.get_keep_alive_config()
+        
+        self.server_url = keep_alive_config['server_url']
+        self.ping_interval = keep_alive_config['ping_interval']
+        self.health_check_interval = keep_alive_config['health_check_interval']
+        self.max_retries = keep_alive_config['max_retries']
+        self.retry_delay = keep_alive_config['retry_delay']
         
         self.stats = {
             'start_time': datetime.now(),
@@ -40,17 +44,15 @@ class KeepAlive:
         }
         
         # 外部 ping URL 列表
-        self.external_ping_urls = [
-            'https://httpbin.org/get',
-            'https://api.github.com',
-            'https://jsonplaceholder.typicode.com/posts/1',
-            'https://httpstat.us/200',
-            'https://discord.com/api/v9/gateway'
-        ]
+        self.external_ping_urls = keep_alive_config['external_ping_urls']
+        
+        logger.info(f"🔧 保活腳本初始化完成 - 伺服器: {self.server_url}")
+        logger.info(f"📋 配置: Ping間隔={self.ping_interval}s, 健康檢查間隔={self.health_check_interval}s")
         
     def ping_server(self):
         """Ping 本地伺服器"""
         try:
+            # 嘗試連線到設定的伺服器
             response = requests.get(f"{self.server_url}/ping", timeout=10)
             if response.status_code == 200:
                 self.stats['success_count'] += 1
@@ -63,7 +65,29 @@ class KeepAlive:
                 logger.warning(f"⚠️ 伺服器 Ping 警告 (狀態碼: {response.status_code})")
                 return False
                 
-        except requests.exceptions.RequestException as e:
+        except requests.exceptions.ConnectionError as e:
+            self.stats['failure_count'] += 1
+            self.stats['last_failure'] = datetime.now()
+            logger.error(f"❌ 伺服器連線失敗: {e}")
+            
+            # 如果是外網 IP 連線失敗，嘗試本地連線
+            if "awa.freeserver.tw" in self.server_url:
+                logger.info("🔄 嘗試本地連線作為備用...")
+                try:
+                    local_response = requests.get("http://localhost:8080/ping", timeout=5)
+                    if local_response.status_code == 200:
+                        logger.info("✅ 本地連線成功")
+                        return True
+                except:
+                    pass
+            
+            return False
+        except requests.exceptions.Timeout as e:
+            self.stats['failure_count'] += 1
+            self.stats['last_failure'] = datetime.now()
+            logger.error(f"⏰ 伺服器連線超時: {e}")
+            return False
+        except Exception as e:
             self.stats['failure_count'] += 1
             self.stats['last_failure'] = datetime.now()
             logger.error(f"❌ 伺服器 Ping 失敗: {e}")

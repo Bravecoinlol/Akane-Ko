@@ -6,11 +6,12 @@ import logging
 from datetime import datetime, timedelta
 from flask import Flask, jsonify, request
 import schedule
+from config import config
 
 # 設定日誌
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
+    level=getattr(logging, config.LOG_LEVEL.upper()),
+    format=config.LOG_FORMAT,
     handlers=[
         logging.FileHandler('server.log'),
         logging.StreamHandler()
@@ -27,23 +28,22 @@ server_stats = {
     'ping_count': 0,
     'health_checks': 0,
     'uptime': 0,
-    'status': 'running'
+    'status': 'running',
+    'server_url': config.SERVER_URL
 }
 
 # 配置設定
 CONFIG = {
-    'ping_interval': 30,  # 每30秒 ping 一次
-    'health_check_interval': 60,  # 每60秒健康檢查
-    'ping_urls': [
-        'https://httpbin.org/get',
-        'https://api.github.com',
-        'https://jsonplaceholder.typicode.com/posts/1',
-        'https://httpstat.us/200'
-    ],
+    'ping_interval': config.PING_INTERVAL,
+    'health_check_interval': config.HEALTH_CHECK_INTERVAL,
+    'ping_urls': config.EXTERNAL_PING_URLS,
     'backup_ping_url': 'https://discord.com/api/v9/gateway',
-    'max_retries': 3,
-    'retry_delay': 5
+    'max_retries': config.MAX_RETRIES,
+    'retry_delay': config.RETRY_DELAY
 }
+
+logger.info(f"🚀 伺服器啟動 - URL: {server_stats['server_url']}")
+logger.info(f"📋 配置: Ping間隔={CONFIG['ping_interval']}s, 健康檢查間隔={CONFIG['health_check_interval']}s")
 
 def ping_server():
     """Ping 外部服務以保持連線活躍"""
@@ -263,17 +263,11 @@ if __name__ == "__main__":
     # 啟動背景任務
     start_background_tasks()
     
-    # 設定伺服器參數
-    port = int(os.environ.get("PORT", 5000))
-    debug = os.environ.get("DEBUG", "False").lower() == "true"
+    # 獲取伺服器配置
+    server_config = config.get_server_config()
     
-    logger.info(f"🚀 啟動 Discord Bot 伺服器 (端口: {port}, 除錯: {debug})")
+    logger.info(f"🚀 啟動 Discord Bot 伺服器 (端口: {server_config['port']}, 除錯: {server_config['debug']})")
+    logger.info(f"🌐 伺服器將在 http://{server_config['host']}:{server_config['port']} 上運行")
     
     # 啟動 Flask 應用
-    app.run(
-        host="0.0.0.0", 
-        port=port, 
-        debug=debug,
-        threaded=True,  # 啟用多執行緒
-        use_reloader=False  # 避免重複啟動背景任務
-    )
+    app.run(**server_config)
