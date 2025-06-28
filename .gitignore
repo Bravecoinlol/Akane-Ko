@@ -1,0 +1,90 @@
+# Discord Bot 專案
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 環境變數
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 日誌檔案
+logs/
+*.log
+bot.log
+error.log
+
+# 快取檔案
+.cache/
+.local/
+
+# 設定檔案（包含敏感資訊）
+setting.json
+antiraid_config.json
+music_config.json
+ffmpeg_config.json
+
+# 音訊檔案
+*.mp3
+*.wav
+*.ogg
+*.m4a
+
+# 圖片檔案（除了範本）
+*.png
+*.jpg
+*.jpeg
+*.gif
+!歡迎卡片範本.png
+!welcome_card.png
+
+# 字體檔案
+*.ttf
+*.otf
+
+# 其他
+.DS_Store
+Thumbs.db
+*.zip
+*.rar
+*.7z
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 虛擬環境
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+extensions/ms-python.debugpy-2024.12.0-win32-x64/bundled/libs/debugpy/_vendored/pydevd/pydevd_attach_to_process/inject_dll_amd64.exe
+extensions/ms-python.debugpy-2024.12.0-win32-x64/bundled/libs/debugpy/_vendored/pydevd/pydevd_attach_to_process/inject_dll_x86.exe
+extensions/ms-python.python-2024.20.0-win32-x64/python-env-tools/bin/pet.exe
+extensions/ms-python.python-2024.20.0-win32-x64
+extensions
+bot/start_bot.py
