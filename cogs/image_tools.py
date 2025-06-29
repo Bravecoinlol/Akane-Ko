@@ -9,6 +9,7 @@ import logging
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
 import random
 from typing import Optional
+import asyncio
 
 logger = logging.getLogger('ImageTools')
 
@@ -41,12 +42,18 @@ class ImageTools(commands.Cog):
         try:
             avatar_url = user.display_avatar.url
             async with aiohttp.ClientSession() as session:
-                async with session.get(avatar_url) as resp:
+                async with session.get(avatar_url, timeout=aiohttp.ClientTimeout(total=10)) as resp:
                     if resp.status == 200:
                         data = await resp.read()
                         img = Image.open(io.BytesIO(data))
                         img = img.resize((size, size))
                         return img
+                    else:
+                        logger.error(f"獲取頭像失敗，HTTP狀態碼: {resp.status}")
+        except asyncio.TimeoutError:
+            logger.error(f"獲取頭像超時: {user.display_name}")
+        except aiohttp.ClientError as e:
+            logger.error(f"獲取頭像網路錯誤: {e}")
         except Exception as e:
             logger.error(f"獲取頭像失敗: {e}")
         return None
@@ -54,22 +61,27 @@ class ImageTools(commands.Cog):
     @app_commands.command(name="頭像", description="顯示用戶的頭像")
     @app_commands.describe(user="要查看頭像的用戶")
     async def avatar(self, interaction: discord.Interaction, user: Optional[discord.User] = None):
-        target_user = user or interaction.user
-        
-        embed = discord.Embed(
-            title=f"🖼️ {target_user.display_name} 的頭像",
-            color=discord.Color.blue()
-        )
-        
-        # 添加不同尺寸的頭像
-        embed.set_image(url=target_user.display_avatar.url)
-        embed.add_field(
-            name="下載連結",
-            value=f"[原始尺寸]({target_user.display_avatar.url})",
-            inline=True
-        )
-        
-        await interaction.response.send_message(embed=embed)
+        try:
+            target_user = user or interaction.user
+            
+            embed = discord.Embed(
+                title=f"🖼️ {target_user.display_name} 的頭像",
+                color=discord.Color.blue()
+            )
+            
+            # 添加不同尺寸的頭像
+            embed.set_image(url=target_user.display_avatar.url)
+            embed.add_field(
+                name="下載連結",
+                value=f"[原始尺寸]({target_user.display_avatar.url})",
+                inline=True
+            )
+            
+            await interaction.response.send_message(embed=embed)
+            
+        except Exception as e:
+            logger.error(f"顯示頭像失敗: {e}")
+            await interaction.response.send_message(f"❌ 顯示頭像失敗：{str(e)}", ephemeral=True)
 
     @app_commands.command(name="頭像效果", description="為頭像添加特效")
     @app_commands.describe(
@@ -86,37 +98,54 @@ class ImageTools(commands.Cog):
     ])
     async def avatar_effect(self, interaction: discord.Interaction, user: Optional[discord.User] = None, effect: app_commands.Choice[str] = None):
         if not effect:
-            await interaction.response.send_message("請選擇一個特效！", ephemeral=True)
-            return
-
-        target_user = user or interaction.user
-        avatar_img = await self.get_avatar(target_user)
-        
-        if not avatar_img:
-            await interaction.response.send_message("無法獲取頭像！", ephemeral=True)
-            return
-
-        # 應用特效
-        processed_img = self.apply_effect(avatar_img, effect.value)
-        
-        if processed_img:
-            # 轉換為 bytes
-            img_buffer = io.BytesIO()
-            processed_img.save(img_buffer, format='PNG')
-            img_buffer.seek(0)
-            
             embed = discord.Embed(
-                title=f"🎨 {target_user.display_name} 的頭像特效",
-                description=f"特效: {effect.name}",
-                color=discord.Color.purple()
+                title="❌ 缺少參數",
+                description="請選擇一個特效！",
+                color=discord.Color.red()
             )
+            embed.add_field(
+                name="可用特效",
+                value="• 模糊\n• 銳化\n• 黑白\n• 反轉\n• 邊框\n• 圓角",
+                inline=False
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
+        await interaction.response.defer()
+        
+        try:
+            target_user = user or interaction.user
+            avatar_img = await self.get_avatar(target_user)
             
-            file = discord.File(img_buffer, f"avatar_{effect.value}.png")
-            embed.set_image(url=f"attachment://avatar_{effect.value}.png")
+            if not avatar_img:
+                await interaction.followup.send("❌ 無法獲取頭像，請稍後再試", ephemeral=True)
+                return
+
+            # 應用特效
+            processed_img = self.apply_effect(avatar_img, effect.value)
             
-            await interaction.response.send_message(embed=embed, file=file)
-        else:
-            await interaction.response.send_message("處理圖片時發生錯誤！", ephemeral=True)
+            if processed_img:
+                # 轉換為 bytes
+                img_buffer = io.BytesIO()
+                processed_img.save(img_buffer, format='PNG')
+                img_buffer.seek(0)
+                
+                embed = discord.Embed(
+                    title=f"🎨 {target_user.display_name} 的頭像特效",
+                    description=f"特效: {effect.name}",
+                    color=discord.Color.purple()
+                )
+                
+                file = discord.File(img_buffer, f"avatar_{effect.value}.png")
+                embed.set_image(url=f"attachment://avatar_{effect.value}.png")
+                
+                await interaction.followup.send(embed=embed, file=file)
+            else:
+                await interaction.followup.send("❌ 處理圖片時發生錯誤，請稍後再試", ephemeral=True)
+                
+        except Exception as e:
+            logger.error(f"頭像特效處理失敗: {e}")
+            await interaction.followup.send(f"❌ 處理頭像特效失敗：{str(e)}", ephemeral=True)
 
     def apply_effect(self, img: Image.Image, effect: str) -> Optional[Image.Image]:
         """應用圖片特效"""
@@ -158,20 +187,42 @@ class ImageTools(commands.Cog):
         await interaction.response.defer()
         
         try:
+            # 檢查文字長度
+            if len(top_text) > 50 or len(bottom_text) > 50:
+                await interaction.followup.send("❌ 文字太長，請輸入50字以內的文字", ephemeral=True)
+                return
+            
             # 獲取圖片
             if image_url:
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(image_url) as resp:
-                        if resp.status != 200:
-                            await interaction.followup.send("無法獲取圖片！", ephemeral=True)
-                            return
-                        img_data = await resp.read()
-                        img = Image.open(io.BytesIO(img_data))
+                try:
+                    async with aiohttp.ClientSession() as session:
+                        async with session.get(image_url, timeout=aiohttp.ClientTimeout(total=15)) as resp:
+                            if resp.status == 200:
+                                img_data = await resp.read()
+                                if len(img_data) > 10 * 1024 * 1024:  # 10MB限制
+                                    await interaction.followup.send("❌ 圖片檔案太大，請選擇10MB以內的圖片", ephemeral=True)
+                                    return
+                                img = Image.open(io.BytesIO(img_data))
+                            elif resp.status == 404:
+                                await interaction.followup.send("❌ 找不到指定的圖片，請檢查圖片網址", ephemeral=True)
+                                return
+                            elif resp.status == 403:
+                                await interaction.followup.send("❌ 無法存取該圖片，可能是權限問題", ephemeral=True)
+                                return
+                            else:
+                                await interaction.followup.send(f"❌ 無法獲取圖片 (錯誤碼: {resp.status})", ephemeral=True)
+                                return
+                except asyncio.TimeoutError:
+                    await interaction.followup.send("❌ 圖片下載超時，請稍後再試", ephemeral=True)
+                    return
+                except aiohttp.ClientError as e:
+                    await interaction.followup.send(f"❌ 圖片下載失敗：{str(e)}", ephemeral=True)
+                    return
             else:
                 # 使用預設圖片或用戶頭像
                 img = await self.get_avatar(interaction.user, 512)
                 if not img:
-                    await interaction.followup.send("無法獲取圖片！", ephemeral=True)
+                    await interaction.followup.send("❌ 無法獲取頭像，請提供圖片網址", ephemeral=True)
                     return
 
             # 調整圖片大小
@@ -186,14 +237,22 @@ class ImageTools(commands.Cog):
                 meme_img.save(img_buffer, format='PNG')
                 img_buffer.seek(0)
                 
+                embed = discord.Embed(
+                    title="🎭 迷因生成完成",
+                    description=f"上方文字: {top_text}\n下方文字: {bottom_text}",
+                    color=discord.Color.green()
+                )
+                
                 file = discord.File(img_buffer, "meme.png")
-                await interaction.followup.send(file=file)
+                embed.set_image(url="attachment://meme.png")
+                
+                await interaction.followup.send(embed=embed, file=file)
             else:
-                await interaction.followup.send("生成迷因失敗！", ephemeral=True)
+                await interaction.followup.send("❌ 生成迷因失敗，請稍後再試", ephemeral=True)
                 
         except Exception as e:
             logger.error(f"生成迷因失敗: {e}")
-            await interaction.followup.send("生成迷因時發生錯誤！", ephemeral=True)
+            await interaction.followup.send(f"❌ 生成迷因時發生錯誤：{str(e)}", ephemeral=True)
 
     def create_meme(self, img: Image.Image, top_text: str, bottom_text: str) -> Optional[Image.Image]:
         """創建迷因圖片"""
@@ -247,32 +306,57 @@ class ImageTools(commands.Cog):
         await interaction.response.defer()
         
         try:
+            # 驗證URL格式
+            if not image_url.startswith(('http://', 'https://')):
+                await interaction.followup.send("❌ 請提供有效的圖片網址", ephemeral=True)
+                return
+            
             async with aiohttp.ClientSession() as session:
-                async with session.get(image_url) as resp:
-                    if resp.status != 200:
-                        await interaction.followup.send("無法獲取圖片！", ephemeral=True)
-                        return
-                    
-                    img_data = await resp.read()
-                    img = Image.open(io.BytesIO(img_data))
-                    
-                    embed = discord.Embed(
-                        title="📊 圖片資訊",
-                        color=discord.Color.blue()
-                    )
-                    
-                    embed.add_field(name="尺寸", value=f"{img.width} x {img.height} 像素", inline=True)
-                    embed.add_field(name="格式", value=img.format, inline=True)
-                    embed.add_field(name="模式", value=img.mode, inline=True)
-                    embed.add_field(name="檔案大小", value=f"{len(img_data) / 1024:.1f} KB", inline=True)
-                    
-                    embed.set_image(url=image_url)
-                    
-                    await interaction.followup.send(embed=embed)
-                    
+                async with session.get(image_url, timeout=aiohttp.ClientTimeout(total=15)) as resp:
+                    if resp.status == 200:
+                        img_data = await resp.read()
+                        
+                        # 檢查檔案大小
+                        if len(img_data) > 25 * 1024 * 1024:  # 25MB限制
+                            await interaction.followup.send("❌ 圖片檔案太大，無法處理", ephemeral=True)
+                            return
+                        
+                        try:
+                            img = Image.open(io.BytesIO(img_data))
+                        except Exception as e:
+                            await interaction.followup.send("❌ 無法識別圖片格式，請確認是有效的圖片檔案", ephemeral=True)
+                            return
+                        
+                        embed = discord.Embed(
+                            title="📊 圖片資訊",
+                            color=discord.Color.blue()
+                        )
+                        
+                        embed.add_field(name="尺寸", value=f"{img.width} x {img.height} 像素", inline=True)
+                        embed.add_field(name="格式", value=img.format or "未知", inline=True)
+                        embed.add_field(name="模式", value=img.mode, inline=True)
+                        embed.add_field(name="檔案大小", value=f"{len(img_data) / 1024:.1f} KB", inline=True)
+                        
+                        embed.set_image(url=image_url)
+                        
+                        await interaction.followup.send(embed=embed)
+                        
+                    elif resp.status == 404:
+                        await interaction.followup.send("❌ 找不到指定的圖片，請檢查圖片網址", ephemeral=True)
+                    elif resp.status == 403:
+                        await interaction.followup.send("❌ 無法存取該圖片，可能是權限問題", ephemeral=True)
+                    elif resp.status == 400:
+                        await interaction.followup.send("❌ 圖片網址格式錯誤", ephemeral=True)
+                    else:
+                        await interaction.followup.send(f"❌ 無法獲取圖片 (錯誤碼: {resp.status})", ephemeral=True)
+                        
+        except asyncio.TimeoutError:
+            await interaction.followup.send("❌ 圖片下載超時，請稍後再試", ephemeral=True)
+        except aiohttp.ClientError as e:
+            await interaction.followup.send(f"❌ 圖片下載失敗：{str(e)}", ephemeral=True)
         except Exception as e:
             logger.error(f"獲取圖片資訊失敗: {e}")
-            await interaction.followup.send("獲取圖片資訊時發生錯誤！", ephemeral=True)
+            await interaction.followup.send(f"❌ 獲取圖片資訊時發生錯誤：{str(e)}", ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(ImageTools(bot)) 

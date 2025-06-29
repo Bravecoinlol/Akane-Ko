@@ -69,6 +69,17 @@ class ChatResponses(commands.Cog):
         # 只有被 @ 才觸發 GPT 回應
         if self.bot.user in message.mentions:
             try:
+                # 檢查API金鑰
+                if not API2D_KEY:
+                    logger.error("API2D_KEY 未設定")
+                    await message.channel.send("❌ 聊天功能暫時無法使用，請聯繫管理員")
+                    return
+                
+                # 檢查訊息長度
+                if len(content) > 1000:
+                    await message.channel.send("❌ 訊息太長，請縮短後再試")
+                    return
+                
                 headers = {
                     "Authorization": f"Bearer {API2D_KEY}",
                     "Content-Type": "application/json",
@@ -82,18 +93,43 @@ class ChatResponses(commands.Cog):
                     "temperature": 0.7,
                     "max_tokens": 150,
                 }
+                
                 async with aiohttp.ClientSession() as session:
-                    async with session.post("https://api.api2d.net/v1/chat/completions", headers=headers, json=data) as response:
+                    async with session.post(
+                        "https://api.api2d.net/v1/chat/completions", 
+                        headers=headers, 
+                        json=data,
+                        timeout=aiohttp.ClientTimeout(total=30)
+                    ) as response:
                         if response.status == 200:
                             result = await response.json()
                             reply = result.get('choices', [{}])[0].get('message', {}).get('content', '抱歉，我無法回應。')
                             await message.channel.send(reply)
+                        elif response.status == 401:
+                            logger.error("API2D 認證失敗")
+                            await message.channel.send("❌ API認證失敗，請聯繫管理員")
+                        elif response.status == 429:
+                            logger.error("API2D 請求過於頻繁")
+                            await message.channel.send("❌ 請求過於頻繁，請稍後再試")
+                        elif response.status == 500:
+                            logger.error("API2D 伺服器錯誤")
+                            await message.channel.send("❌ 服務暫時無法使用，請稍後再試")
                         else:
-                            logger.error("API2D Error: %s", response.status)
-                            await message.channel.send(f"API 錯誤: {response.status}")
+                            logger.error(f"API2D Error: {response.status}")
+                            await message.channel.send(f"❌ API錯誤 (錯誤碼: {response.status})")
+                            
+            except asyncio.TimeoutError:
+                logger.error("API2D 請求超時")
+                await message.channel.send("❌ 回應超時，請稍後再試")
+            except aiohttp.ClientError as e:
+                logger.error(f"API2D 網路錯誤: {e}")
+                await message.channel.send("❌ 網路連線錯誤，請檢查網路後再試")
+            except json.JSONDecodeError as e:
+                logger.error(f"API2D JSON解析錯誤: {e}")
+                await message.channel.send("❌ 回應格式錯誤，請稍後再試")
             except Exception as e:
-                logger.error("API2D Error: %s", e)
-                await message.channel.send("連接錯誤: " + str(e))
+                logger.error(f"API2D 未知錯誤: {e}")
+                await message.channel.send("❌ 發生未知錯誤，請稍後再試")
 
         await self.bot.process_commands(message)
 

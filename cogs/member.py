@@ -27,35 +27,87 @@ class MemberCog(commands.Cog):
         self.autorole_settings = self.load_autorole_settings()
 
     def load_settings(self):
-        if not os.path.exists(self.settings_path):
-            with open(self.settings_path, 'w', encoding='utf8') as f:
-                json.dump({}, f)
-        with open(self.settings_path, 'r', encoding='utf8') as f:
-            content = f.read().strip()
-            return json.loads(content) if content else {}
+        try:
+            if not os.path.exists(self.settings_path):
+                with open(self.settings_path, 'w', encoding='utf8') as f:
+                    json.dump({}, f)
+            with open(self.settings_path, 'r', encoding='utf8') as f:
+                content = f.read().strip()
+                return json.loads(content) if content else {}
+        except json.JSONDecodeError as e:
+            logger.error(f"[Member] 設定檔案格式錯誤: {e}")
+            return {}
+        except PermissionError:
+            logger.error("[Member] 沒有權限讀取設定檔案")
+            return {}
+        except Exception as e:
+            logger.error(f"[Member] 載入設定檔案失敗: {e}")
+            return {}
 
     def load_autorole_settings(self):
-        if not os.path.exists(self.autorole_path):
-            with open(self.autorole_path, 'w', encoding='utf8') as f:
-                json.dump({}, f)
-        with open(self.autorole_path, 'r', encoding='utf8') as f:
-            content = f.read().strip()
-            return json.loads(content) if content else {}
+        try:
+            if not os.path.exists(self.autorole_path):
+                with open(self.autorole_path, 'w', encoding='utf8') as f:
+                    json.dump({}, f)
+            with open(self.autorole_path, 'r', encoding='utf8') as f:
+                content = f.read().strip()
+                return json.loads(content) if content else {}
+        except json.JSONDecodeError as e:
+            logger.error(f"[Member] 自動角色設定檔案格式錯誤: {e}")
+            return {}
+        except PermissionError:
+            logger.error("[Member] 沒有權限讀取自動角色設定檔案")
+            return {}
+        except Exception as e:
+            logger.error(f"[Member] 載入自動角色設定檔案失敗: {e}")
+            return {}
 
     def save_settings(self):
-        with open(self.settings_path, 'w', encoding='utf8') as f:
-            json.dump(self.channel_settings, f, ensure_ascii=False, indent=4)
+        try:
+            with open(self.settings_path, 'w', encoding='utf8') as f:
+                json.dump(self.channel_settings, f, ensure_ascii=False, indent=4)
+        except PermissionError:
+            logger.error("[Member] 沒有權限寫入設定檔案")
+        except Exception as e:
+            logger.error(f"[Member] 保存設定檔案失敗: {e}")
 
     def save_autorole_settings(self):
-        with open(self.autorole_path, 'w', encoding='utf8') as f:
-            json.dump(self.autorole_settings, f, ensure_ascii=False, indent=4)
+        try:
+            with open(self.autorole_path, 'w', encoding='utf8') as f:
+                json.dump(self.autorole_settings, f, ensure_ascii=False, indent=4)
+        except PermissionError:
+            logger.error("[Member] 沒有權限寫入自動角色設定檔案")
+        except Exception as e:
+            logger.error(f"[Member] 保存自動角色設定檔案失敗: {e}")
 
     @commands.Cog.listener()
     async def on_app_command_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
-        if isinstance(error, app_commands.errors.MissingPermissions):
-            await interaction.response.send_message("還想偷看管理員的東西啊？🤨", ephemeral=True)
-        else:
-            logger.error("指令錯誤: %s", error)
+        try:
+            if isinstance(error, app_commands.errors.MissingPermissions):
+                embed = discord.Embed(
+                    title="❌ 權限不足",
+                    description="您需要管理員權限才能使用此命令",
+                    color=discord.Color.red()
+                )
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+            elif isinstance(error, app_commands.errors.CommandInvokeError):
+                logger.error(f"[Member] 命令執行錯誤: {error.original}")
+                embed = discord.Embed(
+                    title="❌ 執行錯誤",
+                    description="執行命令時發生錯誤，請稍後再試",
+                    color=discord.Color.red()
+                )
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+            else:
+                logger.error(f"[Member] 指令錯誤: {error}")
+                embed = discord.Embed(
+                    title="❌ 未知錯誤",
+                    description="發生未知錯誤，請聯繫管理員",
+                    color=discord.Color.red()
+                )
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+        except Exception as e:
+            logger.error(f"[Member] 錯誤處理失敗: {e}")
 
     @app_commands.command(name="setchannel", description="設定歡迎/離開頻道或管理頻道")
     @app_commands.checks.has_permissions(administrator=True)
@@ -65,85 +117,204 @@ class MemberCog(commands.Cog):
         app_commands.Choice(name="管理頻道", value="admin")
     ])
     async def set_channel(self, interaction: discord.Interaction, type: app_commands.Choice[str], channel: discord.TextChannel):
-        guild_id = str(interaction.guild.id)
-        if guild_id not in self.channel_settings:
-            self.channel_settings[guild_id] = {}
+        try:
+            guild_id = str(interaction.guild.id)
+            if guild_id not in self.channel_settings:
+                self.channel_settings[guild_id] = {}
 
-        self.channel_settings[guild_id][f"{type.value}_channel_id"] = channel.id
-        self.save_settings()
-        await interaction.response.send_message(f"✅ 已設定 `{type.name}` 為 {channel.mention}", ephemeral=True)
+            self.channel_settings[guild_id][f"{type.value}_channel_id"] = channel.id
+            self.save_settings()
+            
+            embed = discord.Embed(
+                title="✅ 頻道設定成功",
+                description=f"已設定 `{type.name}` 為 {channel.mention}",
+                color=discord.Color.green()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            logger.error(f"[Member] 設定頻道失敗: {e}")
+            embed = discord.Embed(
+                title="❌ 設定失敗",
+                description="設定頻道時發生錯誤，請稍後再試",
+                color=discord.Color.red()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="setautorole", description="新增要自動分配的角色")
     @app_commands.checks.has_permissions(administrator=True)
     @app_commands.describe(role="要加入自動分配清單的角色")
     async def setautorole(self, interaction: discord.Interaction, role: discord.Role):
-        guild_id = str(interaction.guild.id)
-        if guild_id not in self.autorole_settings:
-            self.autorole_settings[guild_id] = {}
+        try:
+            guild_id = str(interaction.guild.id)
+            if guild_id not in self.autorole_settings:
+                self.autorole_settings[guild_id] = {}
 
-        existing = self.autorole_settings[guild_id].get("autorole", {"enabled": True, "roles": []})
-        if role.name not in existing["roles"]:
-            existing["roles"].append(role.name)
+            existing = self.autorole_settings[guild_id].get("autorole", {"enabled": True, "roles": []})
+            if role.name not in existing["roles"]:
+                existing["roles"].append(role.name)
+            else:
+                embed = discord.Embed(
+                    title="⚠️ 角色已存在",
+                    description=f"`{role.name}` 已在自動分配清單中",
+                    color=discord.Color.orange()
+                )
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+                return
 
-        self.autorole_settings[guild_id]["autorole"] = existing
-        self.save_autorole_settings()
+            self.autorole_settings[guild_id]["autorole"] = existing
+            self.save_autorole_settings()
 
-        await interaction.response.send_message(f"✅ 已新增 `{role.name}` 到自動分配角色清單", ephemeral=True)
+            embed = discord.Embed(
+                title="✅ 角色新增成功",
+                description=f"已新增 `{role.name}` 到自動分配角色清單",
+                color=discord.Color.green()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            logger.error(f"[Member] 新增自動角色失敗: {e}")
+            embed = discord.Embed(
+                title="❌ 新增失敗",
+                description="新增自動角色時發生錯誤，請稍後再試",
+                color=discord.Color.red()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="removeautorole", description="從自動分配清單中移除角色")
     @app_commands.checks.has_permissions(administrator=True)
     @app_commands.describe(role="要移除的角色")
     async def removeautorole(self, interaction: discord.Interaction, role: discord.Role):
-        guild_id = str(interaction.guild.id)
-        if guild_id not in self.autorole_settings:
-            await interaction.response.send_message("⚠️ 此伺服器尚未設定自動分配角色", ephemeral=True)
-            return
+        try:
+            guild_id = str(interaction.guild.id)
+            if guild_id not in self.autorole_settings:
+                embed = discord.Embed(
+                    title="⚠️ 尚未設定",
+                    description="此伺服器尚未設定自動分配角色",
+                    color=discord.Color.orange()
+                )
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+                return
 
-        config = self.autorole_settings[guild_id].get("autorole", {"enabled": True, "roles": []})
-        if role.name in config["roles"]:
-            config["roles"].remove(role.name)
-            self.autorole_settings[guild_id]["autorole"] = config
-            self.save_autorole_settings()
-            await interaction.response.send_message(f"✅ 已移除 `{role.name}` 從自動分配清單", ephemeral=True)
-        else:
-            await interaction.response.send_message(f"⚠️ `{role.name}` 不在自動分配清單中", ephemeral=True)
+            config = self.autorole_settings[guild_id].get("autorole", {"enabled": True, "roles": []})
+            if role.name in config["roles"]:
+                config["roles"].remove(role.name)
+                self.autorole_settings[guild_id]["autorole"] = config
+                self.save_autorole_settings()
+                
+                embed = discord.Embed(
+                    title="✅ 角色移除成功",
+                    description=f"已移除 `{role.name}` 從自動分配清單",
+                    color=discord.Color.green()
+                )
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+            else:
+                embed = discord.Embed(
+                    title="⚠️ 角色不存在",
+                    description=f"`{role.name}` 不在自動分配清單中",
+                    color=discord.Color.orange()
+                )
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+                
+        except Exception as e:
+            logger.error(f"[Member] 移除自動角色失敗: {e}")
+            embed = discord.Embed(
+                title="❌ 移除失敗",
+                description="移除自動角色時發生錯誤，請稍後再試",
+                color=discord.Color.red()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="toggleautorole", description="啟用或停用自動分配角色")
     @app_commands.checks.has_permissions(administrator=True)
     async def toggleautorole(self, interaction: discord.Interaction):
-        guild_id = str(interaction.guild.id)
-        config = self.autorole_settings.get(guild_id, {}).get("autorole", {"enabled": False})
-        config["enabled"] = not config["enabled"]
-        if guild_id not in self.autorole_settings:
-            self.autorole_settings[guild_id] = {}
-        self.autorole_settings[guild_id]["autorole"] = config
-        self.save_autorole_settings()
-        await interaction.response.send_message(f"{'✅ 啟用' if config['enabled'] else '❌ 停用'}自動角色功能", ephemeral=True)
+        try:
+            guild_id = str(interaction.guild.id)
+            config = self.autorole_settings.get(guild_id, {}).get("autorole", {"enabled": False})
+            config["enabled"] = not config["enabled"]
+            if guild_id not in self.autorole_settings:
+                self.autorole_settings[guild_id] = {}
+            self.autorole_settings[guild_id]["autorole"] = config
+            self.save_autorole_settings()
+            
+            status = "✅ 啟用" if config['enabled'] else "❌ 停用"
+            embed = discord.Embed(
+                title=f"{status}自動角色功能",
+                description=f"自動分配角色功能已{'啟用' if config['enabled'] else '停用'}",
+                color=discord.Color.green() if config['enabled'] else discord.Color.red()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            logger.error(f"[Member] 切換自動角色失敗: {e}")
+            embed = discord.Embed(
+                title="❌ 切換失敗",
+                description="切換自動角色功能時發生錯誤，請稍後再試",
+                color=discord.Color.red()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="listautorole", description="顯示目前自動分配的角色清單")
     @app_commands.checks.has_permissions(administrator=True)
     async def listautorole(self, interaction: discord.Interaction):
-        guild_id = str(interaction.guild.id)
-        roles = self.autorole_settings.get(guild_id, {}).get("autorole", {}).get("roles", [])
+        try:
+            guild_id = str(interaction.guild.id)
+            roles = self.autorole_settings.get(guild_id, {}).get("autorole", {}).get("roles", [])
 
-        if not roles:
-            await interaction.response.send_message("⚠️ 目前沒有設定自動分配的角色", ephemeral=True)
-            return
+            if not roles:
+                embed = discord.Embed(
+                    title="📝 自動分配角色清單",
+                    description="目前沒有設定自動分配的角色",
+                    color=discord.Color.blue()
+                )
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+                return
 
-        role_list_str = "\n".join(f"- {name}" for name in roles)
-        await interaction.response.send_message(f"📝 目前自動分配角色清單：\n{role_list_str}", ephemeral=True)
+            role_list_str = "\n".join(f"- {name}" for name in roles)
+            embed = discord.Embed(
+                title="📝 自動分配角色清單",
+                description=f"目前自動分配角色清單：\n{role_list_str}",
+                color=discord.Color.blue()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            logger.error(f"[Member] 列出自動角色失敗: {e}")
+            embed = discord.Embed(
+                title="❌ 查詢失敗",
+                description="查詢自動角色清單時發生錯誤，請稍後再試",
+                color=discord.Color.red()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="togglewelcomecard", description="啟用或停用歡迎卡片")
     @app_commands.checks.has_permissions(administrator=True)
     async def togglewelcomecard(self, interaction: discord.Interaction):
-        guild_id = str(interaction.guild.id)
-        config = self.autorole_settings.get(guild_id, {}).get("welcomecard", {"enabled": True})
-        config["enabled"] = not config["enabled"]
-        if guild_id not in self.autorole_settings:
-            self.autorole_settings[guild_id] = {}
-        self.autorole_settings[guild_id]["welcomecard"] = config
-        self.save_autorole_settings()
-        await interaction.response.send_message(f"{'✅ 啟用' if config['enabled'] else '❌ 停用'}歡迎卡片功能", ephemeral=True)
+        try:
+            guild_id = str(interaction.guild.id)
+            config = self.autorole_settings.get(guild_id, {}).get("welcomecard", {"enabled": True})
+            config["enabled"] = not config["enabled"]
+            if guild_id not in self.autorole_settings:
+                self.autorole_settings[guild_id] = {}
+            self.autorole_settings[guild_id]["welcomecard"] = config
+            self.save_autorole_settings()
+            
+            status = "✅ 啟用" if config['enabled'] else "❌ 停用"
+            embed = discord.Embed(
+                title=f"{status}歡迎卡片功能",
+                description=f"歡迎卡片功能已{'啟用' if config['enabled'] else '停用'}",
+                color=discord.Color.green() if config['enabled'] else discord.Color.red()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            logger.error(f"[Member] 切換歡迎卡片失敗: {e}")
+            embed = discord.Embed(
+                title="❌ 切換失敗",
+                description="切換歡迎卡片功能時發生錯誤，請稍後再試",
+                color=discord.Color.red()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
     
     @commands.Cog.listener()
     async def on_member_remove(self, member):
@@ -159,8 +330,12 @@ class MemberCog(commands.Cog):
                 if member_channel:
                     await member_channel.send(f'**{member.display_name}** 離開了 因為他搞偷吃💢')
             
+        except discord.Forbidden:
+            logger.error(f"[Member] 沒有權限在離開頻道發送訊息: {member.guild.name}")
+        except discord.NotFound:
+            logger.error(f"[Member] 離開頻道不存在: {member.guild.name}")
         except Exception as e:
-            logger.error("on_member_remove 發生錯誤: %s", e)
+            logger.error(f"[Member] on_member_remove 發生錯誤: {e}")
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -180,24 +355,44 @@ class MemberCog(commands.Cog):
             admin_channel = self.bot.get_channel(admin_channel_id) if admin_channel_id else None
 
             if not welcome_channel_id and admin_channel:
-                await admin_channel.send("⚠️ 尚未設定歡迎頻道，請使用 `/setchannel` 指令進行設定！")
+                embed = discord.Embed(
+                    title="⚠️ 設定提醒",
+                    description="尚未設定歡迎頻道，請使用 `/setchannel` 指令進行設定！",
+                    color=discord.Color.orange()
+                )
+                await admin_channel.send(embed=embed)
                 return
 
             guild_config = self.autorole_settings.get(guild_id, {})
 
             # 歡迎卡片控制
             if guild_config.get("welcomecard", {}).get("enabled", True):
-                welcome_card = await self.create_welcome_card(member, member.guild.name)
-                if not welcome_card:
+                try:
+                    welcome_card = await self.create_welcome_card(member, member.guild.name)
+                    if not welcome_card:
+                        if admin_channel:
+                            embed = discord.Embed(
+                                title="⚠️ 歡迎卡片生成失敗",
+                                description="生成歡迎卡片時發生錯誤，請檢查程式日誌！",
+                                color=discord.Color.red()
+                            )
+                            await admin_channel.send(embed=embed)
+                        return
+                    if member_channel:
+                        await member_channel.send(
+                            content=f'歡迎 **{member.display_name}** 加進來伺服器! 我等不及了❤️',
+                            file=discord.File(welcome_card, "welcome_card.png")
+                        )
+                except Exception as e:
+                    logger.error(f"[Member] 生成歡迎卡片失敗: {e}")
                     if admin_channel:
-                        await admin_channel.send("⚠️ 生成歡迎卡失敗，請檢查程式日誌！")
-                    return
-                if member_channel:
-                    await member_channel.send(
-                        content=f'歡迎 **{member.display_name}** 加進來伺服器! 我等不及了❤️',
-                        file=discord.File(welcome_card, "welcome_card.png")
-                    )
-
+                        embed = discord.Embed(
+                            title="⚠️ 歡迎卡片生成失敗",
+                            description=f"生成歡迎卡片時發生錯誤：{str(e)}",
+                            color=discord.Color.red()
+                        )
+                        await admin_channel.send(embed=embed)
+            
             # 自動分配角色
             autorole = guild_config.get("autorole", {})
             if not autorole.get("enabled", False):
@@ -232,8 +427,12 @@ class MemberCog(commands.Cog):
                 if admin_channel:
                     await admin_channel.send(f"⚠️ 找不到任何可分配的角色：\n{chr(10).join(role_names)}")
 
+        except discord.Forbidden:
+            logger.error(f"[Member] 沒有權限在歡迎頻道發送訊息: {member.guild.name}")
+        except discord.NotFound:
+            logger.error(f"[Member] 歡迎頻道不存在: {member.guild.name}")
         except Exception as e:
-            logger.error("on_member_join 發生錯誤: %s", e)
+            logger.error(f"[Member] on_member_join 發生錯誤: {e}")
 
     async def create_welcome_card(self, member, server_name):
         """生成歡迎卡片"""

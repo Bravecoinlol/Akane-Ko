@@ -39,6 +39,11 @@ class UtilityTools(commands.Cog):
         await interaction.response.defer()
         
         try:
+            # 檢查文字長度
+            if len(text) > 500:
+                await interaction.followup.send("❌ 文字太長，請輸入500字以內的文字", ephemeral=True)
+                return
+            
             # 使用免費的翻譯 API
             url = "https://api.mymemory.translated.net/get"
             params = {
@@ -47,10 +52,14 @@ class UtilityTools(commands.Cog):
             }
             
             async with aiohttp.ClientSession() as session:
-                async with session.get(url, params=params) as resp:
+                async with session.get(url, params=params, timeout=aiohttp.ClientTimeout(total=10)) as resp:
                     if resp.status == 200:
                         data = await resp.json()
                         translated_text = data.get("responseData", {}).get("translatedText", "")
+                        
+                        if not translated_text:
+                            await interaction.followup.send("❌ 翻譯失敗，請檢查文字內容或稍後再試", ephemeral=True)
+                            return
                         
                         embed = discord.Embed(
                             title="🌐 翻譯結果",
@@ -60,17 +69,29 @@ class UtilityTools(commands.Cog):
                         embed.add_field(name=f"翻譯 ({target_lang.name})", value=translated_text, inline=False)
                         
                         await interaction.followup.send(embed=embed)
+                    elif resp.status == 429:
+                        await interaction.followup.send("❌ 翻譯服務使用過於頻繁，請稍後再試", ephemeral=True)
                     else:
-                        await interaction.followup.send("翻譯服務暫時無法使用", ephemeral=True)
+                        await interaction.followup.send(f"❌ 翻譯服務暫時無法使用 (錯誤碼: {resp.status})", ephemeral=True)
                         
+        except asyncio.TimeoutError:
+            await interaction.followup.send("❌ 翻譯服務回應超時，請稍後再試", ephemeral=True)
+        except aiohttp.ClientError as e:
+            logger.error(f"翻譯網路錯誤: {e}")
+            await interaction.followup.send("❌ 網路連接錯誤，請檢查網路連線", ephemeral=True)
         except Exception as e:
             logger.error(f"翻譯失敗: {e}")
-            await interaction.followup.send("翻譯時發生錯誤", ephemeral=True)
+            await interaction.followup.send(f"❌ 翻譯時發生錯誤：{str(e)}", ephemeral=True)
 
     @app_commands.command(name="weather", description="查詢天氣資訊")
     @app_commands.describe(city="城市名稱")
     async def weather(self, interaction: discord.Interaction, city: str):
         await interaction.response.defer()
+        
+        # 檢查城市名稱長度
+        if len(city) > 50:
+            await interaction.followup.send("❌ 城市名稱太長，請輸入50字以內的名稱", ephemeral=True)
+            return
         
         # 檢查快取
         cache_key = city.lower()
@@ -99,7 +120,7 @@ class UtilityTools(commands.Cog):
             }
             
             async with aiohttp.ClientSession() as session:
-                async with session.get(url, params=params) as resp:
+                async with session.get(url, params=params, timeout=aiohttp.ClientTimeout(total=10)) as resp:
                     if resp.status == 200:
                         data = await resp.json()
                         weather_data = {
@@ -114,12 +135,23 @@ class UtilityTools(commands.Cog):
                         
                         self.weather_cache[cache_key] = (datetime.now(), weather_data)
                         await self.send_weather_embed(interaction, weather_data)
+                    elif resp.status == 404:
+                        await interaction.followup.send(f"❌ 找不到城市「{city}」的天氣資訊，請檢查城市名稱", ephemeral=True)
+                    elif resp.status == 401:
+                        await interaction.followup.send("❌ 天氣API金鑰無效，請聯繫管理員", ephemeral=True)
+                    elif resp.status == 429:
+                        await interaction.followup.send("❌ 天氣服務使用過於頻繁，請稍後再試", ephemeral=True)
                     else:
-                        await interaction.followup.send("找不到該城市的天氣資訊", ephemeral=True)
+                        await interaction.followup.send(f"❌ 查詢天氣失敗 (錯誤碼: {resp.status})", ephemeral=True)
                         
+        except asyncio.TimeoutError:
+            await interaction.followup.send("❌ 天氣服務回應超時，請稍後再試", ephemeral=True)
+        except aiohttp.ClientError as e:
+            logger.error(f"查詢天氣網路錯誤: {e}")
+            await interaction.followup.send("❌ 網路連接錯誤，請檢查網路連線", ephemeral=True)
         except Exception as e:
             logger.error(f"查詢天氣失敗: {e}")
-            await interaction.followup.send("查詢天氣時發生錯誤", ephemeral=True)
+            await interaction.followup.send(f"❌ 查詢天氣時發生錯誤：{str(e)}", ephemeral=True)
 
     def get_mock_weather(self, city: str) -> dict:
         """生成模擬天氣數據"""
@@ -170,11 +202,30 @@ class UtilityTools(commands.Cog):
     @app_commands.describe(expression="數學表達式 (例如: 2+3*4)")
     async def calculator(self, interaction: discord.Interaction, expression: str):
         try:
+            # 檢查表達式長度
+            if len(expression) > 100:
+                await interaction.response.send_message("❌ 表達式太長，請輸入100字以內的數學表達式", ephemeral=True)
+                return
+            
             # 清理表達式，只允許安全的字符
             safe_expr = re.sub(r'[^0-9+\-*/().\s]', '', expression)
             
+            if not safe_expr.strip():
+                await interaction.response.send_message("❌ 表達式無效，請輸入有效的數學表達式", ephemeral=True)
+                return
+            
+            # 檢查除零錯誤
+            if '/' in safe_expr and re.search(r'/\s*0(?![.0-9])', safe_expr):
+                await interaction.response.send_message("❌ 除零錯誤，請檢查表達式", ephemeral=True)
+                return
+            
             # 計算結果
             result = eval(safe_expr)
+            
+            # 檢查結果是否為無限大或NaN
+            if not math.isfinite(result):
+                await interaction.response.send_message("❌ 計算結果超出範圍", ephemeral=True)
+                return
             
             embed = discord.Embed(
                 title="🧮 計算結果",
@@ -185,30 +236,62 @@ class UtilityTools(commands.Cog):
             
             await interaction.response.send_message(embed=embed)
             
+        except ZeroDivisionError:
+            await interaction.response.send_message("❌ 除零錯誤，請檢查表達式", ephemeral=True)
+        except SyntaxError:
+            await interaction.response.send_message("❌ 表達式語法錯誤，請檢查數學表達式", ephemeral=True)
+        except ValueError:
+            await interaction.response.send_message("❌ 表達式包含無效的數值", ephemeral=True)
         except Exception as e:
-            await interaction.response.send_message("❌ 計算錯誤，請檢查表達式", ephemeral=True)
+            logger.error(f"計算器錯誤: {e}")
+            await interaction.response.send_message(f"❌ 計算錯誤：{str(e)}", ephemeral=True)
 
     @app_commands.command(name="random", description="生成隨機數字")
     @app_commands.describe(min_num="最小值", max_num="最大值", count="數量")
     async def random_number(self, interaction: discord.Interaction, min_num: int, max_num: int, count: int = 1):
-        if min_num > max_num:
-            min_num, max_num = max_num, min_num
-        
-        if count < 1 or count > 10:
-            await interaction.response.send_message("❌ 數量必須在 1-10 之間", ephemeral=True)
-            return
-        
-        numbers = [random.randint(min_num, max_num) for _ in range(count)]
-        
-        embed = discord.Embed(
-            title="🎲 隨機數字",
-            color=discord.Color.purple()
-        )
-        embed.add_field(name="範圍", value=f"{min_num} - {max_num}", inline=True)
-        embed.add_field(name="數量", value=str(count), inline=True)
-        embed.add_field(name="結果", value=", ".join(map(str, numbers)), inline=False)
-        
-        await interaction.response.send_message(embed=embed)
+        try:
+            # 檢查數值範圍
+            if min_num < -1000000 or max_num > 1000000:
+                await interaction.response.send_message("❌ 數值範圍過大，請使用 -1,000,000 到 1,000,000 之間的數字", ephemeral=True)
+                return
+            
+            if count < 1 or count > 20:
+                await interaction.response.send_message("❌ 數量必須在 1-20 之間", ephemeral=True)
+                return
+            
+            # 自動調整大小順序
+            if min_num > max_num:
+                min_num, max_num = max_num, min_num
+            
+            # 檢查範圍大小
+            if max_num - min_num > 1000000:
+                await interaction.response.send_message("❌ 數值範圍過大，最大值與最小值差距不能超過1,000,000", ephemeral=True)
+                return
+            
+            # 生成隨機數字
+            numbers = []
+            for _ in range(count):
+                numbers.append(random.randint(min_num, max_num))
+            
+            # 去重並排序
+            unique_numbers = sorted(list(set(numbers)))
+            
+            embed = discord.Embed(
+                title="🎲 隨機數字",
+                color=discord.Color.purple()
+            )
+            embed.add_field(name="範圍", value=f"{min_num} 到 {max_num}", inline=True)
+            embed.add_field(name="數量", value=str(count), inline=True)
+            embed.add_field(name="結果", value=", ".join(map(str, unique_numbers)), inline=False)
+            
+            if len(unique_numbers) < count:
+                embed.add_field(name="💡 注意", value="結果已去重，實際數量可能少於請求數量", inline=False)
+            
+            await interaction.response.send_message(embed=embed)
+            
+        except Exception as e:
+            logger.error(f"隨機數字生成錯誤: {e}")
+            await interaction.response.send_message(f"❌ 生成隨機數字失敗：{str(e)}", ephemeral=True)
 
     @app_commands.command(name="time", description="顯示當前時間")
     @app_commands.describe(timezone="時區 (例如: Asia/Taipei)")

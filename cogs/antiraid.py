@@ -54,26 +54,13 @@ class AntiRaid(commands.Cog):
                 return config
         except FileNotFoundError:
             logger.warning("[AntiRaid] 配置檔案不存在，使用預設配置")
-            config = {
-                "enabled": True,
-                "raid_threshold": 5,  # 5秒內5人加入
-                "raid_time_window": 5,
-                "mute_duration": 300,  # 5分鐘
-                "spam_threshold": 5,  # 5秒內5條訊息
-                "spam_time_window": 5,
-                "profanity_enabled": True,
-                "profanity_mute_duration": 600,  # 10分鐘
-                "scam_detection_enabled": True,
-                "scam_mute_duration": 1800,  # 30分鐘
-                "auto_delete_spam": True,
-                "log_channel_id": None,
-                "admin_role_id": None,
-                "default_profanity_words": [
-                    "fuck", "shit", "bitch", "asshole", "dick", "pussy", "cock", "cunt",
-                    "motherfucker", "fucker", "bastard", "whore", "slut", "nigger", "nigga",
-                    "faggot", "fag", "dyke", "retard", "idiot", "stupid", "dumb", "moron"
-                ]
-            }
+            config = self.get_default_config()
+            self.save_config(config)
+            return config
+        except json.JSONDecodeError as e:
+            logger.error(f"[AntiRaid] 配置檔案格式錯誤: {e}")
+            logger.info("[AntiRaid] 使用預設配置")
+            config = self.get_default_config()
             self.save_config(config)
             return config
         except Exception as e:
@@ -111,6 +98,8 @@ class AntiRaid(commands.Cog):
             with open(self.config_file, 'w', encoding='utf-8') as f:
                 json.dump(config, f, indent=2, ensure_ascii=False)
             logger.info("[AntiRaid] 配置檔案保存成功")
+        except PermissionError:
+            logger.error("[AntiRaid] 沒有權限寫入配置檔案")
         except Exception as e:
             logger.error(f"[AntiRaid] 保存配置檔案失敗: {e}")
 
@@ -141,14 +130,22 @@ class AntiRaid(commands.Cog):
                     embed.add_field(name="⏱️ 持續時間", value=f"{duration} 秒", inline=True)
                 embed.set_footer(text=f"用戶: {user.name}")
                 await log_channel.send(embed=embed)
+        except discord.Forbidden:
+            logger.error("[AntiRaid] 沒有權限在記錄頻道發送訊息")
+        except discord.NotFound:
+            logger.error("[AntiRaid] 記錄頻道不存在")
         except Exception as e:
             logger.error(f"[AntiRaid] 記錄行動失敗: {e}")
 
     def is_admin(self, member):
         """檢查是否為管理員"""
-        if not self.config.get('admin_role_id'):
-            return member.guild_permissions.administrator
-        return member.guild_permissions.administrator or any(role.id == self.config['admin_role_id'] for role in member.roles)
+        try:
+            if not self.config.get('admin_role_id'):
+                return member.guild_permissions.administrator
+            return member.guild_permissions.administrator or any(role.id == self.config['admin_role_id'] for role in member.roles)
+        except Exception as e:
+            logger.error(f"[AntiRaid] 檢查管理員權限失敗: {e}")
+            return False
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -300,7 +297,12 @@ class AntiRaid(commands.Cog):
         """反惡意系統管理命令"""
         # 檢查管理員權限
         if not self.is_admin(interaction.user):
-            await interaction.response.send_message("❌ 您沒有權限使用此命令", ephemeral=True)
+            embed = discord.Embed(
+                title="❌ 權限不足",
+                description="您需要管理員權限才能使用此命令",
+                color=discord.Color.red()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
         
         await interaction.response.defer()
@@ -327,72 +329,147 @@ class AntiRaid(commands.Cog):
                 self.config['enabled'] = True
                 self.save_config()
                 logger.info("[AntiRaid] 反惡意系統已開啟")
-                await interaction.followup.send("✅ 反惡意系統已開啟")
+                embed = discord.Embed(
+                    title="✅ 反惡意系統已開啟",
+                    description="系統將開始監控惡意行為",
+                    color=discord.Color.green()
+                )
+                await interaction.followup.send(embed=embed)
                 
             elif action == "disable":
                 self.config['enabled'] = False
                 self.save_config()
                 logger.info("[AntiRaid] 反惡意系統已關閉")
-                await interaction.followup.send("❌ 反惡意系統已關閉")
+                embed = discord.Embed(
+                    title="❌ 反惡意系統已關閉",
+                    description="系統已停止監控惡意行為",
+                    color=discord.Color.red()
+                )
+                await interaction.followup.send(embed=embed)
                 
             elif action == "threshold" and setting:
                 try:
                     threshold = int(setting)
                     if threshold < 1:
-                        await interaction.followup.send("❌ 閾值必須大於 0")
+                        embed = discord.Embed(
+                            title="❌ 設定錯誤",
+                            description="閾值必須大於 0",
+                            color=discord.Color.red()
+                        )
+                        await interaction.followup.send(embed=embed)
                         return
                     self.config['raid_threshold'] = threshold
                     self.save_config()
                     logger.info(f"[AntiRaid] 惡意加入閾值已設定為 {threshold}")
-                    await interaction.followup.send(f"✅ 惡意加入閾值已設定為 {threshold}")
+                    embed = discord.Embed(
+                        title="✅ 閾值設定成功",
+                        description=f"惡意加入閾值已設定為 {threshold}",
+                        color=discord.Color.green()
+                    )
+                    await interaction.followup.send(embed=embed)
                 except ValueError:
-                    await interaction.followup.send("❌ 請輸入有效的數字")
+                    embed = discord.Embed(
+                        title="❌ 輸入錯誤",
+                        description="請輸入有效的數字",
+                        color=discord.Color.red()
+                    )
+                    await interaction.followup.send(embed=embed)
                     
             elif action == "mute_duration" and setting:
                 try:
                     duration = int(setting)
                     if duration < 1:
-                        await interaction.followup.send("❌ 禁言時間必須大於 0")
+                        embed = discord.Embed(
+                            title="❌ 設定錯誤",
+                            description="禁言時間必須大於 0",
+                            color=discord.Color.red()
+                        )
+                        await interaction.followup.send(embed=embed)
                         return
                     self.config['mute_duration'] = duration
                     self.save_config()
                     logger.info(f"[AntiRaid] 禁言時間已設定為 {duration} 秒")
-                    await interaction.followup.send(f"✅ 禁言時間已設定為 {duration} 秒")
+                    embed = discord.Embed(
+                        title="✅ 禁言時間設定成功",
+                        description=f"禁言時間已設定為 {duration} 秒",
+                        color=discord.Color.green()
+                    )
+                    await interaction.followup.send(embed=embed)
                 except ValueError:
-                    await interaction.followup.send("❌ 請輸入有效的數字")
+                    embed = discord.Embed(
+                        title="❌ 輸入錯誤",
+                        description="請輸入有效的數字",
+                        color=discord.Color.red()
+                    )
+                    await interaction.followup.send(embed=embed)
                     
             elif action == "log_channel":
                 self.config['log_channel_id'] = interaction.channel.id
                 self.save_config()
                 logger.info(f"[AntiRaid] 記錄頻道已設定為 {interaction.channel.name}")
-                await interaction.followup.send(f"✅ 記錄頻道已設定為 {interaction.channel.mention}")
+                embed = discord.Embed(
+                    title="✅ 記錄頻道設定成功",
+                    description=f"記錄頻道已設定為 {interaction.channel.mention}",
+                    color=discord.Color.green()
+                )
+                await interaction.followup.send(embed=embed)
                 
             elif action == "admin_role" and setting:
                 try:
                     role_id = int(setting)
                     role = interaction.guild.get_role(role_id)
                     if not role:
-                        await interaction.followup.send("❌ 找不到指定的角色")
+                        embed = discord.Embed(
+                            title="❌ 角色不存在",
+                            description="找不到指定的角色，請檢查角色ID",
+                            color=discord.Color.red()
+                        )
+                        await interaction.followup.send(embed=embed)
                         return
                     self.config['admin_role_id'] = role_id
                     self.save_config()
                     logger.info(f"[AntiRaid] 管理員角色已設定為 {role.name}")
-                    await interaction.followup.send(f"✅ 管理員角色已設定為 {role.mention}")
+                    embed = discord.Embed(
+                        title="✅ 管理員角色設定成功",
+                        description=f"管理員角色已設定為 {role.mention}",
+                        color=discord.Color.green()
+                    )
+                    await interaction.followup.send(embed=embed)
                 except ValueError:
-                    await interaction.followup.send("❌ 請輸入有效的角色 ID")
+                    embed = discord.Embed(
+                        title="❌ 輸入錯誤",
+                        description="請輸入有效的角色 ID",
+                        color=discord.Color.red()
+                    )
+                    await interaction.followup.send(embed=embed)
                     
             elif action == "reload":
                 self.config = self.load_config()
                 self.load_profanity_words()
                 logger.info("[AntiRaid] 配置已重新載入")
-                await interaction.followup.send("✅ 配置已重新載入")
+                embed = discord.Embed(
+                    title="✅ 配置重新載入成功",
+                    description="反惡意系統配置已重新載入",
+                    color=discord.Color.green()
+                )
+                await interaction.followup.send(embed=embed)
                 
             else:
-                await interaction.followup.send("❌ 無效的操作或缺少參數")
+                embed = discord.Embed(
+                    title="❌ 無效操作",
+                    description="無效的操作或缺少參數",
+                    color=discord.Color.red()
+                )
+                await interaction.followup.send(embed=embed)
                 
         except Exception as e:
             logger.error(f"[AntiRaid] 命令執行失敗: {e}")
-            await interaction.followup.send(f"❌ 執行命令時發生錯誤: {e}")
+            embed = discord.Embed(
+                title="❌ 執行錯誤",
+                description=f"執行命令時發生錯誤：{str(e)}",
+                color=discord.Color.red()
+            )
+            await interaction.followup.send(embed=embed)
 
     @app_commands.command(name="profanity", description="管理髒話列表")
     @app_commands.describe(
@@ -409,7 +486,12 @@ class AntiRaid(commands.Cog):
         """髒話列表管理命令"""
         # 檢查管理員權限
         if not self.is_admin(interaction.user):
-            await interaction.response.send_message("❌ 您沒有權限使用此命令", ephemeral=True)
+            embed = discord.Embed(
+                title="❌ 權限不足",
+                description="您需要管理員權限才能使用此命令",
+                color=discord.Color.red()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
         
         await interaction.response.defer()
@@ -418,7 +500,12 @@ class AntiRaid(commands.Cog):
             if action == "list":
                 words = list(self.profanity_cache)
                 if not words:
-                    await interaction.followup.send("📝 髒話列表為空")
+                    embed = discord.Embed(
+                        title="📝 髒話列表",
+                        description="髒話列表為空",
+                        color=discord.Color.blue()
+                    )
+                    await interaction.followup.send(embed=embed)
                     return
                 
                 # 分頁顯示
@@ -440,40 +527,84 @@ class AntiRaid(commands.Cog):
                 await interaction.followup.send(embed=embed)
                 
             elif action == "add" and word:
+                if len(word) > 50:
+                    embed = discord.Embed(
+                        title="❌ 詞彙過長",
+                        description="詞彙長度不能超過50個字符",
+                        color=discord.Color.red()
+                    )
+                    await interaction.followup.send(embed=embed)
+                    return
+                    
                 if word.lower() in self.profanity_cache:
-                    await interaction.followup.send("❌ 該詞彙已存在於列表中")
+                    embed = discord.Embed(
+                        title="❌ 詞彙已存在",
+                        description="該詞彙已存在於列表中",
+                        color=discord.Color.red()
+                    )
+                    await interaction.followup.send(embed=embed)
                     return
                 
                 self.profanity_cache.add(word.lower())
                 self.config['profanity_words'] = list(self.profanity_cache)
                 self.save_config()
                 logger.info(f"[AntiRaid] 新增髒話詞彙: {word}")
-                await interaction.followup.send(f"✅ 已新增髒話詞彙: {word}")
+                embed = discord.Embed(
+                    title="✅ 詞彙新增成功",
+                    description=f"已新增髒話詞彙: {word}",
+                    color=discord.Color.green()
+                )
+                await interaction.followup.send(embed=embed)
                 
             elif action == "remove" and word:
                 if word.lower() not in self.profanity_cache:
-                    await interaction.followup.send("❌ 該詞彙不存在於列表中")
+                    embed = discord.Embed(
+                        title="❌ 詞彙不存在",
+                        description="該詞彙不存在於列表中",
+                        color=discord.Color.red()
+                    )
+                    await interaction.followup.send(embed=embed)
                     return
                 
                 self.profanity_cache.discard(word.lower())
                 self.config['profanity_words'] = list(self.profanity_cache)
                 self.save_config()
                 logger.info(f"[AntiRaid] 移除髒話詞彙: {word}")
-                await interaction.followup.send(f"✅ 已移除髒話詞彙: {word}")
+                embed = discord.Embed(
+                    title="✅ 詞彙移除成功",
+                    description=f"已移除髒話詞彙: {word}",
+                    color=discord.Color.green()
+                )
+                await interaction.followup.send(embed=embed)
                 
             elif action == "reset":
                 self.profanity_cache = set(self.config.get('default_profanity_words', []))
                 self.config['profanity_words'] = list(self.profanity_cache)
                 self.save_config()
                 logger.info("[AntiRaid] 髒話列表已重設為預設值")
-                await interaction.followup.send("✅ 髒話列表已重設為預設值")
+                embed = discord.Embed(
+                    title="✅ 列表重設成功",
+                    description="髒話列表已重設為預設值",
+                    color=discord.Color.green()
+                )
+                await interaction.followup.send(embed=embed)
                 
             else:
-                await interaction.followup.send("❌ 無效的操作或缺少參數")
+                embed = discord.Embed(
+                    title="❌ 無效操作",
+                    description="無效的操作或缺少參數",
+                    color=discord.Color.red()
+                )
+                await interaction.followup.send(embed=embed)
                 
         except Exception as e:
             logger.error(f"[AntiRaid] 髒話命令執行失敗: {e}")
-            await interaction.followup.send(f"❌ 執行命令時發生錯誤: {e}")
+            embed = discord.Embed(
+                title="❌ 執行錯誤",
+                description=f"執行命令時發生錯誤：{str(e)}",
+                color=discord.Color.red()
+            )
+            await interaction.followup.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(AntiRaid(bot))

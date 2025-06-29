@@ -152,11 +152,10 @@ class slash(commands.Cog):
         embed.add_field(name="/toggleautorole", value="啟用或停用自動分配角色（管理員限定）", inline=False)
         embed.add_field(name="/listautorole", value="顯示目前自動分配的角色清單（管理員限定）", inline=False)
         embed.add_field(name="/togglewelcomecard", value="啟用或停用歡迎卡片（管理員限定）", inline=False)
-        embed.add_field(name="/identify", value="選擇你的身分組", inline=False)
-        embed.add_field(name="/setidentify", value="設定可選擇的身分組（管理員限定）", inline=False)
+        embed.add_field(name="/createidentify", value="創建公開的身分組選擇面板（管理員限定）", inline=False)
         embed.add_field(name="/listidentify", value="查看目前可選擇的身分組（管理員限定）", inline=False)
         embed.add_field(name="/clearidentify", value="清空可選擇的身分組（管理員限定）", inline=False)
-        embed.add_field(name="/removeidentify", value="移除特定身分組（管理員限定）", inline=False)
+        embed.add_field(name="/removeidentify", value="移除自己的身分組", inline=False)
         pages.append(embed)
         
         # ========== 無前綴指令回復 ==========

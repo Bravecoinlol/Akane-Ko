@@ -124,41 +124,85 @@ class MusicControls(discord.ui.View):
 
     @discord.ui.button(label='🔉', style=discord.ButtonStyle.grey)
     async def volume_down(self, interaction: discord.Interaction, button: discord.ui.Button):
-        self.player.volume = max(0.0, self.player.volume - 0.1)
-        if self.vc.source:
-            self.vc.source.volume = self.player.volume
-        await interaction.response.send_message(f"🔉 音量調低為 {int(self.player.volume * 100)}%", ephemeral=True)
-        await self.update_message(interaction, f"▶️ 正在播放：{self.player.current['title']}")
+        try:
+            if not self.vc or not self.vc.is_connected():
+                await interaction.response.send_message("❌ 機器人未連接到語音頻道", ephemeral=True)
+                return
+                
+            self.player.volume = max(0.0, self.player.volume - 0.1)
+            if self.vc.source:
+                self.vc.source.volume = self.player.volume
+            await interaction.response.send_message(f"🔉 音量調低為 {int(self.player.volume * 100)}%", ephemeral=True)
+            await self.update_message(interaction, f"▶️ 正在播放：{self.player.current['title']}")
+        except Exception as e:
+            logger.error(f"[MusicControls] 音量調低失敗: {e}")
+            await interaction.response.send_message("❌ 調整音量失敗", ephemeral=True)
 
     @discord.ui.button(label='🔊', style=discord.ButtonStyle.grey)
     async def volume_up(self, interaction: discord.Interaction, button: discord.ui.Button):
-        self.player.volume = min(1.0, self.player.volume + 0.1)
-        if self.vc.source:
-            self.vc.source.volume = self.player.volume
-        await interaction.response.send_message(f"🔊 音量調高為 {int(self.player.volume * 100)}%", ephemeral=True)
-        await self.update_message(interaction, f"▶️ 正在播放：{self.player.current['title']}")
+        try:
+            if not self.vc or not self.vc.is_connected():
+                await interaction.response.send_message("❌ 機器人未連接到語音頻道", ephemeral=True)
+                return
+                
+            self.player.volume = min(1.0, self.player.volume + 0.1)
+            if self.vc.source:
+                self.vc.source.volume = self.player.volume
+            await interaction.response.send_message(f"🔊 音量調高為 {int(self.player.volume * 100)}%", ephemeral=True)
+            await self.update_message(interaction, f"▶️ 正在播放：{self.player.current['title']}")
+        except Exception as e:
+            logger.error(f"[MusicControls] 音量調高失敗: {e}")
+            await interaction.response.send_message("❌ 調整音量失敗", ephemeral=True)
 
     @discord.ui.button(label='⏯️', style=discord.ButtonStyle.blurple)
     async def pause_resume(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if self.vc.is_playing():
-            self.vc.pause()
-            self.player.is_paused = True
-            await interaction.response.send_message("⏸ 已暫停播放", ephemeral=True)
-        elif self.vc.is_paused():
-            self.vc.resume()
-            self.player.is_paused = False
-            await interaction.response.send_message("▶️ 已繼續播放", ephemeral=True)
+        try:
+            if not self.vc or not self.vc.is_connected():
+                await interaction.response.send_message("❌ 機器人未連接到語音頻道", ephemeral=True)
+                return
+                
+            if not self.vc.is_playing() and not self.vc.is_paused():
+                await interaction.response.send_message("❌ 目前沒有播放中的音樂", ephemeral=True)
+                return
+                
+            if self.vc.is_playing():
+                self.vc.pause()
+                self.player.is_paused = True
+                await interaction.response.send_message("⏸ 已暫停播放", ephemeral=True)
+            elif self.vc.is_paused():
+                self.vc.resume()
+                self.player.is_paused = False
+                await interaction.response.send_message("▶️ 已繼續播放", ephemeral=True)
+        except Exception as e:
+            logger.error(f"[MusicControls] 暫停/繼續播放失敗: {e}")
+            await interaction.response.send_message("❌ 操作失敗", ephemeral=True)
 
     @discord.ui.button(label='⏭', style=discord.ButtonStyle.green)
     async def skip(self, interaction: discord.Interaction, button: discord.ui.Button):
-        self.vc.stop()
-        await interaction.response.send_message("⏭ 跳到下一首", ephemeral=True)
+        try:
+            if not self.vc or not self.vc.is_connected():
+                await interaction.response.send_message("❌ 機器人未連接到語音頻道", ephemeral=True)
+                return
+                
+            if not self.vc.is_playing() and not self.vc.is_paused():
+                await interaction.response.send_message("❌ 目前沒有播放中的音樂", ephemeral=True)
+                return
+                
+            self.vc.stop()
+            await interaction.response.send_message("⏭ 跳到下一首", ephemeral=True)
+        except Exception as e:
+            logger.error(f"[MusicControls] 跳過歌曲失敗: {e}")
+            await interaction.response.send_message("❌ 跳過歌曲失敗", ephemeral=True)
 
     @discord.ui.button(label='🔁', style=discord.ButtonStyle.grey)
     async def toggle_repeat(self, interaction: discord.Interaction, button: discord.ui.Button):
-        self.player.repeat = not self.player.repeat
-        status = "開啟" if self.player.repeat else "關閉"
-        await interaction.response.send_message(f"🔁 重複播放：{status}", ephemeral=True)
+        try:
+            self.player.repeat = not self.player.repeat
+            status = "開啟" if self.player.repeat else "關閉"
+            await interaction.response.send_message(f"🔁 重複播放：{status}", ephemeral=True)
+        except Exception as e:
+            logger.error(f"[MusicControls] 切換重複播放失敗: {e}")
+            await interaction.response.send_message("❌ 切換重複播放失敗", ephemeral=True)
 
 class Music(commands.Cog):
     def __init__(self, bot):
@@ -501,89 +545,210 @@ class Music(commands.Cog):
     async def play(self, interaction: discord.Interaction, query: str):
         await interaction.response.defer()
 
-        # 確保語音連接
-        vc = await self.ensure_voice_connection(interaction)
-        if not vc:
-            return
+        try:
+            # 檢查查詢字串
+            if not query or len(query.strip()) == 0:
+                await interaction.followup.send("❌ 請提供有效的連結或搜尋關鍵字", ephemeral=True)
+                return
+                
+            if len(query) > 200:
+                await interaction.followup.send("❌ 查詢字串太長，請縮短後再試", ephemeral=True)
+                return
 
-        player = self.get_player(interaction.guild.id)
-        player.retry_count = 0  # 重置重試計數
+            # 確保語音連接
+            vc = await self.ensure_voice_connection(interaction)
+            if not vc:
+                return
 
-        # 獲取歌曲資訊
-        song_info = await self.fetch_song_with_retry(query)
-        if not song_info:
-            await interaction.followup.send("❌ 無法獲取歌曲資訊，請檢查連結或關鍵字")
-            return
+            player = self.get_player(interaction.guild.id)
+            player.retry_count = 0  # 重置重試計數
 
-        url = song_info['url']
-        title = song_info.get('title', '未知標題')
-        player.add({"url": url, "title": title})
+            # 獲取歌曲資訊
+            song_info = await self.fetch_song_with_retry(query)
+            if not song_info:
+                embed = discord.Embed(
+                    title="❌ 無法獲取歌曲資訊",
+                    description="請檢查以下項目：",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="可能的原因",
+                    value="• 連結無效或已失效\n• 搜尋關鍵字太模糊\n• 網路連線問題\n• YouTube服務暫時無法使用",
+                    inline=False
+                )
+                embed.add_field(
+                    name="建議",
+                    value="• 嘗試使用更明確的關鍵字\n• 檢查網路連線\n• 稍後再試",
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+                return
 
-        if not vc.is_playing() and not vc.is_paused():
-            await self.play_next(vc, interaction.guild.id, interaction)
-        else:
-            await interaction.followup.send(f"✅ 已加入佇列：{title}")
+            url = song_info['url']
+            title = song_info.get('title', '未知標題')
+            player.add({"url": url, "title": title})
+
+            if not vc.is_playing() and not vc.is_paused():
+                await self.play_next(vc, interaction.guild.id, interaction)
+            else:
+                embed = discord.Embed(
+                    title="✅ 已加入佇列",
+                    description=f"**{title}**",
+                    color=discord.Color.green()
+                )
+                embed.add_field(
+                    name="佇列位置",
+                    value=f"第 {len(player.queue)} 首",
+                    inline=True
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+                
+        except Exception as e:
+            logger.error(f"[play] 播放命令失敗: {e}")
+            await interaction.followup.send(f"❌ 播放失敗：{str(e)}", ephemeral=True)
 
     @app_commands.command(name="volume", description="設定音量 (1-100)")
     @app_commands.describe(level="音量等級")
     async def volume(self, interaction: discord.Interaction, level: int):
-        if not 1 <= level <= 100:
-            await interaction.response.send_message("❌ 請輸入 1～100 的音量數值。", ephemeral=True)
-            return
+        try:
+            if not 1 <= level <= 100:
+                embed = discord.Embed(
+                    title="❌ 音量設定錯誤",
+                    description="音量必須在 1-100 之間",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="正確用法",
+                    value="`/volume 50` - 設定音量為50%",
+                    inline=False
+                )
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+                return
 
-        vc = interaction.guild.voice_client
-        if not vc or not vc.source:
-            await interaction.response.send_message("❌ 沒有正在播放的音樂。", ephemeral=True)
-            return
+            vc = interaction.guild.voice_client
+            if not vc or not vc.is_connected():
+                await interaction.response.send_message("❌ 機器人未連接到語音頻道", ephemeral=True)
+                return
+                
+            if not vc.source:
+                await interaction.response.send_message("❌ 目前沒有播放中的音樂", ephemeral=True)
+                return
 
-        player = self.get_player(interaction.guild.id)
-        player.volume = level / 100
-        if vc.source:
-            vc.source.volume = player.volume
+            player = self.get_player(interaction.guild.id)
+            player.volume = level / 100
+            if vc.source:
+                vc.source.volume = player.volume
 
-        await interaction.response.send_message(f"🔊 音量設定為 {level}%", ephemeral=True)
+            embed = discord.Embed(
+                title="🔊 音量已調整",
+                description=f"音量設定為 **{level}%**",
+                color=discord.Color.green()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            logger.error(f"[volume] 音量設定失敗: {e}")
+            await interaction.response.send_message(f"❌ 音量設定失敗：{str(e)}", ephemeral=True)
 
     @app_commands.command(name="pause", description="暫停播放")
     async def pause(self, interaction: discord.Interaction):
-        vc = interaction.guild.voice_client
-        if not vc or not vc.is_playing():
-            await interaction.response.send_message("❌ 目前沒有播放中的音樂。", ephemeral=True)
-            return
-        vc.pause()
-        player = self.get_player(interaction.guild.id)
-        player.is_paused = True
-        await interaction.response.send_message("⏸ 已暫停播放。", ephemeral=True)
+        try:
+            vc = interaction.guild.voice_client
+            if not vc or not vc.is_connected():
+                await interaction.response.send_message("❌ 機器人未連接到語音頻道", ephemeral=True)
+                return
+                
+            if not vc.is_playing():
+                await interaction.response.send_message("❌ 目前沒有播放中的音樂", ephemeral=True)
+                return
+                
+            vc.pause()
+            player = self.get_player(interaction.guild.id)
+            player.is_paused = True
+            
+            embed = discord.Embed(
+                title="⏸ 已暫停播放",
+                description="使用 `/resume` 繼續播放",
+                color=discord.Color.orange()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            logger.error(f"[pause] 暫停播放失敗: {e}")
+            await interaction.response.send_message(f"❌ 暫停播放失敗：{str(e)}", ephemeral=True)
 
     @app_commands.command(name="resume", description="繼續播放")
     async def resume(self, interaction: discord.Interaction):
-        vc = interaction.guild.voice_client
-        if not vc or not vc.is_paused():
-            await interaction.response.send_message("❌ 目前沒有暫停中的音樂。", ephemeral=True)
-            return
-        vc.resume()
-        player = self.get_player(interaction.guild.id)
-        player.is_paused = False
-        await interaction.response.send_message("▶️ 已繼續播放。", ephemeral=True)
+        try:
+            vc = interaction.guild.voice_client
+            if not vc or not vc.is_connected():
+                await interaction.response.send_message("❌ 機器人未連接到語音頻道", ephemeral=True)
+                return
+                
+            if not vc.is_paused():
+                await interaction.response.send_message("❌ 目前沒有暫停中的音樂", ephemeral=True)
+                return
+                
+            vc.resume()
+            player = self.get_player(interaction.guild.id)
+            player.is_paused = False
+            
+            embed = discord.Embed(
+                title="▶️ 已繼續播放",
+                description="音樂已恢復播放",
+                color=discord.Color.green()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            logger.error(f"[resume] 繼續播放失敗: {e}")
+            await interaction.response.send_message(f"❌ 繼續播放失敗：{str(e)}", ephemeral=True)
 
     @app_commands.command(name="skip", description="跳到下一首")
     async def skip(self, interaction: discord.Interaction):
-        vc = interaction.guild.voice_client
-        if not vc or not vc.is_playing():
-            await interaction.response.send_message("❌ 目前沒有播放中的音樂。", ephemeral=True)
-            return
+        try:
+            vc = interaction.guild.voice_client
+            if not vc or not vc.is_connected():
+                await interaction.response.send_message("❌ 機器人未連接到語音頻道", ephemeral=True)
+                return
+                
+            if not vc.is_playing() and not vc.is_paused():
+                await interaction.response.send_message("❌ 目前沒有播放中的音樂", ephemeral=True)
+                return
 
-        player = self.get_player(interaction.guild.id)
-        player.repeat = False  # 關閉重複播放，避免跳過無效
-        player.retry_count = 0  # 重置重試計數
-        vc.stop()
-        await interaction.response.send_message("⏭ 已跳到下一首。", ephemeral=True)
+            player = self.get_player(interaction.guild.id)
+            player.repeat = False  # 關閉重複播放，避免跳過無效
+            player.retry_count = 0  # 重置重試計數
+            vc.stop()
+            
+            embed = discord.Embed(
+                title="⏭ 已跳到下一首",
+                description="正在播放下一首歌曲",
+                color=discord.Color.blue()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            logger.error(f"[skip] 跳過歌曲失敗: {e}")
+            await interaction.response.send_message(f"❌ 跳過歌曲失敗：{str(e)}", ephemeral=True)
 
     @app_commands.command(name="repeat", description="切換重複播放")
     async def repeat(self, interaction: discord.Interaction):
-        player = self.get_player(interaction.guild.id)
-        player.repeat = not player.repeat
-        status = "開啟" if player.repeat else "關閉"
-        await interaction.response.send_message(f"🔁 重複播放：{status}", ephemeral=True)
+        try:
+            player = self.get_player(interaction.guild.id)
+            player.repeat = not player.repeat
+            status = "開啟" if player.repeat else "關閉"
+            
+            embed = discord.Embed(
+                title="🔁 重複播放設定",
+                description=f"重複播放已**{status}**",
+                color=discord.Color.green() if player.repeat else discord.Color.grey()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            logger.error(f"[repeat] 切換重複播放失敗: {e}")
+            await interaction.response.send_message(f"❌ 切換重複播放失敗：{str(e)}", ephemeral=True)
 
     @app_commands.command(name="queue", description="顯示播放隊列")
     async def queue(self, interaction: discord.Interaction):
