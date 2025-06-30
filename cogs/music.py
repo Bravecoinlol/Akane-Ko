@@ -209,8 +209,20 @@ class Music(commands.Cog):
         self.bot = bot
         self.players = {}
         self.song_cache = SongCache()
-        self.connection_retries = {}  # 記錄每個伺服器的重連次數
         self.ffmpeg_config = self.load_ffmpeg_config()
+        self.connection_retries = {}
+        self.auto_stream_categories = {}
+        self.reconnect_attempts = {}
+        self.max_reconnect_attempts = 3
+        self.reconnect_delay = 5
+        
+        # 載入音樂配置
+        self.load_music_config()
+        
+        # 標記需要啟動清理任務
+        self._cleanup_task_started = False
+        
+        logger.info("[Music] 音樂系統已啟動")
         
         # 自動串流類別對應搜尋關鍵字
         self.category_keywords = {
@@ -252,51 +264,79 @@ class Music(commands.Cog):
     def load_ffmpeg_config(self):
         """載入 FFmpeg 配置"""
         try:
-            if os.path.exists('ffmpeg_config.json'):
-                with open('ffmpeg_config.json', 'r', encoding='utf-8') as f:
-                    return json.load(f)
-            else:
-                logger.warning("[Music] ffmpeg_config.json 不存在，使用預設配置")
-                return {
-                    "ffmpeg_options": {
-                        "primary": {
-                            "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -fflags +genpts+igndts -avoid_negative_ts make_zero",
-                            "options": "-vn -loglevel error"
-                        },
-                        "backup": {
-                            "before_options": "-reconnect 1 -reconnect_streamed 1",
-                            "options": "-vn -loglevel error"
-                        }
-                    },
-                    "executable": "ffmpeg",
-                    "volume_default": 0.5,
-                    "retry_settings": {
-                        "max_retries": 3,
-                        "retry_delay": 2,
-                        "ffmpeg_fallback": True
-                    }
-                }
-        except Exception as e:
-            logger.error(f"[Music] 載入 FFmpeg 配置失敗: {e}，使用預設配置")
-            return {
+            with open('ffmpeg_config.json', 'r', encoding='utf-8') as f:
+                config = json.load(f)
+                logger.info("[Music] FFmpeg 配置載入成功")
+                return config
+        except FileNotFoundError:
+            logger.warning("[Music] FFmpeg 配置檔案不存在，使用預設配置")
+            config = {
+                "ffmpeg_path": "ffmpeg",
                 "ffmpeg_options": {
-                    "primary": {
-                        "before_options": "-reconnect 1 -reconnect_streamed 1",
-                        "options": "-vn -loglevel error"
-                    },
-                    "backup": {
-                        "before_options": "-reconnect 1",
-                        "options": "-vn -loglevel error"
-                    }
-                },
-                "executable": "ffmpeg",
-                "volume_default": 0.5,
-                "retry_settings": {
-                    "max_retries": 3,
-                    "retry_delay": 2,
-                    "ffmpeg_fallback": True
+                    "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+                    "options": "-vn -b:a 128k -bufsize 3072k"
                 }
             }
+            self.save_ffmpeg_config(config)
+            return config
+        except json.JSONDecodeError as e:
+            logger.error(f"[Music] FFmpeg 配置檔案格式錯誤: {e}")
+            return self.get_default_ffmpeg_config()
+        except Exception as e:
+            logger.error(f"[Music] 載入 FFmpeg 配置失敗: {e}")
+            return self.get_default_ffmpeg_config()
+
+    def load_music_config(self):
+        """載入音樂配置"""
+        try:
+            with open('music_config.json', 'r', encoding='utf-8') as f:
+                config = json.load(f)
+                logger.info("[Music] 音樂配置載入成功")
+                return config
+        except FileNotFoundError:
+            logger.warning("[Music] 音樂配置檔案不存在，使用預設配置")
+            config = {
+                "default_volume": 0.5,
+                "max_queue_size": 50,
+                "auto_disconnect_delay": 300,
+                "max_song_duration": 600,
+                "enable_cache": True,
+                "cache_size": 100,
+                "reconnect_attempts": 3,
+                "reconnect_delay": 5
+            }
+            self.save_music_config(config)
+            return config
+        except json.JSONDecodeError as e:
+            logger.error(f"[Music] 音樂配置檔案格式錯誤: {e}")
+            return self.get_default_music_config()
+        except Exception as e:
+            logger.error(f"[Music] 載入音樂配置失敗: {e}")
+            return self.get_default_music_config()
+
+    def save_music_config(self, config=None):
+        """保存音樂配置"""
+        if config is None:
+            config = self.load_music_config()
+        try:
+            with open('music_config.json', 'w', encoding='utf-8') as f:
+                json.dump(config, f, indent=2, ensure_ascii=False)
+            logger.info("[Music] 音樂配置保存成功")
+        except Exception as e:
+            logger.error(f"[Music] 保存音樂配置失敗: {e}")
+
+    def get_default_music_config(self):
+        """取得預設音樂配置"""
+        return {
+            "default_volume": 0.5,
+            "max_queue_size": 50,
+            "auto_disconnect_delay": 300,
+            "max_song_duration": 600,
+            "enable_cache": True,
+            "cache_size": 100,
+            "reconnect_attempts": 3,
+            "reconnect_delay": 5
+        }
 
     def get_player(self, guild_id):
         return self.players.setdefault(guild_id, AutoMusicPlayer())
@@ -415,39 +455,175 @@ class Music(commands.Cog):
         return None
 
     async def ensure_voice_connection(self, interaction, auto_join=True):
-        """確保語音連接，帶重試機制"""
-        guild_id = interaction.guild.id
-        vc = interaction.guild.voice_client
-        
-        if vc and vc.is_connected():
-            return vc
-            
-        if not auto_join:
-            return None
-            
-        if not interaction.user.voice or not interaction.user.voice.channel:
-            return None
-            
-        channel = interaction.user.voice.channel
-        retry_count = self.connection_retries.get(guild_id, 0)
-        
-        if retry_count >= 3:
-            await interaction.followup.send("❌ 連接失敗次數過多，請稍後再試。")
-            return None
-            
+        """確保語音連線存在"""
         try:
-            if vc:
-                await vc.move_to(channel)
-            else:
-                vc = await channel.connect(timeout=20)
+            # 檢查用戶是否在語音頻道
+            if not interaction.user.voice:
+                embed = discord.Embed(
+                    title="❌ 未連接語音頻道",
+                    description="請先加入語音頻道",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="如何加入",
+                    value="1. 點擊語音頻道\n2. 等待連接完成\n3. 再次使用命令",
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+                return None
+
+            voice_channel = interaction.user.voice.channel
             
-            self.connection_retries[guild_id] = 0  # 重置重試計數
-            return vc
+            # 檢查 Bot 權限
+            if not voice_channel.permissions_for(interaction.guild.me).connect:
+                embed = discord.Embed(
+                    title="❌ 權限不足",
+                    description="Bot 無法加入語音頻道",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="需要的權限",
+                    value="• 連接語音頻道\n• 說話\n• 使用語音活動",
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+                return None
+
+            # 檢查是否已經連接
+            vc = interaction.guild.voice_client
+            if vc and vc.is_connected():
+                # 檢查是否在同一個頻道
+                if vc.channel == voice_channel:
+                    return vc
+                else:
+                    # 在不同頻道，需要移動
+                    try:
+                        await vc.move_to(voice_channel)
+                        logger.info(f"[ensure_voice_connection] 已移動到頻道: {voice_channel.name}")
+                        return vc
+                    except Exception as e:
+                        logger.error(f"[ensure_voice_connection] 移動頻道失敗: {e}")
+                        embed = discord.Embed(
+                            title="❌ 移動頻道失敗",
+                            description="無法移動到新的語音頻道",
+                            color=discord.Color.red()
+                        )
+                        embed.add_field(
+                            name="錯誤詳情",
+                            value=str(e)[:100] + "..." if len(str(e)) > 100 else str(e),
+                            inline=False
+                        )
+                        await interaction.followup.send(embed=embed, ephemeral=True)
+                        return None
+
+            # 如果沒有連接且允許自動加入
+            if auto_join:
+                try:
+                    # 添加重連機制
+                    max_retries = 3
+                    retry_delay = 2
+                    
+                    for attempt in range(max_retries):
+                        try:
+                            vc = await voice_channel.connect(timeout=20.0, self_deaf=True)
+                            logger.info(f"[ensure_voice_connection] 成功連接到頻道: {voice_channel.name}")
+                            
+                            # 設定語音客戶端屬性
+                            vc.retry_count = 0
+                            vc.max_retries = 3
+                            
+                            return vc
+                            
+                        except asyncio.TimeoutError:
+                            logger.warning(f"[ensure_voice_connection] 連接超時，嘗試 {attempt + 1}/{max_retries}")
+                            if attempt < max_retries - 1:
+                                await asyncio.sleep(retry_delay)
+                                retry_delay *= 2  # 指數退避
+                            else:
+                                embed = discord.Embed(
+                                    title="⏰ 連接超時",
+                                    description="連接語音頻道時發生超時",
+                                    color=discord.Color.orange()
+                                )
+                                embed.add_field(
+                                    name="可能原因",
+                                    value="• 網路連線不穩定\n• Discord服務繁忙\n• 頻道擁擠",
+                                    inline=False
+                                )
+                                embed.add_field(
+                                    name="建議",
+                                    value="• 檢查網路連線\n• 稍後再試\n• 嘗試其他頻道",
+                                    inline=False
+                                )
+                                await interaction.followup.send(embed=embed, ephemeral=True)
+                                return None
+                                
+                        except discord.ClientException as e:
+                            if "Already connected to a voice channel" in str(e):
+                                # 已經連接，獲取現有連接
+                                vc = interaction.guild.voice_client
+                                if vc and vc.is_connected():
+                                    return vc
+                            else:
+                                raise e
+                                
+                        except Exception as e:
+                            logger.error(f"[ensure_voice_connection] 連接失敗 (嘗試 {attempt + 1}): {e}")
+                            if attempt < max_retries - 1:
+                                await asyncio.sleep(retry_delay)
+                                retry_delay *= 2
+                            else:
+                                embed = discord.Embed(
+                                    title="❌ 連接失敗",
+                                    description="無法連接到語音頻道",
+                                    color=discord.Color.red()
+                                )
+                                embed.add_field(
+                                    name="錯誤詳情",
+                                    value=str(e)[:100] + "..." if len(str(e)) > 100 else str(e),
+                                    inline=False
+                                )
+                                embed.add_field(
+                                    name="建議",
+                                    value="• 檢查網路連線\n• 確認頻道權限\n• 稍後再試",
+                                    inline=False
+                                )
+                                await interaction.followup.send(embed=embed, ephemeral=True)
+                                return None
+                                
+                except Exception as e:
+                    logger.error(f"[ensure_voice_connection] 連接過程發生錯誤: {e}")
+                    embed = discord.Embed(
+                        title="❌ 連接錯誤",
+                        description="連接語音頻道時發生未預期的錯誤",
+                        color=discord.Color.red()
+                    )
+                    embed.add_field(
+                        name="錯誤詳情",
+                        value=str(e)[:100] + "..." if len(str(e)) > 100 else str(e),
+                        inline=False
+                    )
+                    await interaction.followup.send(embed=embed, ephemeral=True)
+                    return None
+
+            return None
             
         except Exception as e:
-            print(f"[ensure_voice_connection] 連接失敗: {e}")
-            self.connection_retries[guild_id] = retry_count + 1
-            await interaction.followup.send(f"❌ 連接語音頻道失敗: {e}")
+            logger.error(f"[ensure_voice_connection] 確保語音連線失敗: {e}")
+            try:
+                embed = discord.Embed(
+                    title="❌ 語音連線錯誤",
+                    description="處理語音連線時發生錯誤",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="錯誤詳情",
+                    value=str(e)[:100] + "..." if len(str(e)) > 100 else str(e),
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+            except:
+                logger.error(f"[ensure_voice_connection] 無法發送錯誤訊息: {e}")
             return None
 
     async def play_next(self, vc, guild_id, interaction=None):
@@ -499,8 +675,8 @@ class Music(commands.Cog):
                     volume=player.volume
                 )
             
-            vc.play(source, after=lambda error: asyncio.run_coroutine_threadsafe(
-                self.after_playing(error, vc, guild_id), self.bot.loop
+            vc.play(source, after=lambda error: asyncio.create_task(
+                self.after_playing(error, vc, guild_id)
             ))
             
             if interaction:
@@ -543,16 +719,45 @@ class Music(commands.Cog):
     @app_commands.command(name="play", description="播放音樂 (支援連結與關鍵字)")
     @app_commands.describe(query="YouTube 連結或搜尋字詞")
     async def play(self, interaction: discord.Interaction, query: str):
-        await interaction.response.defer()
+        try:
+            # 先回應互動，避免超時
+            await interaction.response.defer(thinking=True)
+        except discord.NotFound:
+            # 如果互動已經超時，直接返回
+            logger.warning(f"[play] 互動已超時，用戶: {interaction.user.name}")
+            return
+        except Exception as e:
+            logger.error(f"[play] 回應互動失敗: {e}")
+            return
 
         try:
             # 檢查查詢字串
             if not query or len(query.strip()) == 0:
-                await interaction.followup.send("❌ 請提供有效的連結或搜尋關鍵字", ephemeral=True)
+                embed = discord.Embed(
+                    title="❌ 參數錯誤",
+                    description="請提供有效的連結或搜尋關鍵字",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="正確用法",
+                    value="`/play 歌曲名稱` 或 `/play YouTube連結`",
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
                 return
                 
             if len(query) > 200:
-                await interaction.followup.send("❌ 查詢字串太長，請縮短後再試", ephemeral=True)
+                embed = discord.Embed(
+                    title="❌ 查詢過長",
+                    description="查詢字串太長，請縮短後再試",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="限制",
+                    value="查詢字串不能超過200個字符",
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
                 return
 
             # 確保語音連接
@@ -563,8 +768,53 @@ class Music(commands.Cog):
             player = self.get_player(interaction.guild.id)
             player.retry_count = 0  # 重置重試計數
 
-            # 獲取歌曲資訊
-            song_info = await self.fetch_song_with_retry(query)
+            # 顯示載入訊息
+            loading_embed = discord.Embed(
+                title="🔍 正在搜尋歌曲...",
+                description=f"正在處理：`{query[:50]}{'...' if len(query) > 50 else ''}`",
+                color=discord.Color.blue()
+            )
+            await interaction.followup.send(embed=loading_embed, ephemeral=True)
+
+            # 獲取歌曲資訊（添加超時處理）
+            try:
+                song_info = await asyncio.wait_for(
+                    self.fetch_song_with_retry(query), 
+                    timeout=30.0  # 30秒超時
+                )
+            except asyncio.TimeoutError:
+                embed = discord.Embed(
+                    title="⏰ 搜尋超時",
+                    description="搜尋歌曲時發生超時，請稍後再試",
+                    color=discord.Color.orange()
+                )
+                embed.add_field(
+                    name="可能原因",
+                    value="• 網路連線不穩定\n• YouTube服務繁忙\n• 搜尋關鍵字太複雜",
+                    inline=False
+                )
+                embed.add_field(
+                    name="建議",
+                    value="• 嘗試使用更簡單的關鍵字\n• 直接使用YouTube連結\n• 稍後再試",
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+                return
+            except Exception as e:
+                logger.error(f"[play] 搜尋歌曲失敗: {e}")
+                embed = discord.Embed(
+                    title="❌ 搜尋失敗",
+                    description="搜尋歌曲時發生錯誤",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="錯誤詳情",
+                    value=str(e)[:100] + "..." if len(str(e)) > 100 else str(e),
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+                return
+
             if not song_info:
                 embed = discord.Embed(
                     title="❌ 無法獲取歌曲資訊",
@@ -589,8 +839,24 @@ class Music(commands.Cog):
             player.add({"url": url, "title": title})
 
             if not vc.is_playing() and not vc.is_paused():
-                await self.play_next(vc, interaction.guild.id, interaction)
+                # 開始播放
+                try:
+                    await self.play_next(vc, interaction.guild.id, interaction)
+                except Exception as e:
+                    logger.error(f"[play] 播放失敗: {e}")
+                    embed = discord.Embed(
+                        title="❌ 播放失敗",
+                        description="開始播放時發生錯誤",
+                        color=discord.Color.red()
+                    )
+                    embed.add_field(
+                        name="錯誤詳情",
+                        value=str(e)[:100] + "..." if len(str(e)) > 100 else str(e),
+                        inline=False
+                    )
+                    await interaction.followup.send(embed=embed, ephemeral=True)
             else:
+                # 加入佇列
                 embed = discord.Embed(
                     title="✅ 已加入佇列",
                     description=f"**{title}**",
@@ -601,11 +867,40 @@ class Music(commands.Cog):
                     value=f"第 {len(player.queue)} 首",
                     inline=True
                 )
+                embed.add_field(
+                    name="預估等待時間",
+                    value=f"約 {len(player.queue) * 3} 分鐘",
+                    inline=True
+                )
                 await interaction.followup.send(embed=embed, ephemeral=True)
                 
+        except discord.NotFound:
+            # 互動已失效
+            logger.warning(f"[play] 互動已失效，用戶: {interaction.user.name}")
+        except discord.Forbidden:
+            logger.error(f"[play] 權限不足: {interaction.guild.name}")
         except Exception as e:
             logger.error(f"[play] 播放命令失敗: {e}")
-            await interaction.followup.send(f"❌ 播放失敗：{str(e)}", ephemeral=True)
+            try:
+                embed = discord.Embed(
+                    title="❌ 執行錯誤",
+                    description="播放命令執行時發生未預期的錯誤",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="錯誤詳情",
+                    value=str(e)[:100] + "..." if len(str(e)) > 100 else str(e),
+                    inline=False
+                )
+                embed.add_field(
+                    name="建議",
+                    value="• 檢查網路連線\n• 確認語音頻道權限\n• 稍後再試",
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+            except:
+                # 如果連錯誤訊息都無法發送，記錄到日誌
+                logger.error(f"[play] 無法發送錯誤訊息: {e}")
 
     @app_commands.command(name="volume", description="設定音量 (1-100)")
     @app_commands.describe(level="音量等級")
@@ -958,5 +1253,181 @@ class Music(commands.Cog):
         else:
             await interaction.response.send_message(f"❌ 重新載入失敗: {error}", ephemeral=True)
 
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member, before, after):
+        """監聽語音狀態變化"""
+        try:
+            # 只處理 Bot 的語音狀態變化
+            if member.id != self.bot.user.id:
+                return
+                
+            guild_id = member.guild.id
+            
+            # Bot 被踢出或離開語音頻道
+            if before.channel and not after.channel:
+                logger.info(f"[on_voice_state_update] Bot 離開語音頻道: {before.channel.name}")
+                
+                # 清理播放器
+                if guild_id in self.players:
+                    player = self.players[guild_id]
+                    player.queue.clear()
+                    player.current = None
+                    player.is_paused = False
+                    player.repeat = False
+                    
+                # 重置重連計數
+                self.reconnect_attempts[guild_id] = 0
+                
+            # Bot 加入語音頻道
+            elif not before.channel and after.channel:
+                logger.info(f"[on_voice_state_update] Bot 加入語音頻道: {after.channel.name}")
+                
+                # 重置重連計數
+                self.reconnect_attempts[guild_id] = 0
+                
+            # Bot 移動到不同頻道
+            elif before.channel and after.channel and before.channel != after.channel:
+                logger.info(f"[on_voice_state_update] Bot 移動到頻道: {after.channel.name}")
+                
+        except Exception as e:
+            logger.error(f"[on_voice_state_update] 處理語音狀態變化失敗: {e}")
+
+    @commands.Cog.listener()
+    async def on_voice_client_disconnect(self, voice_client):
+        """處理語音客戶端斷線"""
+        try:
+            guild_id = voice_client.guild.id
+            logger.warning(f"[on_voice_client_disconnect] 語音客戶端斷線: {voice_client.guild.name}")
+            
+            # 檢查是否需要重連
+            if guild_id in self.reconnect_attempts:
+                attempts = self.reconnect_attempts[guild_id]
+                if attempts < self.max_reconnect_attempts:
+                    self.reconnect_attempts[guild_id] = attempts + 1
+                    logger.info(f"[on_voice_client_disconnect] 嘗試重連 {attempts + 1}/{self.max_reconnect_attempts}")
+                    
+                    # 延遲重連
+                    await asyncio.sleep(self.reconnect_delay)
+                    
+                    try:
+                        # 嘗試重新連接
+                        if voice_client.channel:
+                            await voice_client.connect(timeout=20.0, self_deaf=True)
+                            logger.info(f"[on_voice_client_disconnect] 重連成功: {voice_client.guild.name}")
+                            
+                            # 重置重連計數
+                            self.reconnect_attempts[guild_id] = 0
+                            
+                            # 恢復播放
+                            if guild_id in self.players:
+                                player = self.players[guild_id]
+                                if player.current and not voice_client.is_playing():
+                                    await self.play_next(voice_client, guild_id)
+                                    
+                    except Exception as e:
+                        logger.error(f"[on_voice_client_disconnect] 重連失敗: {e}")
+                        if attempts + 1 >= self.max_reconnect_attempts:
+                            logger.error(f"[on_voice_client_disconnect] 重連次數已達上限，停止重連: {voice_client.guild.name}")
+                            
+                            # 清理播放器
+                            if guild_id in self.players:
+                                player = self.players[guild_id]
+                                player.queue.clear()
+                                player.current = None
+                                
+                            # 發送通知到伺服器
+                            try:
+                                # 尋找系統頻道或第一個文字頻道
+                                system_channel = voice_client.guild.system_channel
+                                if not system_channel:
+                                    text_channels = [c for c in voice_client.guild.text_channels if c.permissions_for(voice_client.guild.me).send_messages]
+                                    if text_channels:
+                                        system_channel = text_channels[0]
+                                
+                                if system_channel:
+                                    embed = discord.Embed(
+                                        title="🔌 語音連線中斷",
+                                        description="Bot 語音連線已中斷，無法自動重連",
+                                        color=discord.Color.red()
+                                    )
+                                    embed.add_field(
+                                        name="原因",
+                                        value="• 網路連線不穩定\n• Discord服務問題\n• 重連次數已達上限",
+                                        inline=False
+                                    )
+                                    embed.add_field(
+                                        name="解決方法",
+                                        value="請重新使用 `/join` 命令加入語音頻道",
+                                        inline=False
+                                    )
+                                    await system_channel.send(embed=embed)
+                                    
+                            except Exception as notify_error:
+                                logger.error(f"[on_voice_client_disconnect] 發送通知失敗: {notify_error}")
+                                
+        except Exception as e:
+            logger.error(f"[on_voice_client_disconnect] 處理斷線失敗: {e}")
+
+    async def periodic_cleanup(self):
+        """定期清理任務"""
+        while True:
+            try:
+                await asyncio.sleep(300)  # 每5分鐘執行一次
+                
+                # 清理無效的語音連線
+                for guild in self.bot.guilds:
+                    if guild.voice_client and not guild.voice_client.is_connected():
+                        try:
+                            await guild.voice_client.disconnect()
+                            logger.info(f"[periodic_cleanup] 清理無效語音連線: {guild.name}")
+                        except:
+                            pass
+                
+                # 清理過期的重連計數
+                current_time = time.time()
+                expired_guilds = []
+                for guild_id, last_attempt in self.reconnect_attempts.items():
+                    if current_time - last_attempt > 3600:  # 1小時後清理
+                        expired_guilds.append(guild_id)
+                
+                for guild_id in expired_guilds:
+                    del self.reconnect_attempts[guild_id]
+                    
+            except Exception as e:
+                logger.error(f"[periodic_cleanup] 定期清理失敗: {e}")
+                await asyncio.sleep(60)  # 發生錯誤時等待1分鐘再試
+
+    def save_ffmpeg_config(self, config=None):
+        """保存 FFmpeg 配置"""
+        if config is None:
+            config = self.load_ffmpeg_config()
+        try:
+            with open('ffmpeg_config.json', 'w', encoding='utf-8') as f:
+                json.dump(config, f, indent=2, ensure_ascii=False)
+            logger.info("[Music] FFmpeg 配置保存成功")
+        except Exception as e:
+            logger.error(f"[Music] 保存 FFmpeg 配置失敗: {e}")
+
+    def get_default_ffmpeg_config(self):
+        """取得預設 FFmpeg 配置"""
+        return {
+            "ffmpeg_path": "ffmpeg",
+            "ffmpeg_options": {
+                "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+                "options": "-vn -b:a 128k -bufsize 3072k"
+            }
+        }
+
+    async def _start_cleanup_task(self):
+        """啟動定期清理任務"""
+        if not self._cleanup_task_started:
+            self._cleanup_task_started = True
+            # 直接創建任務，不需要訪問 loop
+            asyncio.create_task(self.periodic_cleanup())
+            logger.info("[Music] 定期清理任務已啟動")
+
 async def setup(bot):
-    await bot.add_cog(Music(bot))
+    cog = Music(bot)
+    await bot.add_cog(cog)
+    # 啟動定期清理任務
+    await cog._start_cleanup_task()

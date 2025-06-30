@@ -22,12 +22,12 @@ class RoleButton(discord.ui.Button):
     async def callback(self, interaction: discord.Interaction):
         user = interaction.user
         guild = interaction.guild
-        
         try:
-            # 檢查用戶是否已有該身分組
+            await interaction.response.defer(thinking=True)
+            action = None
             if self.role in user.roles:
-                # 移除身分組
                 await user.remove_roles(self.role)
+                action = "移除"
                 embed = discord.Embed(
                     title="❌ 身分組已移除",
                     description=f"已移除身分組 **{self.role.name}**",
@@ -35,60 +35,63 @@ class RoleButton(discord.ui.Button):
                 )
                 embed.set_footer(text=f"用戶: {user.display_name}")
             else:
-                # 添加身分組
                 await user.add_roles(self.role)
+                action = "領取"
                 embed = discord.Embed(
                     title="✅ 身分組已分配",
                     description=f"已分配身分組 **{self.role.name}**",
                     color=discord.Color.green()
                 )
                 embed.set_footer(text=f"用戶: {user.display_name}")
-            
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            
-        except discord.Forbidden:
-            # 檢查具體的權限問題
-            bot_member = guild.get_member(interaction.client.user.id)
-            if not bot_member.guild_permissions.manage_roles:
-                error_msg = "❌ 我沒有「管理身分組」權限，請聯繫管理員授予權限"
-            elif self.role.position >= bot_member.top_role.position:
-                error_msg = f"❌ 我無法管理身分組 **{self.role.name}**，因為它的權限等級比我高"
-            else:
-                error_msg = f"❌ 我沒有權限管理身分組 **{self.role.name}**，請聯繫管理員"
-            
-            await interaction.response.send_message(error_msg, ephemeral=True)
-            
-        except discord.HTTPException as e:
-            if e.status == 429:
-                await interaction.response.send_message("❌ 操作過於頻繁，請稍後再試", ephemeral=True)
-            else:
-                logger.error(f"HTTP錯誤 - 身分組操作失敗: {e}")
-                await interaction.response.send_message(f"❌ 網路錯誤 ({e.status})，請稍後再試", ephemeral=True)
-                
+            # 發送公開訊息並於3秒後自動刪除
+            msg = await interaction.followup.send(embed=embed, ephemeral=False)
+            try:
+                await msg.delete(delay=3)
+            except Exception:
+                pass  # 若刪除失敗則忽略
+
+            # role_update_channel 公開通知
+            member_cog = interaction.client.get_cog('MemberCog')
+            if member_cog:
+                guild_id = str(guild.id)
+                channel_id = member_cog.channel_settings.get(guild_id, {}).get('role_update_channel_id')
+                pm_enabled = member_cog.channel_settings.get(guild_id, {}).get('role_update_pm_enabled', False)
+                if channel_id:
+                    channel = guild.get_channel(channel_id) or interaction.client.get_channel(channel_id)
+                    if channel:
+                        notify_embed = discord.Embed(
+                            title="🔔 身分組變動通知",
+                            description=f"用戶: {user.mention}\n動作: {action}身分組 **{self.role.name}**",
+                            color=discord.Color.blue()
+                        )
+                        await channel.send(embed=notify_embed)
+                if pm_enabled:
+                    try:
+                        pm_embed = discord.Embed(
+                            title="🔔 身分組通知",
+                            description=f"你已{action}身分組 **{self.role.name}**",
+                            color=discord.Color.blue()
+                        )
+                        await user.send(embed=pm_embed)
+                    except Exception:
+                        pass
         except Exception as e:
-            logger.error(f"身分組操作失敗: {e}")
-            await interaction.response.send_message(f"❌ 操作失敗：{str(e)}", ephemeral=True)
+            logger.error(f"[RoleButton.callback] 操作失敗: {e}")
+            # 不再嘗試回覆互動，避免多次訊息或已失效錯誤
 
 class PublicRoleSelectionView(discord.ui.View):
     def __init__(self, roles: List[discord.Role], max_buttons_per_row: int = 3):
-        super().__init__(timeout=None)  # 永久有效
-        
-        # 為每個身分組創建按鈕
+        super().__init__(timeout=None)
         for i, role in enumerate(roles):
-            # 計算按鈕樣式和表情符號
             style = discord.ButtonStyle.primary
-            emoji = "🎭"  # 預設表情符號
-            
-            # 根據身分組顏色設定按鈕樣式
+            emoji = "🎭"
             if role.color.value != 0:
-                if role.color.value < 0x800000:  # 深色
+                if role.color.value < 0x800000:
                     style = discord.ButtonStyle.secondary
-                elif role.color.value > 0xFFFF00:  # 亮色
+                elif role.color.value > 0xFFFF00:
                     style = discord.ButtonStyle.success
-            
-            # 創建按鈕
             button = RoleButton(role, role.name, emoji, style)
-            button.row = i // max_buttons_per_row  # 每行最多3個按鈕
+            button.row = i // max_buttons_per_row
             self.add_item(button)
 
 class RoleManager(commands.Cog):
@@ -118,33 +121,24 @@ class RoleManager(commands.Cog):
         description="面板描述（可選）"
     )
     async def create_identify_panel(self, interaction: discord.Interaction, roles: str = None, title: str = "🎭 身分組選擇", description: str = "點擊下方按鈕來選擇或移除身分組"):
-        """創建公開的身分組選擇面板"""
         guild_id = str(interaction.guild.id)
-        
         # 如果沒有提供身分組參數，顯示選擇器介面
         if roles is None:
-            # 創建身分組選擇視圖
             view = RoleSelectionView(interaction.guild, title, description)
-            
             embed = discord.Embed(
                 title="🎭 身分組選擇器",
                 description="請從下方選擇要加入面板的身分組，然後點擊「創建面板」按鈕\n\n或者您也可以直接使用 `/createidentify roles:@身分組1,@身分組2` 的方式",
                 color=discord.Color.blue()
             )
             embed.set_footer(text=f"創建者: {interaction.user.display_name}")
-            
             await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
             return
-        
-        # 解析身分組（支援@身分組和文字名稱）
+        # 解析身分組
         role_items = [item.strip() for item in roles.split(',')]
         found_roles = []
         not_found = []
-        
         for role_item in role_items:
-            # 處理可能包含多個@身分組的情況
             if '<@&' in role_item:
-                # 提取所有身分組ID
                 role_ids = re.findall(r'<@&(\d+)>', role_item)
                 for role_id in role_ids:
                     role = interaction.guild.get_role(int(role_id))
@@ -153,27 +147,19 @@ class RoleManager(commands.Cog):
                     else:
                         not_found.append(f'<@&{role_id}>')
                 continue
-            
             role = None
-            
-            # 檢查是否為@身分組格式（單個）
             if role_item.startswith('<@&') and role_item.endswith('>'):
-                # 提取身分組ID
-                role_id = role_item[3:-1]  # 移除 <@& 和 >
+                role_id = role_item[3:-1]
                 role = interaction.guild.get_role(int(role_id))
             elif role_item.startswith('@'):
-                # 移除@符號，按名稱查找
                 role_name = role_item[1:]
                 role = discord.utils.get(interaction.guild.roles, name=role_name)
             else:
-                # 直接按名稱查找
                 role = discord.utils.get(interaction.guild.roles, name=role_item)
-            
             if role:
                 found_roles.append(role)
             else:
                 not_found.append(role_item)
-        
         if not found_roles:
             embed = discord.Embed(
                 title="❌ 創建失敗",
@@ -193,31 +179,21 @@ class RoleManager(commands.Cog):
                 )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
-        
         try:
-            # 儲存設定
+            await interaction.response.defer(thinking=True)
             if guild_id not in self.role_config:
                 self.role_config[guild_id] = []
-            
-            # 添加新的身分組到配置中（避免重複）
             existing_role_ids = set(self.role_config[guild_id])
             for role in found_roles:
                 if str(role.id) not in existing_role_ids:
                     self.role_config[guild_id].append(str(role.id))
-            
             self.save_role_config()
-            
-            # 創建公開的身分組選擇視圖
             view = PublicRoleSelectionView(found_roles)
-            
-            # 創建公開的嵌入訊息
             embed = discord.Embed(
                 title=title,
                 description=description,
                 color=discord.Color.blue()
             )
-            
-            # 添加身分組資訊
             for role in found_roles:
                 member_count = len(role.members)
                 embed.add_field(
@@ -225,56 +201,24 @@ class RoleManager(commands.Cog):
                     value=f"成員數: {member_count}\n顏色: {str(role.color)}",
                     inline=True
                 )
-            
             embed.set_footer(text=f"創建者: {interaction.user.display_name} | 點擊按鈕切換身分組")
-            
-            # 發送公開訊息
-            await interaction.channel.send(embed=embed, view=view)
-            
-            # 回應管理員
+            panel_message = await interaction.channel.send(embed=embed, view=view)
             response_embed = discord.Embed(
                 title="✅ 身分組面板已創建",
-                description="公開的身分組選擇面板已成功創建！",
+                description="身分組選擇面板已成功創建！",
                 color=discord.Color.green()
             )
-            
             for role in found_roles:
                 response_embed.add_field(name=role.name, value=f"ID: {role.id}", inline=True)
-            
-            if not_found:
-                response_embed.add_field(
-                    name="⚠️ 未找到的身分組",
-                    value=", ".join(not_found),
-                    inline=False
-                )
-            
-            response_embed.set_footer(text=f"創建者: {interaction.user.display_name}")
-            
-            await interaction.response.send_message(embed=response_embed, ephemeral=True)
-            
-        except discord.Forbidden:
-            embed = discord.Embed(
-                title="❌ 創建失敗",
-                description="我沒有權限在當前頻道發送訊息",
-                color=discord.Color.red()
-            )
-            embed.add_field(
-                name="💡 解決方法",
-                value="請確認我有「發送訊息」權限，或選擇其他頻道",
+            response_embed.add_field(
+                name="📋 面板資訊",
+                value=f"• 面板訊息ID: {panel_message.id}\n• 頻道: {interaction.channel.mention}\n• 身分組數量: {len(found_roles)}",
                 inline=False
             )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            
-        except discord.HTTPException as e:
-            if e.status == 429:
-                await interaction.response.send_message("❌ 操作過於頻繁，請稍後再試", ephemeral=True)
-            else:
-                logger.error(f"HTTP錯誤 - 創建面板失敗: {e}")
-                await interaction.response.send_message(f"❌ 網路錯誤 ({e.status})，請稍後再試", ephemeral=True)
-                
+            response_embed.set_footer(text=f"創建者: {interaction.user.display_name}")
+            await interaction.followup.send(embed=response_embed, ephemeral=True)
         except Exception as e:
-            logger.error(f"創建面板失敗: {e}")
-            await interaction.response.send_message(f"❌ 創建失敗：{str(e)}", ephemeral=True)
+            logger.error(f"[create_identify_panel] 發生錯誤: {e}")
 
     @app_commands.command(name="listidentify", description="查看目前可選擇的身分組（管理員限定）")
     @app_commands.checks.has_permissions(manage_roles=True)
@@ -282,21 +226,24 @@ class RoleManager(commands.Cog):
         """列出可選擇的身分組"""
         guild_id = str(interaction.guild.id)
         
-        if guild_id not in self.role_config or not self.role_config[guild_id]:
-            embed = discord.Embed(
-                title="📋 可選擇身分組列表",
-                description="目前沒有設定任何可選擇的身分組",
-                color=discord.Color.orange()
-            )
-            embed.add_field(
-                name="💡 提示",
-                value="使用 `/createidentify` 來創建身分組選擇面板",
-                inline=False
-            )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-        
         try:
+            # 立即回應互動，避免超時
+            await interaction.response.defer(thinking=True)
+            
+            if guild_id not in self.role_config or not self.role_config[guild_id]:
+                embed = discord.Embed(
+                    title="📋 可選擇身分組列表",
+                    description="目前沒有設定任何可選擇的身分組",
+                    color=discord.Color.orange()
+                )
+                embed.add_field(
+                    name="💡 提示",
+                    value="使用 `/createidentify` 來創建身分組選擇面板",
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+                return
+            
             role_ids = self.role_config[guild_id]
             roles = []
             not_found = []
@@ -334,11 +281,24 @@ class RoleManager(commands.Cog):
                     inline=False
                 )
             
-            await interaction.response.send_message(embed=embed, ephemeral=True)
+            await interaction.followup.send(embed=embed, ephemeral=True)
             
         except Exception as e:
             logger.error(f"列出身分組失敗: {e}")
-            await interaction.response.send_message(f"❌ 列出失敗：{str(e)}", ephemeral=True)
+            try:
+                embed = discord.Embed(
+                    title="❌ 列出失敗",
+                    description="列出可選擇身分組時發生錯誤",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="錯誤詳情",
+                    value=str(e)[:100] + "..." if len(str(e)) > 100 else str(e),
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+            except discord.NotFound:
+                logger.error(f"[list_identify_roles] 一般錯誤但互動已失效: {e}")
 
     @app_commands.command(name="clearidentify", description="清空可選擇的身分組（管理員限定）")
     @app_commands.checks.has_permissions(manage_roles=True)
@@ -347,6 +307,9 @@ class RoleManager(commands.Cog):
         guild_id = str(interaction.guild.id)
         
         try:
+            # 立即回應互動，避免超時
+            await interaction.response.defer(thinking=True)
+            
             if guild_id in self.role_config:
                 role_count = len(self.role_config[guild_id])
                 del self.role_config[guild_id]
@@ -365,62 +328,56 @@ class RoleManager(commands.Cog):
                 )
             
             embed.set_footer(text=f"操作者: {interaction.user.display_name}")
-            await interaction.response.send_message(embed=embed, ephemeral=True)
+            await interaction.followup.send(embed=embed, ephemeral=True)
             
         except Exception as e:
             logger.error(f"清空身分組失敗: {e}")
-            await interaction.response.send_message(f"❌ 清空失敗：{str(e)}", ephemeral=True)
+            try:
+                embed = discord.Embed(
+                    title="❌ 清空失敗",
+                    description="清空可選擇身分組時發生錯誤",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="錯誤詳情",
+                    value=str(e)[:100] + "..." if len(str(e)) > 100 else str(e),
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+            except discord.NotFound:
+                logger.error(f"[clear_identify_roles] 一般錯誤但互動已失效: {e}")
 
     @app_commands.command(name="removeidentify", description="移除自己的身分組")
     @app_commands.describe(role="要移除的身分組")
     async def remove_identify_role(self, interaction: discord.Interaction, role: discord.Role):
         """移除自己的身分組"""
         user = interaction.user
-        guild_id = str(interaction.guild.id)
-        
-        # 檢查用戶是否有該身分組
-        if role not in user.roles:
-            embed = discord.Embed(
-                title="❌ 移除失敗",
-                description=f"您沒有身分組 **{role.name}**",
-                color=discord.Color.red()
-            )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-        
-        # 檢查該身分組是否在可選擇清單中
-        if guild_id not in self.role_config:
-            embed = discord.Embed(
-                title="❌ 移除失敗",
-                description="目前沒有設定任何可選擇的身分組",
-                color=discord.Color.red()
-            )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-        
-        role_ids = self.role_config[guild_id]
-        role_id_str = str(role.id)
-        
-        if role_id_str not in role_ids:
-            embed = discord.Embed(
-                title="❌ 移除失敗",
-                description=f"**{role.name}** 不在可選擇清單中",
-                color=discord.Color.red()
-            )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-        
         try:
-            # 移除身分組
+            # 立即回應互動，避免超時
+            await interaction.response.defer(thinking=True)
+
+            # 檢查用戶是否有該身分組
+            if role not in user.roles:
+                embed = discord.Embed(
+                    title="❌ 移除失敗",
+                    description=f"您沒有身分組 **{role.name}**",
+                    color=discord.Color.red()
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+                return
+
+            # 直接移除身分組
             await user.remove_roles(role)
-            
+
             embed = discord.Embed(
                 title="✅ 身分組已移除",
                 description=f"已移除身分組 **{role.name}**",
                 color=discord.Color.green()
             )
             embed.set_footer(text=f"用戶: {user.display_name}")
-            
+
+            await interaction.followup.send(embed=embed, ephemeral=True)
+
         except discord.Forbidden:
             embed = discord.Embed(
                 title="❌ 移除失敗",
@@ -432,16 +389,47 @@ class RoleManager(commands.Cog):
                 value="• 我的權限等級比該身分組低\n• 我沒有「管理身分組」權限\n• 該身分組受到保護",
                 inline=False
             )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
+            try:
+                await interaction.followup.send(embed=embed, ephemeral=True)
+            except discord.NotFound:
+                logger.error(f"[remove_identify_role] 權限錯誤但互動已失效")
+
         except discord.HTTPException as e:
             if e.status == 429:
-                await interaction.response.send_message("❌ 操作過於頻繁，請稍後再試", ephemeral=True)
+                try:
+                    await interaction.followup.send("❌ 操作過於頻繁，請稍後再試", ephemeral=True)
+                except discord.NotFound:
+                    logger.error(f"[remove_identify_role] 速率限制但互動已失效")
             else:
                 logger.error(f"HTTP錯誤 - 移除身分組失敗: {e}")
-                await interaction.response.send_message(f"❌ 網路錯誤 ({e.status})，請稍後再試", ephemeral=True)
+                try:
+                    await interaction.followup.send(f"❌ 網路錯誤 ({e.status})，請稍後再試", ephemeral=True)
+                except discord.NotFound:
+                    logger.error(f"[remove_identify_role] HTTP錯誤但互動已失效: {e}")
+
         except Exception as e:
             logger.error(f"移除身分組失敗: {e}")
-            await interaction.response.send_message(f"❌ 移除失敗：{str(e)}", ephemeral=True)
+            try:
+                embed = discord.Embed(
+                    title="❌ 移除失敗",
+                    description="移除身分組時發生錯誤",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="錯誤詳情",
+                    value=str(e)[:100] + "..." if len(str(e)) > 100 else str(e),
+                    inline=False
+                )
+                embed.add_field(
+                    name="建議",
+                    value="• 檢查網路連線\n• 確認 Bot 權限\n• 稍後再試",
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+            except discord.NotFound:
+                logger.error(f"[remove_identify_role] 一般錯誤但互動已失效: {e}")
+            except Exception as send_error:
+                logger.error(f"[remove_identify_role] 無法發送錯誤訊息: {send_error}")
 
 class RoleSelectionView(discord.ui.View):
     def __init__(self, guild: discord.Guild, title: str, description: str):
@@ -491,29 +479,42 @@ class RoleSelect(discord.ui.Select):
         view = self.view
         view.selected_roles = []
         
-        for role_id in self.values:
-            role = interaction.guild.get_role(int(role_id))
-            if role:
-                view.selected_roles.append(role)
-        
-        # 更新嵌入訊息
-        embed = discord.Embed(
-            title="🎭 身分組選擇器",
-            description=f"已選擇 {len(view.selected_roles)} 個身分組\n點擊「創建面板」按鈕來創建公開面板",
-            color=discord.Color.green()
-        )
-        
-        for role in view.selected_roles:
-            member_count = len(role.members)
-            embed.add_field(
-                name=role.name,
-                value=f"成員數: {member_count}",
-                inline=True
+        try:
+            # 立即回應互動，避免超時
+            await interaction.response.defer(thinking=True)
+            
+            for role_id in self.values:
+                role = interaction.guild.get_role(int(role_id))
+                if role:
+                    view.selected_roles.append(role)
+            
+            # 更新嵌入訊息
+            embed = discord.Embed(
+                title="🎭 身分組選擇器",
+                description=f"已選擇 {len(view.selected_roles)} 個身分組\n點擊「創建面板」按鈕來創建公開面板",
+                color=discord.Color.green()
             )
-        
-        embed.set_footer(text=f"創建者: {interaction.user.display_name}")
-        
-        await interaction.response.edit_message(embed=embed, view=view)
+            
+            for role in view.selected_roles:
+                member_count = len(role.members)
+                embed.add_field(
+                    name=role.name,
+                    value=f"成員數: {member_count}",
+                    inline=True
+                )
+            
+            embed.set_footer(text=f"創建者: {interaction.user.display_name}")
+            
+            await interaction.followup.edit_message(embed=embed, view=view)
+            
+        except discord.NotFound:
+            logger.warning(f"[RoleSelect] 互動已失效，用戶: {interaction.user.name}")
+        except Exception as e:
+            logger.error(f"[RoleSelect] 更新選擇失敗: {e}")
+            try:
+                await interaction.followup.send("❌ 更新選擇失敗，請重試", ephemeral=True)
+            except:
+                pass
 
 class CreatePanelButton(discord.ui.Button):
     def __init__(self, view: RoleSelectionView):
@@ -526,7 +527,11 @@ class CreatePanelButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
         if not self.view.selected_roles:
-            await interaction.response.send_message("❌ 請先選擇至少一個身分組", ephemeral=True)
+            try:
+                await interaction.response.defer(thinking=True)
+                await interaction.followup.send("❌ 請先選擇至少一個身分組", ephemeral=True)
+            except discord.NotFound:
+                logger.warning(f"[CreatePanelButton] 互動已失效，用戶: {interaction.user.name}")
             return
         
         guild_id = str(interaction.guild.id)
@@ -534,10 +539,17 @@ class CreatePanelButton(discord.ui.Button):
         # 獲取cog實例
         cog = interaction.client.get_cog('RoleManager')
         if not cog:
-            await interaction.response.send_message("❌ 系統錯誤：找不到身分組管理器", ephemeral=True)
+            try:
+                await interaction.response.defer(thinking=True)
+                await interaction.followup.send("❌ 系統錯誤：找不到身分組管理器", ephemeral=True)
+            except discord.NotFound:
+                logger.error(f"[CreatePanelButton] 找不到 RoleManager cog")
             return
         
         try:
+            # 立即回應互動，避免超時
+            await interaction.response.defer(thinking=True)
+            
             # 儲存設定
             if guild_id not in cog.role_config:
                 cog.role_config[guild_id] = []
@@ -571,22 +583,28 @@ class CreatePanelButton(discord.ui.Button):
             
             embed.set_footer(text=f"創建者: {interaction.user.display_name} | 點擊按鈕切換身分組")
             
-            # 發送公開訊息
-            await interaction.channel.send(embed=embed, view=public_view)
+            # 發送公開訊息（身分組選擇面板）
+            panel_message = await interaction.channel.send(embed=embed, view=public_view)
             
-            # 回應管理員
+            # 回應管理員（只有管理員可見）
             response_embed = discord.Embed(
                 title="✅ 身分組面板已創建",
-                description="公開的身分組選擇面板已成功創建！",
+                description="身分組選擇面板已成功創建！",
                 color=discord.Color.green()
             )
             
             for role in self.view.selected_roles:
                 response_embed.add_field(name=role.name, value=f"ID: {role.id}", inline=True)
             
+            response_embed.add_field(
+                name="📋 面板資訊",
+                value=f"• 面板訊息ID: {panel_message.id}\n• 頻道: {interaction.channel.mention}\n• 身分組數量: {len(self.view.selected_roles)}",
+                inline=False
+            )
+            
             response_embed.set_footer(text=f"創建者: {interaction.user.display_name}")
             
-            await interaction.response.send_message(embed=response_embed, ephemeral=True)
+            await interaction.followup.send(embed=response_embed, ephemeral=True)
             
         except discord.Forbidden:
             embed = discord.Embed(
@@ -599,18 +617,47 @@ class CreatePanelButton(discord.ui.Button):
                 value="請確認我有「發送訊息」權限，或選擇其他頻道",
                 inline=False
             )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
+            try:
+                await interaction.followup.send(embed=embed, ephemeral=True)
+            except discord.NotFound:
+                logger.error(f"[CreatePanelButton] 權限錯誤但互動已失效")
             
         except discord.HTTPException as e:
             if e.status == 429:
-                await interaction.response.send_message("❌ 操作過於頻繁，請稍後再試", ephemeral=True)
+                try:
+                    await interaction.followup.send("❌ 操作過於頻繁，請稍後再試", ephemeral=True)
+                except discord.NotFound:
+                    logger.error(f"[CreatePanelButton] 速率限制但互動已失效")
             else:
                 logger.error(f"HTTP錯誤 - 創建面板失敗: {e}")
-                await interaction.response.send_message(f"❌ 網路錯誤 ({e.status})，請稍後再試", ephemeral=True)
+                try:
+                    await interaction.followup.send(f"❌ 網路錯誤 ({e.status})，請稍後再試", ephemeral=True)
+                except discord.NotFound:
+                    logger.error(f"[CreatePanelButton] HTTP錯誤但互動已失效: {e}")
                 
         except Exception as e:
             logger.error(f"創建面板失敗: {e}")
-            await interaction.response.send_message(f"❌ 創建失敗：{str(e)}", ephemeral=True)
+            try:
+                embed = discord.Embed(
+                    title="❌ 創建失敗",
+                    description="創建身分組面板時發生錯誤",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="錯誤詳情",
+                    value=str(e)[:100] + "..." if len(str(e)) > 100 else str(e),
+                    inline=False
+                )
+                embed.add_field(
+                    name="建議",
+                    value="• 檢查網路連線\n• 確認 Bot 權限\n• 稍後再試",
+                    inline=False
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+            except discord.NotFound:
+                logger.error(f"[CreatePanelButton] 一般錯誤但互動已失效: {e}")
+            except Exception as send_error:
+                logger.error(f"[CreatePanelButton] 無法發送錯誤訊息: {send_error}")
 
 async def setup(bot):
     await bot.add_cog(RoleManager(bot)) 

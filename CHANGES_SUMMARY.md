@@ -9,6 +9,8 @@
 - **用戶體驗提升**: 將模糊的錯誤訊息改為詳細、友善的嵌入訊息
 - **Cog 載入問題修復**: 解決 cog 重複載入和名稱衝突問題
 - **輸入驗證加強**: 為所有命令添加參數驗證和權限檢查
+- **網路連線穩定性修復**: 解決音樂播放和語音連線的網路超時問題
+- **互動超時處理**: 修復 Discord 互動超時導致的錯誤
 
 #### 📋 詳細更新內容
 
@@ -37,7 +39,28 @@
 - ✅ JSON 解析錯誤處理
 - ✅ 詳細的錯誤日誌記錄
 
-##### 2. 用戶體驗提升
+##### 2. 網路連線穩定性修復
+**音樂播放系統修復:**
+- 🔧 修復 `TimeoutError` 網路超時問題
+- ⏰ 添加 30 秒搜尋超時限制
+- 🔄 實現指數退避重試機制
+- 🛡️ 添加互動超時保護
+- 📊 改進錯誤訊息顯示
+
+**語音連線穩定性:**
+- 🔌 修復語音客戶端斷線問題
+- 🔄 添加自動重連機制 (最多3次)
+- ⏱️ 實現智能重連延遲
+- 🧹 定期清理無效連線
+- 📢 斷線時自動通知用戶
+
+**互動超時處理:**
+- ⚡ 修復 Discord 互動超時錯誤
+- 🛡️ 添加 `discord.NotFound` 錯誤處理
+- 🔄 實現互動狀態檢查
+- 📝 改進錯誤日誌記錄
+
+##### 3. 用戶體驗提升
 **錯誤訊息改進:**
 - 🔄 從簡單文字錯誤改為詳細的 Discord Embed
 - 🎨 使用顏色編碼區分不同類型的錯誤
@@ -49,7 +72,20 @@
 - 📊 添加操作結果統計
 - 🎯 提供後續操作建議
 
-##### 3. 權限系統優化
+**載入狀態顯示:**
+- 🔍 音樂搜尋時顯示載入訊息
+- ⏳ 添加進度指示器
+- 📈 預估等待時間顯示
+
+**猜數字遊戲改進:**
+- 🗑️ 刪除 `/猜` 命令，改用回覆方式
+- 💬 直接回覆 Bot 訊息即可猜測數字
+- 🎯 更直觀的遊戲體驗
+- 🏆 支援多人參與自定義遊戲
+- 📝 改進遊戲規則說明
+- 🎨 美化遊戲介面和訊息
+
+##### 4. 權限系統優化
 **管理員權限檢查:**
 - 🔒 加強管理員權限驗證
 - 👥 支援自定義管理員角色
@@ -60,7 +96,7 @@
 - 📋 提供權限不足時的具體提示
 - 🔧 自動處理權限相關錯誤
 
-##### 4. 輸入驗證系統
+##### 5. 輸入驗證系統
 **參數驗證:**
 - 📏 字串長度限制檢查
 - 🔢 數值範圍驗證
@@ -73,7 +109,7 @@
 - 🔍 惡意內容檢測
 - 🛡️ 垃圾訊息防護
 
-##### 5. 日誌系統改進
+##### 6. 日誌系統改進
 **詳細日誌記錄:**
 - 📝 操作成功/失敗記錄
 - 👤 用戶行為追蹤
@@ -87,7 +123,7 @@
 - ℹ️ 資訊日誌 (INFO)
 - 🔍 除錯日誌 (DEBUG)
 
-##### 6. 穩定性改進
+##### 7. 穩定性改進
 **記憶體管理:**
 - 🧹 自動清理暫存數據
 - 💾 優化檔案讀寫操作
@@ -98,10 +134,26 @@
 - ⏱️ 連線超時處理
 - 🛡️ 網路錯誤恢復
 
+**配置管理:**
+- ⚙️ 新增音樂配置系統
+- 🔧 改進 FFmpeg 配置管理
+- 📁 統一配置檔案格式
+
 #### 🎯 技術改進
 
 ##### 錯誤處理模式
 ```python
+try:
+    # 先回應互動，避免超時
+    await interaction.response.defer(thinking=True)
+except discord.NotFound:
+    # 如果互動已經超時，直接返回
+    logger.warning(f"[command] 互動已超時，用戶: {interaction.user.name}")
+    return
+except Exception as e:
+    logger.error(f"[command] 回應互動失敗: {e}")
+    return
+
 try:
     # 主要操作邏輯
     result = await perform_operation()
@@ -114,14 +166,18 @@ try:
     )
     await interaction.followup.send(embed=embed)
     
-except ValueError as e:
-    # 輸入錯誤處理
+except asyncio.TimeoutError:
+    # 超時錯誤處理
     embed = discord.Embed(
-        title="❌ 輸入錯誤",
-        description=f"請檢查輸入格式：{str(e)}",
-        color=discord.Color.red()
+        title="⏰ 操作超時",
+        description="操作執行時間過長，請稍後再試",
+        color=discord.Color.orange()
     )
     await interaction.followup.send(embed=embed)
+    
+except discord.NotFound:
+    # 互動已失效
+    logger.warning(f"[command] 互動已失效，用戶: {interaction.user.name}")
     
 except discord.Forbidden:
     # 權限錯誤處理
@@ -143,27 +199,28 @@ except Exception as e:
     await interaction.followup.send(embed=embed)
 ```
 
-##### 輸入驗證模式
+##### 語音連線重連機制
 ```python
-# 參數驗證
-if not parameter:
-    embed = discord.Embed(
-        title="❌ 參數缺失",
-        description="請提供必要的參數",
-        color=discord.Color.red()
-    )
-    await interaction.followup.send(embed=embed)
-    return
-
-# 權限檢查
-if not self.is_admin(interaction.user):
-    embed = discord.Embed(
-        title="❌ 權限不足",
-        description="您需要管理員權限才能使用此命令",
-        color=discord.Color.red()
-    )
-    await interaction.followup.send(embed=embed)
-    return
+@commands.Cog.listener()
+async def on_voice_client_disconnect(self, voice_client):
+    """處理語音客戶端斷線"""
+    try:
+        guild_id = voice_client.guild.id
+        attempts = self.reconnect_attempts.get(guild_id, 0)
+        
+        if attempts < self.max_reconnect_attempts:
+            self.reconnect_attempts[guild_id] = attempts + 1
+            await asyncio.sleep(self.reconnect_delay)
+            
+            try:
+                await voice_client.connect(timeout=20.0, self_deaf=True)
+                self.reconnect_attempts[guild_id] = 0  # 重置計數
+                logger.info(f"重連成功: {voice_client.guild.name}")
+            except Exception as e:
+                logger.error(f"重連失敗: {e}")
+                
+    except Exception as e:
+        logger.error(f"處理斷線失敗: {e}")
 ```
 
 #### 📈 性能改進
@@ -171,18 +228,21 @@ if not self.is_admin(interaction.user):
 - 🧹 優化記憶體使用
 - 🔄 改善錯誤恢復速度
 - 📊 添加性能監控
+- 🔄 實現智能重試機制
 
 #### 🔧 維護性改進
 - 📝 統一的錯誤處理模式
 - 🎯 模組化的驗證函數
 - 🔍 詳細的日誌記錄
 - 📚 完整的錯誤代碼文檔
+- ⚙️ 配置檔案管理系統
 
 #### 🚀 未來計劃
 - 🔄 自動錯誤報告系統
 - 📊 用戶行為分析
 - 🛡️ 進階安全功能
 - 🎮 更多遊戲功能
+- 🌐 網路連線優化
 
 ---
 
@@ -324,3 +384,121 @@ Akane-Ko/
 5. 測試網頁端點是否能正常訪問
 6. 檢查日誌檔案是否正常生成
 7. 測試 Discord Bot 是否能正常連接 
+
+### 🔧 身分組管理器 (role_manager.py) - 互動超時修復
+- **修復身分組按鈕互動超時問題**
+  - 添加 `interaction.response.defer()` 立即回應，避免 3 秒超時
+  - 使用 `interaction.followup.send()` 替代 `interaction.response.send_message()`
+  - 添加 `discord.NotFound` 異常處理，處理互動已失效的情況
+  - 改進錯誤訊息格式，提供更詳細的錯誤資訊和建議
+
+- **修復身分組選擇器互動問題**
+  - 修復 `RoleSelect` 回調函數的互動超時
+  - 修復 `CreatePanelButton` 的互動處理
+  - 添加完整的錯誤處理和日誌記錄
+
+- **修復命令互動問題**
+  - 修復 `/createidentify` 命令的互動超時
+  - 修復 `/listidentify` 命令的互動處理
+  - 修復 `/clearidentify` 命令的錯誤處理
+  - 修復 `/removeidentify` 命令的互動回應
+
+- **改進錯誤處理機制**
+  - 添加分層錯誤處理：權限錯誤、HTTP錯誤、一般錯誤
+  - 每個錯誤類型都有專門的處理邏輯
+  - 添加詳細的日誌記錄，便於除錯
+  - 提供用戶友好的錯誤訊息和解決建議
+
+- **隱私保護改進**
+  - 所有身分組操作回應都設為 `ephemeral=True`（只有自己可見）
+  - 創建面板完成通知只對管理員可見
+  - 添加面板資訊（訊息ID、頻道、身分組數量）到管理員通知
+  - 保持身分組選擇面板公開（用戶需要看到才能選擇）
+
+- **穩定性提升**
+  - 所有互動操作都有適當的超時處理
+  - 添加網路錯誤重試機制
+  - 改進身分組操作的可靠性
+  - 防止因互動超時導致的「此交互失敗」錯誤
+
+### 🎮 猜數字遊戲 (minigames.py) - 回覆式猜測系統
+- **移除 `/猜` 命令**
+  - 刪除原有的斜線命令猜測功能
+  - 簡化命令結構，避免重複功能
+
+- **實現回覆式猜測系統**
+  - 用戶使用 `/猜數字` 開始遊戲
+  - 用戶回覆機器人的遊戲訊息來猜測數字
+  - 機器人檢查回覆內容並提供提示
+  - 支援多種數字格式：純數字、包含數字的文字
+
+- **改進用戶體驗**
+  - 清晰的遊戲說明和操作指引
+  - 即時反饋和提示訊息
+  - 遊戲狀態追蹤和管理
+  - 自動清理過期遊戲
+
+- **增強錯誤處理**
+  - 處理無效回覆和格式錯誤
+  - 防止重複猜測和作弊行為
+  - 改進互動超時處理
+  - 添加詳細的錯誤日誌
+
+### 🎵 音樂播放器 (music.py) - 穩定性提升
+- **修復播放命令超時問題**
+  - 添加 `interaction.response.defer()` 立即回應
+  - 實現分階段回應機制
+  - 改進錯誤處理和用戶反饋
+
+- **修復 Cog 載入錯誤**
+  - 修復 `AttributeError: loop attribute cannot be accessed in non-async contexts` 錯誤
+  - 將異步任務創建從 `__init__` 移到 `setup` 函數
+  - 添加 `_start_cleanup_task()` 方法來安全啟動清理任務
+  - 改進異步初始化流程
+
+- **增強語音連接穩定性**
+  - 添加自動重連機制
+  - 改進連接狀態檢查
+  - 添加清理任務防止記憶體洩漏
+
+- **改進錯誤處理**
+  - 處理網路延遲和連接問題
+  - 添加重試機制
+  - 提供更詳細的錯誤訊息
+
+### 🔧 其他改進
+- **日誌系統優化**
+  - 添加更詳細的錯誤日誌
+  - 改進日誌格式和分類
+  - 便於除錯和問題追蹤
+
+- **代碼結構優化**
+  - 統一錯誤處理模式
+  - 改進代碼可讀性
+  - 添加適當的註釋和文檔
+
+- **用戶體驗提升**
+  - 更清晰的錯誤訊息
+  - 改進操作指引
+  - 減少用戶困惑
+
+---
+
+## 技術細節
+
+### 互動超時修復原理
+1. **立即回應**: 使用 `interaction.response.defer()` 在 3 秒內回應 Discord
+2. **分階段處理**: 先回應，再執行實際操作
+3. **錯誤處理**: 處理各種可能的錯誤情況
+4. **用戶反饋**: 提供清晰的狀態和錯誤訊息
+
+### 回覆式猜測系統設計
+1. **遊戲初始化**: `/猜數字` 命令創建遊戲狀態
+2. **回覆檢測**: 監聽對遊戲訊息的回覆
+3. **內容解析**: 提取回覆中的數字
+4. **狀態管理**: 追蹤遊戲進度和結果
+
+### 穩定性改進
+1. **連接管理**: 自動處理語音連接問題
+2. **錯誤恢復**: 從各種錯誤狀態中恢復
+3. **資源清理**: 防止記憶體洩漏和資源浪費 

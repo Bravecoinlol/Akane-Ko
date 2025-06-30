@@ -109,29 +109,33 @@ class MemberCog(commands.Cog):
         except Exception as e:
             logger.error(f"[Member] 錯誤處理失敗: {e}")
 
-    @app_commands.command(name="setchannel", description="設定歡迎/離開頻道或管理頻道")
+    @app_commands.command(name="setchannel", description="設定歡迎/離開頻道或管理頻道/身分組更新頻道")
     @app_commands.checks.has_permissions(administrator=True)
     @app_commands.describe(type="選擇頻道用途", channel="指定的頻道")
     @app_commands.choices(type=[
         app_commands.Choice(name="歡迎與離開頻道", value="welcome_leave"),
-        app_commands.Choice(name="管理頻道", value="admin")
+        app_commands.Choice(name="管理頻道", value="admin"),
+        app_commands.Choice(name="身分組更新頻道", value="role_update")
     ])
     async def set_channel(self, interaction: discord.Interaction, type: app_commands.Choice[str], channel: discord.TextChannel):
         try:
             guild_id = str(interaction.guild.id)
             if guild_id not in self.channel_settings:
                 self.channel_settings[guild_id] = {}
-
             self.channel_settings[guild_id][f"{type.value}_channel_id"] = channel.id
             self.save_settings()
-            
+            # 顯示正確的中文名稱
+            type_display = {
+                "welcome_leave": "歡迎與離開頻道",
+                "admin": "管理頻道",
+                "role_update": "身分組更新頻道"
+            }.get(type.value, type.name)
             embed = discord.Embed(
                 title="✅ 頻道設定成功",
-                description=f"已設定 `{type.name}` 為 {channel.mention}",
+                description=f"已設定 `{type_display}` 為 {channel.mention}",
                 color=discord.Color.green()
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
-            
         except Exception as e:
             logger.error(f"[Member] 設定頻道失敗: {e}")
             embed = discord.Embed(
@@ -315,7 +319,33 @@ class MemberCog(commands.Cog):
                 color=discord.Color.red()
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
-    
+
+    @app_commands.command(name="setroleupdatepm", description="設定是否啟用身分組變動時的私訊通知（管理員限定）")
+    @app_commands.checks.has_permissions(administrator=True)
+    @app_commands.describe(enable="是否啟用私訊通知（true/false）")
+    async def setroleupdatepm(self, interaction: discord.Interaction, enable: bool):
+        try:
+            guild_id = str(interaction.guild.id)
+            if guild_id not in self.channel_settings:
+                self.channel_settings[guild_id] = {}
+            self.channel_settings[guild_id]['role_update_pm_enabled'] = enable
+            self.save_settings()
+            status = "✅ 已啟用" if enable else "❌ 已停用"
+            embed = discord.Embed(
+                title="身分組私訊通知設定",
+                description=f"{status} 身分組變動時的私訊通知",
+                color=discord.Color.green() if enable else discord.Color.red()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+        except Exception as e:
+            logger.error(f"[Member] 設定身分組私訊通知失敗: {e}")
+            embed = discord.Embed(
+                title="❌ 設定失敗",
+                description="設定身分組私訊通知時發生錯誤，請稍後再試",
+                color=discord.Color.red()
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+
     @commands.Cog.listener()
     async def on_member_remove(self, member):
         """成員離開時的事件"""

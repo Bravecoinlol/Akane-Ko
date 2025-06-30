@@ -175,57 +175,253 @@ class MiniGames(commands.Cog):
         app_commands.Choice(name="自定義數字", value="custom")
     ])
     async def guess_number(self, interaction: discord.Interaction, mode: app_commands.Choice[str] = None):
-        if mode is None:
-            # 如果沒有選擇模式，預設為隨機模式
-            mode = app_commands.Choice(name="隨機數字 (1-100)", value="random")
-        
-        if mode.value == "random":
-            # 隨機數字模式
-            number = random.randint(1, 100)
-            self.guess_numbers[interaction.user.id] = number
-            await interaction.response.send_message(f"{interaction.user.mention} 選好一個 1～100 的隨機數字了，請直接輸入 `/猜 <數字>` 來猜喔！")
-        else:
-            # 自定義數字模式
-            # 創建一個選擇數字的視圖
-            view = CustomNumberView(interaction.user, self)
-            await interaction.response.send_message(f"{interaction.user.mention} 請選擇你要設定的數字（1-100）：", view=view)
+        try:
+            if mode is None or mode.value == "random":
+                # 隨機數字模式
+                number = random.randint(1, 100)
+                self.guess_numbers[interaction.user.id] = number
+                
+                embed = discord.Embed(
+                    title="🎲 猜數字遊戲開始！",
+                    description="我已經想好了一個 1-100 之間的數字",
+                    color=discord.Color.blue()
+                )
+                embed.add_field(
+                    name="遊戲規則",
+                    value="• 回覆這則訊息並輸入你猜的數字\n• 我會告訴你猜的數字是太大還是太小\n• 猜對就贏了！",
+                    inline=False
+                )
+                embed.add_field(
+                    name="開始猜測",
+                    value="請回覆這則訊息並輸入你的猜測數字",
+                    inline=False
+                )
+                embed.set_footer(text="遊戲會持續到猜對為止")
+                
+                await interaction.response.send_message(embed=embed)
+                
+            elif mode.value == "custom":
+                # 自定義數字模式
+                if interaction.channel_id in self.custom_numbers:
+                    await interaction.response.send_message("❌ 此頻道已有進行中的自定義猜數字遊戲！", ephemeral=True)
+                    return
+                
+                view = CustomNumberView(interaction.user, self)
+                embed = discord.Embed(
+                    title="🎯 自定義猜數字遊戲",
+                    description="請選擇數字範圍，然後設定正確答案",
+                    color=discord.Color.green()
+                )
+                embed.add_field(
+                    name="遊戲設定",
+                    value="• 選擇數字範圍\n• 設定正確答案\n• 其他玩家可以猜測",
+                    inline=False
+                )
+                await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+                
+        except Exception as e:
+            logger.error(f"[guess_number] 開始猜數字遊戲失敗: {e}")
+            try:
+                embed = discord.Embed(
+                    title="❌ 遊戲啟動失敗",
+                    description="開始猜數字遊戲時發生錯誤",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="錯誤詳情",
+                    value=str(e)[:100] + "..." if len(str(e)) > 100 else str(e),
+                    inline=False
+                )
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+            except:
+                logger.error(f"[guess_number] 無法發送錯誤訊息: {e}")
 
-    @app_commands.command(name="猜", description="猜一個數字")
-    @app_commands.describe(guess="你猜的數字")
-    async def make_guess(self, interaction: discord.Interaction, guess: int):
-        # 檢查是否在自定義數字遊戲中
-        custom_game = self.custom_numbers.get(interaction.channel_id)
-        if custom_game:
-            # 自定義數字遊戲
-            number = custom_game['number']
-            host = custom_game['host']
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        """監聽訊息來處理猜數字遊戲"""
+        try:
+            # 忽略 Bot 訊息
+            if message.author.bot:
+                return
+                
+            # 檢查是否為回覆訊息
+            if not message.reference:
+                return
+                
+            # 獲取被回覆的訊息
+            try:
+                replied_message = await message.channel.fetch_message(message.reference.message_id)
+            except:
+                return
+                
+            # 檢查被回覆的訊息是否為 Bot 的猜數字遊戲訊息
+            if replied_message.author.id != self.bot.user.id:
+                return
+                
+            # 檢查訊息內容是否包含猜數字遊戲相關內容
+            if not any(keyword in replied_message.content.lower() for keyword in ["猜數字", "數字遊戲", "猜測數字", "遊戲開始", "想好了一個"]):
+                return
+                
+            # 嘗試解析數字
+            try:
+                guess = int(message.content.strip())
+            except ValueError:
+                embed = discord.Embed(
+                    title="❌ 輸入錯誤",
+                    description="請輸入有效的數字",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="正確格式",
+                    value="直接輸入數字，例如：`50`",
+                    inline=False
+                )
+                await message.reply(embed=embed, mention_author=False)
+                return
+                
+            # 處理猜數字邏輯
+            await self.process_guess(message, guess, replied_message)
             
+        except Exception as e:
+            logger.error(f"[on_message] 處理猜數字回覆失敗: {e}")
+
+    async def process_guess(self, message, guess, game_message):
+        """處理猜數字邏輯"""
+        try:
+            # 檢查是否在自定義數字遊戲中
+            custom_game = self.custom_numbers.get(message.channel.id)
+            if custom_game:
+                number = custom_game['number']
+                if guess == number:
+                    embed = discord.Embed(
+                        title="🎉 恭喜猜對了！",
+                        description=f"**{message.author.mention}** 猜對了！正確答案是：**{number}**",
+                        color=discord.Color.green()
+                    )
+                    embed.add_field(
+                        name="遊戲結束",
+                        value="自定義猜數字遊戲已結束",
+                        inline=False
+                    )
+                    embed.set_footer(text=f"獲勝者: {message.author.display_name}")
+                    del self.custom_numbers[message.channel.id]
+                    await message.reply(embed=embed, mention_author=False)
+                    return
+                elif guess < number:
+                    embed = discord.Embed(
+                        title="📈 太小了！",
+                        description=f"**{message.author.mention}** 猜的 **{guess}** 太小了",
+                        color=discord.Color.blue()
+                    )
+                    embed.add_field(
+                        name="提示",
+                        value="試試更大的數字",
+                        inline=False
+                    )
+                    await message.reply(embed=embed, mention_author=False)
+                    return
+                else:
+                    embed = discord.Embed(
+                        title="📉 太大了！",
+                        description=f"**{message.author.mention}** 猜的 **{guess}** 太大了",
+                        color=discord.Color.orange()
+                    )
+                    embed.add_field(
+                        name="提示",
+                        value="試試更小的數字",
+                        inline=False
+                    )
+                    await message.reply(embed=embed, mention_author=False)
+                    return
+
+            # 檢查是否在個人隨機數字遊戲中
+            if message.author.id not in self.guess_numbers:
+                embed = discord.Embed(
+                    title="❌ 沒有進行中的遊戲",
+                    description="請先使用 `/猜數字` 開始遊戲",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="如何開始",
+                    value="使用 `/猜數字` 命令開始新的遊戲",
+                    inline=False
+                )
+                await message.reply(embed=embed, mention_author=False)
+                return
+
+            number = self.guess_numbers[message.author.id]
+            
+            # 檢查猜測範圍
+            if guess < 1 or guess > 100:
+                embed = discord.Embed(
+                    title="❌ 數字範圍錯誤",
+                    description="請猜測 1-100 之間的數字",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="正確範圍",
+                    value="1 到 100 之間的整數",
+                    inline=False
+                )
+                await message.reply(embed=embed, mention_author=False)
+                return
+        
             if guess == number:
-                await interaction.response.send_message(f"🎉 恭喜 {interaction.user.mention} 猜對了！數字是 {number}！")
-                # 記錄勝場
-                self.leaderboard_manager.add_win('guess_number', interaction.user.id)
-                # 清除自定義遊戲
-                del self.custom_numbers[interaction.channel_id]
+                embed = discord.Embed(
+                    title="🎉 恭喜你猜對了！",
+                    description=f"**{message.author.mention}** 猜對了！正確答案是：**{number}**",
+                    color=discord.Color.green()
+                )
+                embed.add_field(
+                    name="遊戲結束",
+                    value="猜數字遊戲已結束",
+                    inline=False
+                )
+                embed.set_footer(text=f"獲勝者: {message.author.display_name}")
+                del self.guess_numbers[message.author.id]
+                self.leaderboard_manager.add_win('guess_number', message.author.id)
+                await message.reply(embed=embed, mention_author=False)
             elif guess < number:
-                await interaction.response.send_message("太小了！")
+                embed = discord.Embed(
+                    title="📈 太小了！",
+                    description=f"**{message.author.mention}** 猜的 **{guess}** 太小了",
+                    color=discord.Color.blue()
+                )
+                embed.add_field(
+                    name="提示",
+                    value="試試更大的數字",
+                    inline=False
+                )
+                await message.reply(embed=embed, mention_author=False)
             else:
-                await interaction.response.send_message("太大了！")
-            return
-        
-        # 檢查個人隨機數字遊戲
-        number = self.guess_numbers.get(interaction.user.id)
-        if number is None:
-            await interaction.response.send_message("你還沒開始猜數字遊戲喔！請先輸入 `/猜數字`。", ephemeral=True)
-            return
-        
-        if guess == number:
-            await interaction.response.send_message("🎉 恭喜你猜對了！")
-            del self.guess_numbers[interaction.user.id]
-            self.leaderboard_manager.add_win('guess_number', interaction.user.id)
-        elif guess < number:
-            await interaction.response.send_message("太小了！")
-        else:
-            await interaction.response.send_message("太大了！")
+                embed = discord.Embed(
+                    title="📉 太大了！",
+                    description=f"**{message.author.mention}** 猜的 **{guess}** 太大了",
+                    color=discord.Color.orange()
+                )
+                embed.add_field(
+                    name="提示",
+                    value="試試更小的數字",
+                    inline=False
+                )
+                await message.reply(embed=embed, mention_author=False)
+                
+        except Exception as e:
+            logger.error(f"[process_guess] 處理猜數字失敗: {e}")
+            try:
+                embed = discord.Embed(
+                    title="❌ 處理錯誤",
+                    description="處理猜數字時發生錯誤",
+                    color=discord.Color.red()
+                )
+                embed.add_field(
+                    name="錯誤詳情",
+                    value=str(e)[:100] + "..." if len(str(e)) > 100 else str(e),
+                    inline=False
+                )
+                await message.reply(embed=embed, mention_author=False)
+            except:
+                logger.error(f"[process_guess] 無法發送錯誤訊息: {e}")
 
     @app_commands.command(name="結束猜數字", description="結束當前的自定義猜數字遊戲")
     async def end_guess_number(self, interaction: discord.Interaction):
@@ -620,24 +816,18 @@ class CustomNumberView(discord.ui.View):
         super().__init__(timeout=60)
         self.user = user
         self.cog = cog
-        self.selected_number = None
-        self.message = None
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        if interaction.user.id != self.user.id:
-            await interaction.response.send_message("只有遊戲主持人才能選擇數字！", ephemeral=True)
-            return False
-        return True
+        return interaction.user.id == self.user.id
 
     async def on_timeout(self):
         # 超時處理
-        for child in self.children:
-            child.disabled = True
         try:
-            if self.message:
-                await self.message.edit(content="⏰ 選擇數字超時，遊戲取消！", view=self)
-        except:
-            pass
+            for child in self.children:
+                child.disabled = True
+            await self.message.edit(content="⏰ 設定超時，自定義猜數字遊戲已取消", view=self)
+        except Exception as e:
+            logger.error(f"[CustomNumberView] 超時處理失敗: {e}")
 
     @discord.ui.button(label="1-20", style=discord.ButtonStyle.primary, row=0)
     async def range_1_20(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -662,9 +852,18 @@ class CustomNumberView(discord.ui.View):
     async def show_number_selector(self, interaction: discord.Interaction, start: int, end: int):
         # 創建數字選擇器
         view = NumberSelectorView(self.user, self.cog, start, end)
-        await interaction.response.edit_message(content=f"請選擇 {start}-{end} 範圍內的數字：", view=view)
+        embed = discord.Embed(
+            title=f"🎯 選擇數字 ({start}-{end})",
+            description=f"請選擇 {start} 到 {end} 之間的數字作為正確答案",
+            color=discord.Color.blue()
+        )
+        embed.add_field(
+            name="遊戲說明",
+            value="設定完成後，其他玩家可以回覆遊戲訊息來猜測數字",
+            inline=False
+        )
+        await interaction.response.edit_message(embed=embed, view=view)
 
-# 數字選擇器視圖
 class NumberSelectorView(discord.ui.View):
     def __init__(self, user: discord.User, cog, start: int, end: int):
         super().__init__(timeout=60)
@@ -672,19 +871,16 @@ class NumberSelectorView(discord.ui.View):
         self.cog = cog
         self.start = start
         self.end = end
-        self.message = None
         self.create_buttons()
 
     def create_buttons(self):
         # 清除現有按鈕
         self.clear_items()
         
-        # 創建數字按鈕（每行最多5個）
-        buttons_per_row = 5
-        
+        # 創建數字按鈕 (每行5個)
+        numbers_per_row = 5
         for i in range(self.start, self.end + 1):
-            row = (i - self.start) // buttons_per_row
-            
+            row = (i - self.start) // numbers_per_row
             button = discord.ui.Button(
                 label=str(i),
                 style=discord.ButtonStyle.secondary,
@@ -695,38 +891,53 @@ class NumberSelectorView(discord.ui.View):
 
     def create_callback(self, number: int):
         async def callback(interaction: discord.Interaction):
-            if interaction.user.id != self.user.id:
-                await interaction.response.send_message("這不是你的遊戲！", ephemeral=True)
-                return
-            
-            # 設定自定義數字遊戲
-            self.cog.custom_numbers[interaction.channel_id] = {
-                'number': number,
-                'host': self.user.id
-            }
-            
-            await interaction.response.edit_message(
-                content=f"🎯 {self.user.mention} 已設定數字為 **{number}**！\n其他人可以使用 `/猜 <數字>` 來猜這個數字！",
-                view=None
-            )
+            try:
+                # 設定自定義數字
+                self.cog.custom_numbers[interaction.channel_id] = {
+                    'number': number,
+                    'host': self.user.id
+                }
+                
+                embed = discord.Embed(
+                    title="🎯 自定義猜數字遊戲已設定！",
+                    description=f"**{self.user.mention}** 已設定正確答案",
+                    color=discord.Color.green()
+                )
+                embed.add_field(
+                    name="遊戲規則",
+                    value="• 回覆這則訊息並輸入你猜的數字\n• 我會告訴你猜的數字是太大還是太小\n• 猜對就贏了！",
+                    inline=False
+                )
+                embed.add_field(
+                    name="開始猜測",
+                    value="請回覆這則訊息並輸入你的猜測數字",
+                    inline=False
+                )
+                embed.set_footer(text=f"主持人: {self.user.display_name}")
+                
+                # 禁用所有按鈕
+                for child in self.children:
+                    child.disabled = True
+                
+                await interaction.response.edit_message(embed=embed, view=self)
+                
+            except Exception as e:
+                logger.error(f"[NumberSelectorView] 設定數字失敗: {e}")
+                await interaction.response.send_message(f"❌ 設定數字失敗：{str(e)}", ephemeral=True)
         
         return callback
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        if interaction.user.id != self.user.id:
-            await interaction.response.send_message("只有遊戲主持人才能選擇數字！", ephemeral=True)
-            return False
-        return True
+        return interaction.user.id == self.user.id
 
     async def on_timeout(self):
         # 超時處理
-        for child in self.children:
-            child.disabled = True
         try:
-            if self.message:
-                await self.message.edit(content="⏰ 選擇數字超時，遊戲取消！", view=self)
-        except:
-            pass
+            for child in self.children:
+                child.disabled = True
+            await self.message.edit(content="⏰ 選擇超時，自定義猜數字遊戲已取消", view=self)
+        except Exception as e:
+            logger.error(f"[NumberSelectorView] 超時處理失敗: {e}")
 
 async def setup(bot):
     await bot.add_cog(MiniGames(bot))
