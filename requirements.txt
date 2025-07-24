@@ -12,6 +12,6 @@ discord.py[voice]
 async-timeout>=4.0.0
 requests>=2.31.0
 schedule>=1.2.0
-matplotlib>=3.8.0
 qrcode[pil]
 pytz
+matplotlib

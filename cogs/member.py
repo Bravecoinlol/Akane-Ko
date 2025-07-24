@@ -464,36 +464,94 @@ class MemberCog(commands.Cog):
         except Exception as e:
             logger.error(f"[Member] on_member_join 發生錯誤: {e}")
 
+    def load_welcome_card_config(self):
+        """載入歡迎卡片配置"""
+        try:
+            config_path = 'welcome_card_config.json'
+            if os.path.exists(config_path):
+                with open(config_path, 'r', encoding='utf-8') as f:
+                    config = json.load(f)
+                    return config
+            return None
+        except Exception as e:
+            logger.error(f"載入歡迎卡片配置失敗: {e}")
+            return None
+
     async def create_welcome_card(self, member, server_name):
         """生成歡迎卡片"""
         try:
-            template_path = os.path.join(os.getcwd(), "歡迎卡片範本.png")
+            # 載入配置
+            config = self.load_welcome_card_config()
+            
+            # 使用網頁儀表板配置或預設值
+            if config:
+                background_image = config.get('background_image', 'welcome_card.png')
+                font_file = config.get('font_file', 'Arial_1.ttf')
+                font_size = config.get('font_size', 60)
+                text_color = config.get('text_color', '#FFFFFF')
+                main_text_position = config.get('main_text_position', {'x': 400, 'y': 200})
+                subtitle_position = config.get('subtitle_position', {'x': 400, 'y': 300})
+            else:
+                # 使用舊版配置或預設值
+                background_image = '歡迎卡片範本.png'
+                font_file = 'Arial_1.ttf'
+                font_size = 60
+                text_color = '#FFFFFF'
+                main_text_position = {'x': 400, 'y': 200}
+                subtitle_position = {'x': 400, 'y': 300}
+
+            # 載入背景圖片
+            template_path = os.path.join(os.getcwd(), background_image)
             if not os.path.exists(template_path):
-                logger.error("❌ 找不到歡迎卡片範本.png")
+                logger.error(f"❌ 找不到背景圖片: {background_image}")
                 return None
 
             base_image = Image.open(template_path).convert("RGBA").resize((1920, 1080))
-            font_path = "Arial_1.ttf"
-            font_path_bold = "Arial_1_Bold.ttf"
-            font_large = ImageFont.truetype(font_path_bold, 120)
-            font_medium = ImageFont.truetype(font_path_bold, 80)
-            font_small = ImageFont.truetype(font_path, 60)
+            
+            # 載入字體
+            try:
+                font_path = os.path.join(os.getcwd(), font_file)
+                if not os.path.exists(font_path):
+                    logger.error(f"❌ 找不到字體文件: {font_file}")
+                    font = ImageFont.load_default()
+                else:
+                    font = ImageFont.truetype(font_path, font_size)
+            except Exception as e:
+                logger.error(f"載入字體失敗: {e}")
+                font = ImageFont.load_default()
 
+            # 載入頭像
             avatar_url = member.avatar.url if member.avatar else member.default_avatar.url
             async with aiohttp.ClientSession() as session:
                 async with session.get(avatar_url) as resp:
                     avatar_bytes = await resp.read()
             avatar = Image.open(BytesIO(avatar_bytes)).resize((400, 400)).convert("RGBA")
 
+            # 創建圓形遮罩
             mask = Image.new("L", avatar.size, 0)
             draw_circle = ImageDraw.Draw(mask)
             draw_circle.ellipse((0, 0, 400, 400), fill=255)
             base_image.paste(avatar, (100, 340), mask)
 
+            # 繪製文字
             draw = ImageDraw.Draw(base_image)
-            draw.text((550, 340), f"歡迎 {member.display_name}", font=font_large, fill="white")
-            draw.text((550, 480), f"加入 {server_name}!", font=font_medium, fill="red")
-            draw.text((550, 620), "希望您玩得愉快 :>", font=font_small, fill="white")
+            
+            # 轉換顏色格式
+            if text_color.startswith('#'):
+                text_color_rgb = tuple(int(text_color[i:i+2], 16) for i in (1, 3, 5))
+            else:
+                text_color_rgb = 'white'
+            
+            # 主文字
+            main_text = f"歡迎 {member.display_name} 加入！"
+            draw.text((main_text_position['x'], main_text_position['y']), main_text, 
+                     font=font, fill=text_color_rgb)
+            
+            # 副標題
+            subtitle = f"歡迎來到 {server_name}！"
+            subtitle_font = ImageFont.truetype(font_path, font_size // 2) if os.path.exists(font_path) else ImageFont.load_default()
+            draw.text((subtitle_position['x'], subtitle_position['y']), subtitle, 
+                     font=subtitle_font, fill=text_color_rgb)
 
             image_bytes = BytesIO()
             base_image.save(image_bytes, format='PNG')

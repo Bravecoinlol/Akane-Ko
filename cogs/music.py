@@ -92,13 +92,23 @@ class AutoMusicPlayer:
         self.queue.append(song)
 
     def next(self):
+        # 如果開啟重複播放且有當前歌曲
         if self.repeat and self.current:
             logger.debug(f"[Queue] 重複播放：{self.current['title']}")
             return self.current
+        
+        # 如果隊列中有歌曲
         if self.queue:
             self.current = self.queue.popleft()
             logger.debug(f"[Queue] 取出下一首：{self.current['title']}")
             return self.current
+        
+        # 如果沒有歌曲且開啟重複播放，但沒有當前歌曲
+        if self.repeat and not self.current:
+            logger.debug("[Queue] 重複播放開啟但沒有當前歌曲")
+            return None
+            
+        # 播放隊列空了
         self.current = None
         logger.debug("[Queue] 播放隊列空了")
         return None
@@ -122,7 +132,7 @@ class MusicControls(discord.ui.View):
         except Exception as e:
             logger.error(f"[MusicControls] 更新訊息失敗: {e}")
 
-    @discord.ui.button(label='🔉', style=discord.ButtonStyle.grey)
+    @discord.ui.button(label='🔉', style=discord.ButtonStyle.secondary)
     async def volume_down(self, interaction: discord.Interaction, button: discord.ui.Button):
         try:
             if not self.vc or not self.vc.is_connected():
@@ -138,7 +148,7 @@ class MusicControls(discord.ui.View):
             logger.error(f"[MusicControls] 音量調低失敗: {e}")
             await interaction.response.send_message("❌ 調整音量失敗", ephemeral=True)
 
-    @discord.ui.button(label='🔊', style=discord.ButtonStyle.grey)
+    @discord.ui.button(label='🔊', style=discord.ButtonStyle.secondary)
     async def volume_up(self, interaction: discord.Interaction, button: discord.ui.Button):
         try:
             if not self.vc or not self.vc.is_connected():
@@ -194,7 +204,7 @@ class MusicControls(discord.ui.View):
             logger.error(f"[MusicControls] 跳過歌曲失敗: {e}")
             await interaction.response.send_message("❌ 跳過歌曲失敗", ephemeral=True)
 
-    @discord.ui.button(label='🔁', style=discord.ButtonStyle.grey)
+    @discord.ui.button(label='🔁', style=discord.ButtonStyle.secondary)
     async def toggle_repeat(self, interaction: discord.Interaction, button: discord.ui.Button):
         try:
             self.player.repeat = not self.player.repeat
@@ -213,8 +223,8 @@ class Music(commands.Cog):
         self.connection_retries = {}
         self.auto_stream_categories = {}
         self.reconnect_attempts = {}
-        self.max_reconnect_attempts = 3
-        self.reconnect_delay = 5
+        self.max_reconnect_attempts = 1
+        self.reconnect_delay = 20
         
         # 載入音樂配置
         self.load_music_config()
@@ -525,7 +535,7 @@ class Music(commands.Cog):
                     
                     for attempt in range(max_retries):
                         try:
-                            vc = await voice_channel.connect(timeout=20.0, self_deaf=True)
+                            vc = await voice_channel.connect(timeout=45.0, self_deaf=True)
                             logger.info(f"[ensure_voice_connection] 成功連接到頻道: {voice_channel.name}")
                             
                             # 設定語音客戶端屬性
@@ -647,37 +657,52 @@ class Music(commands.Cog):
             return
 
         # 使用配置檔案中的 FFmpeg 選項
-        ffmpeg_config = self.ffmpeg_config['ffmpeg_options']
-        executable = self.ffmpeg_config.get('executable', 'ffmpeg')
+        ffmpeg_options = self.ffmpeg_config.get('ffmpeg_options', {})
+        executable = self.ffmpeg_config.get('ffmpeg_path', 'ffmpeg')
         
         try:
-            # 嘗試使用主要 FFmpeg 選項
+            # 嘗試使用標準 FFmpeg 選項
             try:
                 source = discord.PCMVolumeTransformer(
                     discord.FFmpegPCMAudio(
                         song['url'],
-                        before_options=ffmpeg_config['primary']['before_options'],
-                        options=ffmpeg_config['primary']['options'],
+                        before_options=ffmpeg_options.get('before_options', '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5'),
+                        options=ffmpeg_options.get('options', '-vn -b:a 128k -bufsize 3072k'),
                         executable=executable
                     ),
                     volume=player.volume
                 )
             except Exception as ffmpeg_error:
-                print(f"[play_next] 主要 FFmpeg 選項失敗，使用備用選項: {ffmpeg_error}")
+                print(f"[play_next] 標準 FFmpeg 選項失敗，使用備用選項: {ffmpeg_error}")
                 # 使用備用 FFmpeg 選項
                 source = discord.PCMVolumeTransformer(
                     discord.FFmpegPCMAudio(
                         song['url'],
-                        before_options=ffmpeg_config['backup']['before_options'],
-                        options=ffmpeg_config['backup']['options'],
+                        before_options='-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
+                        options='-vn -b:a 96k -bufsize 2048k',
                         executable=executable
                     ),
                     volume=player.volume
                 )
             
-            vc.play(source, after=lambda error: asyncio.create_task(
-                self.after_playing(error, vc, guild_id)
-            ))
+            def after_callback(error):
+                if error:
+                    print(f"[after_callback] 播放錯誤: {error}")
+                # 使用線程安全的方式調用異步函數
+                try:
+                    loop = asyncio.get_event_loop()
+                    if loop.is_running():
+                        asyncio.run_coroutine_threadsafe(
+                            self.after_playing(error, vc, guild_id), 
+                            loop
+                        )
+                    else:
+                        # 如果沒有運行中的事件循環，創建一個新的
+                        asyncio.run(self.after_playing(error, vc, guild_id))
+                except Exception as e:
+                    print(f"[after_callback] 調用 after_playing 失敗: {e}")
+            
+            vc.play(source, after=after_callback)
             
             if interaction:
                 try:
@@ -780,7 +805,7 @@ class Music(commands.Cog):
             try:
                 song_info = await asyncio.wait_for(
                     self.fetch_song_with_retry(query), 
-                    timeout=30.0  # 30秒超時
+                    timeout=45.0  # 30秒超時
                 )
             except asyncio.TimeoutError:
                 embed = discord.Embed(
@@ -1037,7 +1062,7 @@ class Music(commands.Cog):
             embed = discord.Embed(
                 title="🔁 重複播放設定",
                 description=f"重複播放已**{status}**",
-                color=discord.Color.green() if player.repeat else discord.Color.grey()
+                color=discord.Color.green() if player.repeat else discord.Color.light_gray()
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             
@@ -1104,7 +1129,10 @@ class Music(commands.Cog):
 
         # 直接抓一首該類別歌加入佇列並播放（如果沒在播）
         keywords = self.category_keywords.get(category.value)
-        song = await self.fetch_song_with_retry(keywords)
+        song = None
+        if keywords:
+            keyword = random.choice(keywords)
+            song = await self.fetch_song_with_retry(keyword)
         if song:
             player.add({"url": song['url'], "title": song['title']})
             if not vc.is_playing() and not vc.is_paused():
@@ -1223,7 +1251,7 @@ class Music(commands.Cog):
         embed.add_field(name="🔄 連接重試", value=str(retry_count), inline=True)
         
         # FFmpeg 配置狀態
-        ffmpeg_executable = self.ffmpeg_config.get('executable', 'ffmpeg')
+        ffmpeg_executable = self.ffmpeg_config.get('ffmpeg_path', 'ffmpeg')
         embed.add_field(name="🎬 FFmpeg", value=ffmpeg_executable, inline=True)
         
         await interaction.response.send_message(embed=embed, ephemeral=True)
@@ -1237,9 +1265,8 @@ class Music(commands.Cog):
             self.ffmpeg_config = self.load_ffmpeg_config()
             
             embed = discord.Embed(title="🔄 FFmpeg 配置已重新載入", color=discord.Color.green())
-            embed.add_field(name="執行檔", value=self.ffmpeg_config.get('executable', 'ffmpeg'), inline=True)
-            embed.add_field(name="主要選項", value=self.ffmpeg_config['ffmpeg_options']['primary']['before_options'][:50] + "...", inline=False)
-            embed.add_field(name="備用選項", value=self.ffmpeg_config['ffmpeg_options']['backup']['before_options'][:50] + "...", inline=False)
+            embed.add_field(name="執行檔", value=self.ffmpeg_config.get('ffmpeg_path', 'ffmpeg'), inline=True)
+            embed.add_field(name="選項", value=self.ffmpeg_config.get('ffmpeg_options', {}).get('before_options', '預設選項')[:50] + "...", inline=False)
             
             await interaction.response.send_message(embed=embed, ephemeral=True)
             
@@ -1312,7 +1339,7 @@ class Music(commands.Cog):
                     try:
                         # 嘗試重新連接
                         if voice_client.channel:
-                            await voice_client.connect(timeout=20.0, self_deaf=True)
+                            await voice_client.connect(timeout=45.0, self_deaf=True)
                             logger.info(f"[on_voice_client_disconnect] 重連成功: {voice_client.guild.name}")
                             
                             # 重置重連計數
@@ -1383,11 +1410,12 @@ class Music(commands.Cog):
                         except:
                             pass
                 
-                # 清理過期的重連計數
+                # 清理過期的重連計數（超過1小時沒有活動的伺服器）
                 current_time = time.time()
                 expired_guilds = []
-                for guild_id, last_attempt in self.reconnect_attempts.items():
-                    if current_time - last_attempt > 3600:  # 1小時後清理
+                for guild_id in list(self.reconnect_attempts.keys()):
+                    # 檢查伺服器是否還存在
+                    if not any(guild.id == guild_id for guild in self.bot.guilds):
                         expired_guilds.append(guild_id)
                 
                 for guild_id in expired_guilds:

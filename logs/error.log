@@ -1,0 +1,1799 @@
+2025-06-28 10:50:26 - Bot - ERROR - 載入 cog cogs.chat_responses 失敗: Extension 'cogs.chat_responses' raised an error: ModuleNotFoundError: No module named 'requests'
+2025-06-28 10:52:04 - Bot - ERROR - 載入 cog cogs.chat_responses 失敗: Extension 'cogs.chat_responses' raised an error: ModuleNotFoundError: No module named 'requests'
+2025-06-28 10:54:10 - Bot - ERROR - 載入 cog cogs.chat_responses 失敗: Extension 'cogs.chat_responses' raised an error: ModuleNotFoundError: No module named 'requests'
+2025-07-07 14:40:15 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-07 14:40:15 - Bot - ERROR - ❌ 載入 cog cogs.chat_responses 失敗: Extension 'cogs.chat_responses' raised an error: ModuleNotFoundError: No module named 'requests'
+2025-07-07 14:40:16 - Bot - ERROR - ❌ 載入 cog cogs.image_tools 失敗: Extension 'cogs.image_tools' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 14:40:16 - Bot - ERROR - ❌ 載入 cog cogs.member 失敗: Extension 'cogs.member' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 14:40:16 - Bot - ERROR - ❌ 載入 cog cogs.music 失敗: Extension 'cogs.music' raised an error: ModuleNotFoundError: No module named 'yt_dlp'
+2025-07-07 14:40:17 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-07 14:40:17 - Bot - ERROR - ❌ 載入 cog cogs.chat_responses 失敗: Extension 'cogs.chat_responses' raised an error: ModuleNotFoundError: No module named 'requests'
+2025-07-07 14:40:17 - Bot - ERROR - ❌ 載入 cog cogs.image_tools 失敗: Extension 'cogs.image_tools' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 14:40:17 - Bot - ERROR - ❌ 載入 cog cogs.member 失敗: Extension 'cogs.member' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 14:40:17 - Bot - ERROR - ❌ 載入 cog cogs.music 失敗: Extension 'cogs.music' raised an error: ModuleNotFoundError: No module named 'yt_dlp'
+2025-07-07 15:05:08 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-07 15:05:08 - Bot - ERROR - ❌ 載入 cog cogs.chat_responses 失敗: Extension 'cogs.chat_responses' raised an error: ModuleNotFoundError: No module named 'requests'
+2025-07-07 15:05:08 - Bot - ERROR - ❌ 載入 cog cogs.image_tools 失敗: Extension 'cogs.image_tools' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 15:05:08 - Bot - ERROR - ❌ 載入 cog cogs.member 失敗: Extension 'cogs.member' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 15:05:08 - Bot - ERROR - ❌ 載入 cog cogs.music 失敗: Extension 'cogs.music' raised an error: ModuleNotFoundError: No module named 'yt_dlp'
+2025-07-07 15:07:32 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-07 15:07:32 - Bot - ERROR - ❌ 載入 cog cogs.chat_responses 失敗: Extension 'cogs.chat_responses' raised an error: ModuleNotFoundError: No module named 'requests'
+2025-07-07 15:07:32 - Bot - ERROR - ❌ 載入 cog cogs.image_tools 失敗: Extension 'cogs.image_tools' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 15:07:32 - Bot - ERROR - ❌ 載入 cog cogs.member 失敗: Extension 'cogs.member' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 15:07:32 - Bot - ERROR - ❌ 載入 cog cogs.music 失敗: Extension 'cogs.music' raised an error: ModuleNotFoundError: No module named 'yt_dlp'
+2025-07-07 15:09:27 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-07 15:09:27 - Bot - ERROR - ❌ 載入 cog cogs.chat_responses 失敗: Extension 'cogs.chat_responses' raised an error: ModuleNotFoundError: No module named 'requests'
+2025-07-07 15:09:27 - Bot - ERROR - ❌ 載入 cog cogs.image_tools 失敗: Extension 'cogs.image_tools' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 15:09:27 - Bot - ERROR - ❌ 載入 cog cogs.member 失敗: Extension 'cogs.member' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 15:09:27 - Bot - ERROR - ❌ 載入 cog cogs.music 失敗: Extension 'cogs.music' raised an error: ModuleNotFoundError: No module named 'yt_dlp'
+2025-07-07 15:12:02 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-07 15:12:02 - Bot - ERROR - ❌ 載入 cog cogs.chat_responses 失敗: Extension 'cogs.chat_responses' raised an error: ModuleNotFoundError: No module named 'requests'
+2025-07-07 15:12:02 - Bot - ERROR - ❌ 載入 cog cogs.image_tools 失敗: Extension 'cogs.image_tools' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 15:12:02 - Bot - ERROR - ❌ 載入 cog cogs.member 失敗: Extension 'cogs.member' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 15:12:02 - Bot - ERROR - ❌ 載入 cog cogs.music 失敗: Extension 'cogs.music' raised an error: ModuleNotFoundError: No module named 'yt_dlp'
+2025-07-07 15:19:20 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-07 15:19:20 - Bot - ERROR - ❌ 載入 cog cogs.chat_responses 失敗: Extension 'cogs.chat_responses' raised an error: ModuleNotFoundError: No module named 'requests'
+2025-07-07 15:19:20 - Bot - ERROR - ❌ 載入 cog cogs.image_tools 失敗: Extension 'cogs.image_tools' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 15:19:20 - Bot - ERROR - ❌ 載入 cog cogs.member 失敗: Extension 'cogs.member' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 15:19:20 - Bot - ERROR - ❌ 載入 cog cogs.music 失敗: Extension 'cogs.music' raised an error: ModuleNotFoundError: No module named 'yt_dlp'
+2025-07-07 15:22:32 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-07 15:22:32 - Bot - ERROR - ❌ 載入 cog cogs.chat_responses 失敗: Extension 'cogs.chat_responses' raised an error: ModuleNotFoundError: No module named 'requests'
+2025-07-07 15:22:32 - Bot - ERROR - ❌ 載入 cog cogs.image_tools 失敗: Extension 'cogs.image_tools' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 15:22:32 - Bot - ERROR - ❌ 載入 cog cogs.member 失敗: Extension 'cogs.member' raised an error: ModuleNotFoundError: No module named 'PIL'
+2025-07-07 15:22:32 - Bot - ERROR - ❌ 載入 cog cogs.music 失敗: Extension 'cogs.music' raised an error: ModuleNotFoundError: No module named 'yt_dlp'
+2025-07-07 15:34:38 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-07 15:34:38 - Bot - ERROR - ❌ 載入 cog cogs.chat_responses 失敗: Extension 'cogs.chat_responses' raised an error: ModuleNotFoundError: No module named 'requests'
+2025-07-07 15:41:32 - discord.client - ERROR - Attempting a reconnect in 1.28s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 15:41:41 - discord.client - ERROR - Attempting a reconnect in 1.59s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 15:42:54 - discord.client - ERROR - Attempting a reconnect in 0.30s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 15:42:54 - discord.client - ERROR - Attempting a reconnect in 0.80s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 15:44:03 - discord.client - ERROR - Attempting a reconnect in 0.24s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 15:44:03 - discord.client - ERROR - Attempting a reconnect in 0.32s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 15:45:33 - discord.client - ERROR - Attempting a reconnect in 3.68s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 15:45:33 - discord.client - ERROR - Attempting a reconnect in 14.48s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 15:47:11 - discord.client - ERROR - Attempting a reconnect in 6.21s
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 490, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 492, in wait_for
+    raise exceptions.TimeoutError() from exc
+TimeoutError
+2025-07-07 15:47:11 - discord.client - ERROR - Attempting a reconnect in 30.90s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 15:48:46 - discord.client - ERROR - Attempting a reconnect in 58.20s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 15:48:59 - discord.client - ERROR - Attempting a reconnect in 30.18s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 16:15:18 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-07 16:32:46 - discord.client - ERROR - Attempting a reconnect in 1.69s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 704, in connect
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 627, in poll_event
+    await self.received_message(msg.data)
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 532, in received_message
+    await self.send_as_json(beat)
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 663, in send_as_json
+    await self.send(utils._to_json(data))
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 659, in send
+    await self.socket.send_str(data)
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client_ws.py", line 245, in send_str
+    await self._writer.send_frame(
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/_websocket/writer.py", line 126, in send_frame
+    raise ClientConnectionResetError("Cannot write to closing transport")
+aiohttp.client_exceptions.ClientConnectionResetError: Cannot write to closing transport
+2025-07-07 16:33:52 - discord.client - ERROR - Attempting a reconnect in 3.46s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 16:34:54 - discord.client - ERROR - Attempting a reconnect in 7.20s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 16:35:53 - discord.client - ERROR - Attempting a reconnect in 2.93s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 16:37:03 - discord.client - ERROR - Attempting a reconnect in 15.80s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 16:38:19 - discord.client - ERROR - Attempting a reconnect in 5.61s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 16:39:19 - discord.client - ERROR - Attempting a reconnect in 51.01s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 16:41:14 - discord.client - ERROR - Attempting a reconnect in 235.75s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 16:46:03 - discord.client - ERROR - Attempting a reconnect in 285.34s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 16:52:06 - discord.client - ERROR - Attempting a reconnect in 441.61s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 17:01:03 - discord.client - ERROR - Attempting a reconnect in 381.10s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 17:08:21 - discord.client - ERROR - Attempting a reconnect in 444.98s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1159, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 867, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1518, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-07-07 17:17:17 - discord.client - ERROR - Attempting a reconnect in 674.81s
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 490, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1061, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 622, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1189, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1512, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1128, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 492, in wait_for
+    raise exceptions.TimeoutError() from exc
+TimeoutError
+2025-07-07 21:55:26 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-07 21:55:41 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-07 21:55:49 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-07 22:10:03 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-08 16:05:27 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 0.00s.
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 490, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/home/bruhlu/discordbot-venv/lib/python3.11/site-packages/aiohttp/client_ws.py", line 336, in receive
+    msg = await self._reader.read()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "aiohttp/_websocket/reader_c.py", line 118, in read
+  File "aiohttp/_websocket/reader_c.py", line 115, in aiohttp._websocket.reader_c.WebSocketDataQueue.read
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bruhlu/discordbot-venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/home/bruhlu/discordbot-venv/lib/python3.11/site-packages/discord/gateway.py", line 1031, in poll_event
+    msg = await asyncio.wait_for(self.ws.receive(), timeout=30.0)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 492, in wait_for
+    raise exceptions.TimeoutError() from exc
+TimeoutError
+2025-07-08 16:28:05 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-08 16:28:05 - Bot - ERROR - ❌ 載入 cog cogs.chat_responses 失敗: Extension 'cogs.chat_responses' raised an error: ModuleNotFoundError: No module named 'requests'
+2025-07-08 16:43:47 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-08 16:44:17 - Music - ERROR - [ensure_voice_connection] 連接失敗 (嘗試 1): PyNaCl library needed in order to use voice
+2025-07-08 16:44:19 - Music - ERROR - [ensure_voice_connection] 連接失敗 (嘗試 2): PyNaCl library needed in order to use voice
+2025-07-08 16:44:23 - Music - ERROR - [ensure_voice_connection] 連接失敗 (嘗試 3): PyNaCl library needed in order to use voice
+2025-07-08 16:44:24 - Music - ERROR - [ensure_voice_connection] 連接過程發生錯誤: 404 Not Found (error code: 10015): Unknown Webhook
+2025-07-08 16:44:24 - Music - ERROR - [ensure_voice_connection] 確保語音連線失敗: 404 Not Found (error code: 10015): Unknown Webhook
+2025-07-08 16:44:24 - Music - ERROR - [ensure_voice_connection] 無法發送錯誤訊息: 404 Not Found (error code: 10015): Unknown Webhook
+2025-07-08 16:44:57 - Music - ERROR - [ensure_voice_connection] 連接失敗 (嘗試 1): PyNaCl library needed in order to use voice
+2025-07-08 16:44:59 - Music - ERROR - [ensure_voice_connection] 連接失敗 (嘗試 2): PyNaCl library needed in order to use voice
+2025-07-08 16:45:03 - Music - ERROR - [ensure_voice_connection] 連接失敗 (嘗試 3): PyNaCl library needed in order to use voice
+2025-07-08 16:58:35 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-08 17:03:42 - discord.player - ERROR - Calling the after function failed.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/player.py", line 788, in _call_after
+    self.after(error)
+  File "/mnt/usb/Akane-Ko/cogs/music.py", line 678, in <lambda>
+    vc.play(source, after=lambda error: asyncio.create_task(
+                                        ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 371, in create_task
+    loop = events.get_running_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: no running event loop
+2025-07-08 17:08:07 - discord.player - ERROR - Calling the after function failed.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/player.py", line 788, in _call_after
+    self.after(error)
+  File "/mnt/usb/Akane-Ko/cogs/music.py", line 678, in <lambda>
+    vc.play(source, after=lambda error: asyncio.create_task(
+                                        ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 371, in create_task
+    loop = events.get_running_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: no running event loop
+2025-07-08 17:08:25 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: ModuleNotFoundError: No module named 'matplotlib'
+2025-07-08 17:09:02 - Bot - ERROR - ❌ 載入 cog cogs.analytics 失敗: Extension 'cogs.analytics' raised an error: NameError: name 'matplotlib' is not defined
+2025-07-09 12:11:16 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 0.39s.
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 490, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client_ws.py", line 336, in receive
+    msg = await self._reader.read()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "aiohttp/_websocket/reader_c.py", line 118, in read
+  File "aiohttp/_websocket/reader_c.py", line 115, in aiohttp._websocket.reader_c.WebSocketDataQueue.read
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 1031, in poll_event
+    msg = await asyncio.wait_for(self.ws.receive(), timeout=30.0)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 492, in wait_for
+    raise exceptions.TimeoutError() from exc
+TimeoutError
+2025-07-09 12:16:19 - discord.player - ERROR - Calling the after function failed.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/player.py", line 788, in _call_after
+    self.after(error)
+  File "/mnt/usb/Akane-Ko/cogs/music.py", line 678, in <lambda>
+    vc.play(source, after=lambda error: asyncio.create_task(
+                                        ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 371, in create_task
+    loop = events.get_running_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: no running event loop
+2025-07-09 12:29:52 - Music - ERROR - [ensure_voice_connection] 確保語音連線失敗: 404 Not Found (error code: 10015): Unknown Webhook
+2025-07-09 12:29:52 - Music - ERROR - [ensure_voice_connection] 無法發送錯誤訊息: 404 Not Found (error code: 10015): Unknown Webhook
+2025-07-10 12:39:59 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 0.89s.
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 490, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/aiohttp/client_ws.py", line 336, in receive
+    msg = await self._reader.read()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "aiohttp/_websocket/reader_c.py", line 118, in read
+  File "aiohttp/_websocket/reader_c.py", line 115, in aiohttp._websocket.reader_c.WebSocketDataQueue.read
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/gateway.py", line 1031, in poll_event
+    msg = await asyncio.wait_for(self.ws.receive(), timeout=30.0)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 492, in wait_for
+    raise exceptions.TimeoutError() from exc
+TimeoutError
+2025-07-10 12:40:31 - discord.player - ERROR - Calling the after function failed.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/player.py", line 788, in _call_after
+    self.after(error)
+  File "/mnt/usb/Akane-Ko/cogs/music.py", line 678, in <lambda>
+    vc.play(source, after=lambda error: asyncio.create_task(
+                                        ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 371, in create_task
+    loop = events.get_running_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: no running event loop
+2025-07-10 12:40:52 - Music - ERROR - [repeat] 切換重複播放失敗: type object 'Colour' has no attribute 'grey'
+2025-07-10 12:41:20 - discord.player - ERROR - Calling the after function failed.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/venv/lib/python3.11/site-packages/discord/player.py", line 788, in _call_after
+    self.after(error)
+  File "/mnt/usb/Akane-Ko/cogs/music.py", line 678, in <lambda>
+    vc.play(source, after=lambda error: asyncio.create_task(
+                                        ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 371, in create_task
+    loop = events.get_running_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: no running event loop
+2025-07-10 13:28:46 - discord.player - ERROR - Calling the after function failed.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/player.py", line 788, in _call_after
+    self.after(error)
+  File "/mnt/usb/Akane-Ko/Bot/cogs/music.py", line 678, in <lambda>
+    vc.play(source, after=lambda error: asyncio.create_task(
+                                        ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 371, in create_task
+    loop = events.get_running_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: no running event loop
+2025-07-10 13:29:38 - discord.player - ERROR - Calling the after function failed.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/player.py", line 788, in _call_after
+    self.after(error)
+  File "/mnt/usb/Akane-Ko/Bot/cogs/music.py", line 678, in <lambda>
+    vc.play(source, after=lambda error: asyncio.create_task(
+                                        ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 371, in create_task
+    loop = events.get_running_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: no running event loop
+2025-07-10 13:55:00 - Music - ERROR - [play] 回應互動失敗: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+2025-07-10 13:55:27 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 1.03s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:55:27 - discord.app_commands.tree - ERROR - Ignoring exception in command 'join'
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/app_commands/commands.py", line 857, in _do_call
+    return await self._callback(self.binding, interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/Bot/cogs/music.py", line 1138, in join
+    await interaction.response.send_message(f"✅ 機器人已加入語音頻道：{vc.channel.name}", ephemeral=True)
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/interactions.py", line 1004, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/webhook/async_.py", line 226, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/app_commands/tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/app_commands/commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/app_commands/commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'join' raised an exception: HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+2025-07-10 13:55:28 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 0.57s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:55:29 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 1.08s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:55:49 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 3.20s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:55:52 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 6.61s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:55:59 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 2.03s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:56:01 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 11.75s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:56:13 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 15.71s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:56:29 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 3.86s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:56:33 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 5.96s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:56:39 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 33.81s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:57:13 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 2.67s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:57:16 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 92.05s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:58:49 - discord.voice_state - ERROR - Disconnected from voice... Reconnecting in 23.10s.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/voice_state.py", line 598, in _poll_voice_ws
+    await self.ws.poll_event()
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 1039, in poll_event
+    raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
+discord.errors.ConnectionClosed: Shard ID None WebSocket closed with 4006
+2025-07-10 13:59:00 - discord.app_commands.tree - ERROR - Ignoring exception in command 'leave'
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/app_commands/commands.py", line 857, in _do_call
+    return await self._callback(self.binding, interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/Bot/cogs/music.py", line 1152, in leave
+    await interaction.response.send_message("👋 已離開語音頻道。", ephemeral=True)
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/interactions.py", line 1004, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/webhook/async_.py", line 226, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/app_commands/tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/app_commands/commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/app_commands/commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'leave' raised an exception: HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+2025-07-11 10:52:31 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-13 12:02:23 - discord.app_commands.tree - ERROR - Ignoring exception in command 'queue'
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/app_commands/commands.py", line 857, in _do_call
+    return await self._callback(self.binding, interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/Bot/cogs/music.py", line 1078, in queue
+    await interaction.response.send_message("❌ 目前沒有播放隊列。", ephemeral=True)
+                             ^^^^^^^^^^^^^^^^^
+TypeError: sequence index must be integer, not 'slice'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/app_commands/tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/app_commands/commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/app_commands/commands.py", line 872, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'queue' raised an exception: TypeError: sequence index must be integer, not 'slice'
+2025-07-13 19:53:04 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-13 19:53:20 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-13 19:57:33 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-13 20:52:54 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-13 20:52:55 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-16 22:00:47 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-16 22:04:49 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-16 22:13:58 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-16 22:14:03 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-16 22:16:52 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-16 22:18:01 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-17 13:51:25 - Member - ERROR - 載入字體失敗: cannot import name '_imagingft' from 'PIL' (/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/PIL/__init__.py)
+2025-07-17 13:51:25 - Member - ERROR - 生成歡迎卡時發生錯誤: 'latin-1' codec can't encode characters in position 0-1: ordinal not in range(256)
+2025-07-17 18:58:40 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-18 22:05:10 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-19 18:56:50 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-19 23:51:09 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-22 02:34:39 - AntiRaid - ERROR - [AntiRaid] 禁言用戶失敗: second must be in 0..59
+2025-07-23 08:08:00 - discord.client - ERROR - Attempting a reconnect in 0.43s
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/client.py", line 701, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/gateway.py", line 375, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/discord/http.py", line 554, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/usb/Akane-Ko/Bot/venv/lib/python3.11/site-packages/aiohttp/client.py", line 1078, in _ws_connect
+    raise WSServerHandshakeError(
+aiohttp.client_exceptions.WSServerHandshakeError: 520, message='Invalid response status', url='wss://gateway-us-east1-d.discord.gg/?v=10&encoding=json&compress=zlib-stream'

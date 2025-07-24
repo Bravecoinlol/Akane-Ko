@@ -1,0 +1,14 @@
+{
+  "default_volume": 0.5,
+  "max_queue_size": 25,
+  "auto_disconnect_delay": 900,
+  "max_song_duration": 480,
+  "enable_cache": true,
+  "cache_size": 30,
+  "reconnect_attempts": 1,
+  "reconnect_delay": 20,
+  "voice_timeout": 45,
+  "enable_voice_reconnect": true,
+  "max_voice_retries": 1,
+  "voice_retry_delay": 30
+}

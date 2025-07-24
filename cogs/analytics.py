@@ -6,11 +6,6 @@ import os
 import logging
 from datetime import datetime, timedelta
 from collections import defaultdict, Counter
-import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.use('Agg')  # 使用非互動式後端
-import io
-import asyncio
 
 logger = logging.getLogger('Analytics')
 
@@ -149,103 +144,38 @@ class Analytics(commands.Cog):
             # 獲取活躍用戶
             user_data = self.analytics_data.get('user_activity', {}).get(guild_id_str, {})
             active_users = len(user_data)
-            
-            # 創建統計圖表
-            try:
-                fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(12, 8))
-                fig.suptitle(f'{guild.name} 伺服器統計', fontsize=16)
-                
-                # 1. 成員狀態分布
-                status_counts = Counter([m.status.value for m in guild.members])
-                if status_counts:
-                    ax1.pie(status_counts.values(), labels=status_counts.keys(), autopct='%1.1f%%')
-                    ax1.set_title('成員狀態分布')
-                else:
-                    ax1.text(0.5, 0.5, '無數據', ha='center', va='center', transform=ax1.transAxes)
-                    ax1.set_title('成員狀態分布')
-                
-                # 2. 頻道類型分布
-                channel_types = Counter([c.type.name for c in guild.channels])
-                if channel_types:
-                    ax2.bar(channel_types.keys(), channel_types.values())
-                    ax2.set_title('頻道類型分布')
-                    ax2.tick_params(axis='x', rotation=45)
-                else:
-                    ax2.text(0.5, 0.5, '無數據', ha='center', va='center', transform=ax2.transAxes)
-                    ax2.set_title('頻道類型分布')
-                
-                # 3. 最近7天訊息趨勢
-                dates = sorted(message_data.keys())[-7:]
-                message_counts = [message_data.get(date, 0) for date in dates]
-                if dates and any(message_counts):
-                    ax3.plot(dates, message_counts, marker='o')
-                    ax3.set_title('最近7天訊息趨勢')
-                    ax3.tick_params(axis='x', rotation=45)
-                else:
-                    ax3.text(0.5, 0.5, '無數據', ha='center', va='center', transform=ax3.transAxes)
-                    ax3.set_title('最近7天訊息趨勢')
-                
-                # 4. 活躍用戶排行
-                top_users = sorted(user_data.items(), key=lambda x: x[1]['message_count'], reverse=True)[:5]
-                if top_users:
-                    user_names = []
-                    user_counts = []
-                    for user_id, data in top_users:
-                        try:
-                            user = guild.get_member(int(user_id))
-                            user_names.append(user.display_name if user else f"用戶{user_id}")
-                            user_counts.append(data['message_count'])
-                        except (ValueError, KeyError):
-                            continue
-                    
-                    if user_names and user_counts:
-                        ax4.barh(user_names, user_counts)
-                        ax4.set_title('最活躍用戶')
-                    else:
-                        ax4.text(0.5, 0.5, '無數據', ha='center', va='center', transform=ax4.transAxes)
-                        ax4.set_title('最活躍用戶')
-                else:
-                    ax4.text(0.5, 0.5, '無數據', ha='center', va='center', transform=ax4.transAxes)
-                    ax4.set_title('最活躍用戶')
-                
-                plt.tight_layout()
-                
-                # 轉換為圖片
-                img_buffer = io.BytesIO()
-                plt.savefig(img_buffer, format='png', dpi=300, bbox_inches='tight')
-                img_buffer.seek(0)
-                plt.close()
-                
-                # 創建嵌入訊息
-                embed = discord.Embed(
-                    title=f"📊 {guild.name} 統計報告",
-                    color=discord.Color.blue()
-                )
-                
-                embed.add_field(name="👥 成員", value=f"總數: {total_members}\n線上: {online_members}", inline=True)
-                embed.add_field(name="📝 訊息", value=f"總數: {total_messages}\n活躍用戶: {active_users}", inline=True)
-                embed.add_field(name="📊 頻道與角色", value=f"頻道: {total_channels}\n角色: {total_roles}", inline=True)
-                
-                file = discord.File(img_buffer, "server_stats.png")
-                embed.set_image(url="attachment://server_stats.png")
-                
-                await interaction.followup.send(embed=embed, file=file)
-                
-            except Exception as e:
-                logger.error(f"[server_stats] 生成圖表失敗: {e}")
-                # 如果圖表生成失敗，只發送文字統計
-                embed = discord.Embed(
-                    title=f"📊 {guild.name} 統計報告",
-                    description="圖表生成失敗，顯示基本統計資訊",
-                    color=discord.Color.orange()
-                )
-                
-                embed.add_field(name="👥 成員", value=f"總數: {total_members}\n線上: {online_members}", inline=True)
-                embed.add_field(name="📝 訊息", value=f"總數: {total_messages}\n活躍用戶: {active_users}", inline=True)
-                embed.add_field(name="📊 頻道與角色", value=f"頻道: {total_channels}\n角色: {total_roles}", inline=True)
-                
-                await interaction.followup.send(embed=embed)
-                
+
+            # 純文字統計
+            embed = discord.Embed(
+                title=f"📊 {guild.name} 統計報告",
+                color=discord.Color.blue()
+            )
+            embed.add_field(name="👥 成員", value=f"總數: {total_members}\n線上: {online_members}", inline=True)
+            embed.add_field(name="📝 訊息", value=f"總數: {total_messages}\n活躍用戶: {active_users}", inline=True)
+            embed.add_field(name="📊 頻道與角色", value=f"頻道: {total_channels}\n角色: {total_roles}", inline=True)
+
+            # 近7天訊息趨勢
+            dates = sorted(message_data.keys())[-7:]
+            message_counts = [message_data.get(date, 0) for date in dates]
+            if dates:
+                trend = "\n".join([f"{date}: {count}" for date, count in zip(dates, message_counts)])
+                embed.add_field(name="🗓️ 最近7天訊息趨勢", value=trend, inline=False)
+            else:
+                embed.add_field(name="🗓️ 最近7天訊息趨勢", value="無數據", inline=False)
+
+            # 活躍用戶排行
+            top_users = sorted(user_data.items(), key=lambda x: x[1]['message_count'], reverse=True)[:5]
+            if top_users:
+                leaderboard = []
+                for i, (user_id, data) in enumerate(top_users, 1):
+                    user = guild.get_member(int(user_id))
+                    name = user.display_name if user else f"用戶{user_id}"
+                    leaderboard.append(f"{i}. {name}: {data['message_count']} 訊息")
+                embed.add_field(name="🏆 最活躍用戶", value="\n".join(leaderboard), inline=False)
+            else:
+                embed.add_field(name="🏆 最活躍用戶", value="無數據", inline=False)
+
+            await interaction.followup.send(embed=embed)
         except Exception as e:
             logger.error(f"[server_stats] 伺服器統計失敗: {e}")
             await interaction.followup.send(f"❌ 生成統計報告失敗：{str(e)}", ephemeral=True)
@@ -283,52 +213,17 @@ class Analytics(commands.Cog):
             channel = interaction.guild.get_channel(int(channel_id))
             channel_names.append(f"{channel.name if channel else '未知頻道'}: {count} 訊息")
         
-        # 創建用戶活動圖表
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-        fig.suptitle(f'{user.display_name} 活動分析', fontsize=16)
-        
-        # 1. 頻道使用分布
-        if channels:
-            channel_labels = []
-            channel_values = []
-            for channel_id, count in top_channels:
-                channel = interaction.guild.get_channel(int(channel_id))
-                channel_labels.append(channel.name if channel else f"頻道{channel_id}")
-                channel_values.append(count)
-            
-            ax1.pie(channel_values, labels=channel_labels, autopct='%1.1f%%')
-            ax1.set_title('最常使用的頻道')
-        
-        # 2. 訊息數量條形圖
-        ax2.bar(['總訊息數'], [message_count], color='skyblue')
-        ax2.set_title('訊息統計')
-        ax2.set_ylabel('訊息數量')
-        
-        plt.tight_layout()
-        
-        # 轉換為圖片
-        img_buffer = io.BytesIO()
-        plt.savefig(img_buffer, format='png', dpi=300, bbox_inches='tight')
-        img_buffer.seek(0)
-        plt.close()
-        
-        # 創建嵌入訊息
+        # 純文字用戶分析
         embed = discord.Embed(
             title=f"👤 {user.display_name} 活動分析",
             color=discord.Color.green()
         )
-        
         embed.add_field(name="📝 訊息統計", value=f"總訊息數: {message_count}", inline=True)
         embed.add_field(name="🕐 最後活躍", value=f"{days_since_active} 天前" if isinstance(days_since_active, int) else "未知", inline=True)
         embed.add_field(name="📺 使用頻道數", value=str(len(channels)), inline=True)
-        
         if channel_names:
-            embed.add_field(name="🏆 最常使用頻道", value="\n".join(channel_names), inline=False)
-        
-        file = discord.File(img_buffer, "user_analysis.png")
-        embed.set_image(url="attachment://user_analysis.png")
-        
-        await interaction.followup.send(embed=embed, file=file)
+            embed.add_field(name="�� 最常使用頻道", value="\n".join(channel_names), inline=False)
+        await interaction.followup.send(embed=embed)
 
     @app_commands.command(name="指令統計", description="顯示指令使用統計")
     @app_commands.checks.has_permissions(manage_guild=True)
