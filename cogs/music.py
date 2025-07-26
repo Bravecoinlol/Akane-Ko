@@ -365,49 +365,52 @@ class Music(commands.Cog):
             logger.debug(f"[fetch_song] 使用快取結果：{cached_result.get('title', '未知標題')}")
             return cached_result
 
-        # 多個 ytdl 配置，按優先順序嘗試，針對網路不穩定優化
+        # 優化的 ytdl 配置，減少 JavaScript 解釋器負載
         ytdl_configs = [
-            # 配置1: 標準配置，較短超時
+            # 配置1: 輕量級配置，避免複雜的 JavaScript 處理
             {
                 'format': 'bestaudio/best',
                 'noplaylist': True,
                 'quiet': True,
                 'default_search': 'ytsearch',
                 'extract_flat': 'in_playlist',
-                'socket_timeout': 60,
+                'socket_timeout': 30,
+                'retries': 3,
+                'fragment_retries': 3,
+                'ignoreerrors': True,
+                'no_warnings': True,
+                'extractor_retries': 2,
+                'file_access_retries': 2,
+                'retry_sleep': 1,
+                'max_sleep_interval': 5,
+                'http_headers': {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                },
+                # 避免複雜的簽名解密
+                'extract_flat': False,
+                'skip': ['dash', 'live'],
+                'prefer_insecure': True
+            },
+            # 配置2: 備用配置，更保守的設定
+            {
+                'format': 'bestaudio/best',
+                'noplaylist': True,
+                'quiet': True,
+                'default_search': 'ytsearch',
+                'socket_timeout': 45,
                 'retries': 5,
                 'fragment_retries': 5,
-                'http_headers': {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-                }
-            },
-            # 配置2: 更長的超時，更多重試
-            {
-                'format': 'bestaudio/best',
-                'noplaylist': True,
-                'quiet': True,
-                'default_search': 'ytsearch',
-                'extract_flat': 'in_playlist',
-                'socket_timeout': 120,
-                'retries': 10,
-                'fragment_retries': 10,
-                'http_headers': {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-                }
-            },
-            # 配置3: 最保守的配置
-            {
-                'format': 'bestaudio/best',
-                'noplaylist': True,
-                'quiet': True,
-                'default_search': 'ytsearch',
-                'extract_flat': 'in_playlist',
-                'socket_timeout': 180,
-                'retries': 15,
-                'fragment_retries': 15,
+                'ignoreerrors': True,
+                'no_warnings': True,
+                'extractor_retries': 3,
+                'file_access_retries': 3,
+                'retry_sleep': 2,
+                'max_sleep_interval': 8,
                 'http_headers': {
                     'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
-                }
+                },
+                'skip': ['dash', 'live'],
+                'prefer_insecure': True
             }
         ]
 
@@ -416,19 +419,17 @@ class Music(commands.Cog):
                 try:
                     logger.debug(f"[fetch_song] 嘗試配置 {config_idx + 1}，第 {attempt + 1} 次嘗試")
                     
-                    # 添加額外的錯誤處理選項
-                    ytdl_opts.update({
-                        'ignoreerrors': True,
-                        'no_warnings': False,
-                        'extractor_retries': 3,
-                        'file_access_retries': 3,
-                        'fragment_retries': ytdl_opts.get('fragment_retries', 5),
-                        'retry_sleep': 2,
-                        'max_sleep_interval': 10,
-                    })
-                    
+                    # 添加超時控制
                     with yt_dlp.YoutubeDL(ytdl_opts) as ytdl:
-                        info = ytdl.extract_info(keyword_or_url, download=False)
+                        # 使用 asyncio.wait_for 添加超時
+                        try:
+                            info = await asyncio.wait_for(
+                                asyncio.to_thread(ytdl.extract_info, keyword_or_url, download=False),
+                                timeout=30.0  # 30秒超時
+                            )
+                        except asyncio.TimeoutError:
+                            logger.warning(f"[fetch_song] 配置 {config_idx + 1} 超時")
+                            continue
                         
                         if not info:
                             logger.warning(f"[fetch_song] 配置 {config_idx + 1} 無法提取資訊")
@@ -439,11 +440,18 @@ class Music(commands.Cog):
                             if entries:
                                 song_info = random.choice(entries)
                                 try:
-                                    full_info = ytdl.extract_info(song_info['url'], download=False)
+                                    # 再次使用超時控制
+                                    full_info = await asyncio.wait_for(
+                                        asyncio.to_thread(ytdl.extract_info, song_info['url'], download=False),
+                                        timeout=25.0
+                                    )
                                     if full_info and 'url' in full_info:
                                         logger.info(f"[fetch_song] 找到歌曲：{full_info['title']}")
                                         self.song_cache.set(keyword_or_url, full_info)
                                         return full_info
+                                except asyncio.TimeoutError:
+                                    logger.warning(f"[fetch_song] 提取完整資訊超時")
+                                    continue
                                 except Exception as e:
                                     logger.warning(f"[fetch_song] 提取完整資訊失敗: {e}")
                                     continue
@@ -456,7 +464,7 @@ class Music(commands.Cog):
                 except Exception as e:
                     logger.warning(f"[fetch_song] 配置 {config_idx + 1} 失敗: {e}")
                     if attempt < max_retries - 1:
-                        wait_time = min(2 ** attempt, 10)  # 指數退避，最大等待10秒
+                        wait_time = min(2 ** attempt, 8)  # 指數退避，最大等待8秒
                         logger.debug(f"[fetch_song] 等待 {wait_time} 秒後重試...")
                         await asyncio.sleep(wait_time)
                         continue
@@ -645,7 +653,7 @@ class Music(commands.Cog):
             keywords = self.category_keywords.get(player.category)
             if keywords:
                 keyword = random.choice(keywords)
-                print(f"[play_next] 自動串流模式，隨機搜尋關鍵字：{keyword}")
+                logger.info(f"[play_next] 自動串流模式，隨機搜尋關鍵字：{keyword}")
                 song = await self.fetch_song_with_retry(keyword)
                 if song:
                     player.add({"url": song['url'], "title": song['title']})
@@ -661,46 +669,22 @@ class Music(commands.Cog):
         executable = self.ffmpeg_config.get('ffmpeg_path', 'ffmpeg')
         
         try:
-            # 嘗試使用標準 FFmpeg 選項
-            try:
-                source = discord.PCMVolumeTransformer(
-                    discord.FFmpegPCMAudio(
-                        song['url'],
-                        before_options=ffmpeg_options.get('before_options', '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5'),
-                        options=ffmpeg_options.get('options', '-vn -b:a 128k -bufsize 3072k'),
-                        executable=executable
-                    ),
-                    volume=player.volume
-                )
-            except Exception as ffmpeg_error:
-                print(f"[play_next] 標準 FFmpeg 選項失敗，使用備用選項: {ffmpeg_error}")
-                # 使用備用 FFmpeg 選項
-                source = discord.PCMVolumeTransformer(
-                    discord.FFmpegPCMAudio(
-                        song['url'],
-                        before_options='-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-                        options='-vn -b:a 96k -bufsize 2048k',
-                        executable=executable
-                    ),
-                    volume=player.volume
-                )
+            # 使用優化的 FFmpeg 選項
+            source = discord.PCMVolumeTransformer(
+                discord.FFmpegPCMAudio(
+                    song['url'],
+                    before_options=ffmpeg_options.get('before_options', '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 10'),
+                    options=ffmpeg_options.get('options', '-vn -b:a 96k -bufsize 2048k'),
+                    executable=executable
+                ),
+                volume=player.volume
+            )
             
             def after_callback(error):
                 if error:
-                    print(f"[after_callback] 播放錯誤: {error}")
-                # 使用線程安全的方式調用異步函數
-                try:
-                    loop = asyncio.get_event_loop()
-                    if loop.is_running():
-                        asyncio.run_coroutine_threadsafe(
-                            self.after_playing(error, vc, guild_id), 
-                            loop
-                        )
-                    else:
-                        # 如果沒有運行中的事件循環，創建一個新的
-                        asyncio.run(self.after_playing(error, vc, guild_id))
-                except Exception as e:
-                    print(f"[after_callback] 調用 after_playing 失敗: {e}")
+                    logger.error(f"[after_callback] 播放錯誤: {error}")
+                # 使用新的調度方法
+                self._schedule_after_playing(error, vc, guild_id)
             
             vc.play(source, after=after_callback)
             
@@ -712,10 +696,10 @@ class Music(commands.Cog):
                         ephemeral=False
                     )
                 except Exception as e:
-                    print(f"[play_next] 發送互動訊息失敗: {e}")
+                    logger.error(f"[play_next] 發送互動訊息失敗: {e}")
                     
         except Exception as e:
-            print(f"[play_next] 播放失敗: {e}")
+            logger.error(f"[play_next] 播放失敗: {e}")
             player.retry_count += 1
             if player.retry_count < player.max_retries:
                 await asyncio.sleep(2)
@@ -728,18 +712,55 @@ class Music(commands.Cog):
     async def after_playing(self, error, vc, guild_id):
         """播放結束後的處理"""
         if error:
-            print(f"[after_playing] 播放錯誤: {error}")
+            logger.error(f"[after_playing] 播放錯誤: {error}")
         
         try:
             # 檢查是否仍在語音頻道
             if vc.is_connected():
-                await self.play_next(vc, guild_id)
+                # 使用更安全的方式調用 play_next
+                try:
+                    await self.play_next(vc, guild_id)
+                except Exception as play_error:
+                    logger.error(f"[after_playing] play_next 失敗: {play_error}")
             else:
                 await vc.disconnect()
                 if guild_id in self.players:
                     del self.players[guild_id]
         except Exception as e:
-            print(f"[after_playing] 處理播放結束時發生錯誤: {e}")
+            logger.error(f"[after_playing] 處理播放結束時發生錯誤: {e}")
+    
+    def _schedule_after_playing(self, error, vc, guild_id):
+        """調度 after_playing 的線程安全方法"""
+        try:
+            # 獲取主事件循環
+            loop = asyncio.get_event_loop()
+            if loop and loop.is_running():
+                # 在主線程中調用
+                asyncio.run_coroutine_threadsafe(
+                    self.after_playing(error, vc, guild_id), 
+                    loop
+                )
+            else:
+                # 如果沒有運行中的事件循環，創建一個新的
+                def run_after_playing():
+                    try:
+                        new_loop = asyncio.new_event_loop()
+                        asyncio.set_event_loop(new_loop)
+                        new_loop.run_until_complete(self.after_playing(error, vc, guild_id))
+                    except Exception as e:
+                        logger.error(f"[_schedule_after_playing] 執行失敗: {e}")
+                    finally:
+                        try:
+                            new_loop.close()
+                        except:
+                            pass
+                
+                # 在新線程中運行
+                import threading
+                thread = threading.Thread(target=run_after_playing, daemon=True)
+                thread.start()
+        except Exception as e:
+            logger.error(f"[_schedule_after_playing] 調度失敗: {e}")
 
     @app_commands.command(name="play", description="播放音樂 (支援連結與關鍵字)")
     @app_commands.describe(query="YouTube 連結或搜尋字詞")
@@ -1136,7 +1157,7 @@ class Music(commands.Cog):
         if song:
             player.add({"url": song['url'], "title": song['title']})
             if not vc.is_playing() and not vc.is_paused():
-                await self.play_next(vc, interaction.guild.id)
+                await self.play_next(vc, interaction.guild.id, interaction)
             await interaction.followup.send(f"▶️ 自動串流已啟動，並加入歌曲：{song['title']}")
         else:
             await interaction.followup.send("❌ 找不到符合類別的歌曲。")

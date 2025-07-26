@@ -2,3 +2,12 @@
  * Debug mode: on
 Address already in use
 Port 5000 is in use by another program. Either identify and stop that program, or start the server with a different port.
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/bot.py", line 1, in <module>
+    import discord
+ModuleNotFoundError: No module named 'discord'
+🚀 正在啟動 Discord Bot...
+Traceback (most recent call last):
+  File "/mnt/usb/Akane-Ko/Bot/bot.py", line 1, in <module>
+    import discord
+ModuleNotFoundError: No module named 'discord'

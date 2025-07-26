@@ -43,6 +43,7 @@ class AntiRaid(commands.Cog):
             r'free.*gems'
         ]
         self.load_profanity_words()
+        self.kick_counter = {}  # 記錄用戶被踢次數
         logger.info("[AntiRaid] 反惡意系統已啟動")
 
     def load_config(self):
@@ -87,7 +88,9 @@ class AntiRaid(commands.Cog):
                 "fuck", "shit", "bitch", "asshole", "dick", "pussy", "cock", "cunt",
                 "motherfucker", "fucker", "bastard", "whore", "slut", "nigger", "nigga",
                 "faggot", "fag", "dyke", "retard", "idiot", "stupid", "dumb", "moron"
-            ]
+            ],
+            "super_protect_enabled": False,  # 超級防護開關
+            "auto_delete_invite_enabled": False,  # 自動刪除邀請開關
         }
 
     def save_config(self, config=None):
@@ -148,6 +151,16 @@ class AntiRaid(commands.Cog):
             return False
 
     @commands.Cog.listener()
+    async def on_invite_create(self, invite):
+        if not self.config.get("auto_delete_invite_enabled", False):
+            return
+        try:
+            await invite.delete(reason="自動防護: 禁止邀請連結")
+            logger.info(f"[AntiRaid] 已自動刪除邀請: {invite.url}")
+        except Exception as e:
+            logger.error(f"[AntiRaid] 刪除邀請失敗: {e}")
+
+    @commands.Cog.listener()
     async def on_member_join(self, member):
         """監聽成員加入事件"""
         if not self.config.get('enabled', True):
@@ -179,6 +192,32 @@ class AntiRaid(commands.Cog):
             
             # 記錄行動
             await self.log_action("惡意加入防護", member, f"{len(self.user_joins[guild_id])} 人在 {window} 秒內加入")
+
+        # 超級防護
+        if self.config.get('super_protect_enabled', False):
+            now = time.time()
+            # 7天內新帳號直接踢
+            if (now - member.created_at.timestamp()) < 7*24*60*60:
+                try:
+                    await member.kick(reason="新帳號7天內禁止加入")
+                except Exception as e:
+                    logger.error(f"[AntiRaid] Kick新帳號失敗: {e}")
+                return
+            # 記錄被踢次數
+            uid = str(member.id)
+            self.kick_counter[uid] = self.kick_counter.get(uid, 0) + 1
+            if self.kick_counter[uid] >= 3:
+                try:
+                    await member.ban(reason="連續3次加入被Ban")
+                except Exception as e:
+                    logger.error(f"[AntiRaid] Ban失敗: {e}")
+                return
+            else:
+                try:
+                    await member.kick(reason="超級防護: 直接踢")
+                except Exception as e:
+                    logger.error(f"[AntiRaid] Kick失敗: {e}")
+                return
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -605,6 +644,44 @@ class AntiRaid(commands.Cog):
                 color=discord.Color.red()
             )
             await interaction.followup.send(embed=embed)
+
+    @app_commands.command(name="superprotect", description="開關超級防護(管理員)")
+    @app_commands.describe(
+        action="on或off"
+    )
+    async def superprotect_command(self, interaction: discord.Interaction, action: str):
+        if not self.is_admin(interaction.user):
+            await interaction.response.send_message("你不是管理員不能用", ephemeral=True)
+            return
+        if action.lower() == "on":
+            self.config["super_protect_enabled"] = True
+            self.save_config()
+            await interaction.response.send_message("超級防護已開啟", ephemeral=True)
+        elif action.lower() == "off":
+            self.config["super_protect_enabled"] = False
+            self.save_config()
+            await interaction.response.send_message("超級防護已關閉", ephemeral=True)
+        else:
+            await interaction.response.send_message("請用 on 或 off", ephemeral=True)
+
+    @app_commands.command(name="autoinvite", description="開關自動刪除邀請(管理員)")
+    @app_commands.describe(
+        action="on或off"
+    )
+    async def autoinvite_command(self, interaction: discord.Interaction, action: str):
+        if not self.is_admin(interaction.user):
+            await interaction.response.send_message("你不是管理員不能用", ephemeral=True)
+            return
+        if action.lower() == "on":
+            self.config["auto_delete_invite_enabled"] = True
+            self.save_config()
+            await interaction.response.send_message("自動刪除邀請已開啟", ephemeral=True)
+        elif action.lower() == "off":
+            self.config["auto_delete_invite_enabled"] = False
+            self.save_config()
+            await interaction.response.send_message("自動刪除邀請已關閉", ephemeral=True)
+        else:
+            await interaction.response.send_message("請用 on 或 off", ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(AntiRaid(bot))

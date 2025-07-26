@@ -1,4 +1,48 @@
-Traceback (most recent call last):
-  File "/mnt/usb/Akane-Ko/Bot/bot.py", line 1, in <module>
-    import discord
-ModuleNotFoundError: No module named 'discord'
+nohup: 忽略輸入
+2025-07-26 10:03:02 - Bot - INFO - Logging 系統已設定完成
+2025-07-26 10:03:02 - Bot - INFO - 設定檔案載入成功
+2025-07-26 10:03:02 - Bot - INFO - 正在啟動 Bot...
+2025-07-26 10:03:02 - Bot - INFO - 發現 14 個 cog 檔案: ['cogs.advanced_games', 'cogs.analytics', 'cogs.antiraid', 'cogs.chat_responses', 'cogs.Extensions', 'cogs.image_tools', 'cogs.member', 'cogs.minigames', 'cogs.music', 'cogs.ping_number', 'cogs.QuestionCog', 'cogs.role_manager', 'cogs.slash', 'cogs.utility_tools']
+2025-07-26 10:03:02 - Bot - INFO - ✅ 已載入 cog: cogs.advanced_games
+2025-07-26 10:03:02 - Bot - INFO - ✅ 已載入 cog: cogs.analytics
+2025-07-26 10:03:02 - AntiRaid - INFO - [AntiRaid] 配置檔案載入成功
+2025-07-26 10:03:02 - AntiRaid - INFO - [AntiRaid] 反惡意系統已啟動
+2025-07-26 10:03:02 - Bot - INFO - ✅ 已載入 cog: cogs.antiraid
+2025-07-26 10:03:03 - ChatResponses - INFO - Loading ChatResponses Cog...
+2025-07-26 10:03:03 - Bot - INFO - ✅ 已載入 cog: cogs.chat_responses
+2025-07-26 10:03:03 - Bot - INFO - ✅ 已載入 cog: cogs.Extensions
+2025-07-26 10:03:03 - Bot - INFO - ✅ 已載入 cog: cogs.image_tools
+2025-07-26 10:03:03 - Bot - INFO - ✅ 已載入 cog: cogs.member
+2025-07-26 10:03:03 - Bot - INFO - ✅ 已載入 cog: cogs.minigames
+2025-07-26 10:03:04 - Music - INFO - [Music] FFmpeg 配置載入成功
+2025-07-26 10:03:04 - Music - INFO - [Music] 音樂配置載入成功
+2025-07-26 10:03:04 - Music - INFO - [Music] 音樂系統已啟動
+2025-07-26 10:03:04 - Music - INFO - [Music] 定期清理任務已啟動
+2025-07-26 10:03:04 - Bot - INFO - ✅ 已載入 cog: cogs.music
+2025-07-26 10:03:04 - Bot - INFO - ✅ 已載入 cog: cogs.ping_number
+2025-07-26 10:03:04 - QuestionCog - INFO - Loaded coins data: {'989884174355791932': 69, '862654551223435266': 110000000}
+2025-07-26 10:03:04 - Bot - INFO - ✅ 已載入 cog: cogs.QuestionCog
+2025-07-26 10:03:04 - Bot - INFO - ✅ 已載入 cog: cogs.role_manager
+2025-07-26 10:03:04 - Bot - INFO - ✅ 已載入 cog: cogs.slash
+2025-07-26 10:03:04 - Bot - INFO - ✅ 已載入 cog: cogs.utility_tools
+2025-07-26 10:03:04 - Bot - INFO - 📊 Cog 載入完成: 14 成功, 0 失敗
+2025-07-26 10:03:04 - Bot - INFO - ✅ Discord Token 已找到
+2025-07-26 10:03:07 - Bot - INFO - Bot 已登入為 紅子 あかねこ(Akane Ko)
+2025-07-26 10:03:07 - Bot - INFO - Bot ID: 1304049627510865960
+2025-07-26 10:03:07 - Bot - INFO - 已連接的伺服器數量: 3
+2025-07-26 10:03:08 - discord.http - WARNING - We are being rate li2025-07-26 10:09:30 - Music - INFO - [on_voice_state_update] Bot 加入語音頻道: test
+2025-07-26 10:09:31 - Music - INFO - [ensure_voice_connection] 成功連接到頻道: test
+2025-07-26 10:09:55 - Music - INFO - [fetch_song] 找到歌曲：Nothing Beats a Jet2holiday | Sale | Family | TV advert
+Multiple -ac options specified for stream 0, only the last option '-ac 2' will be used.
+Multiple -ar options specified for stream 0, only the last option '-ar 48000' will be used.
+[https @ 0xc2d640] Will reconnect at 483309 in 0 second(s), error=End of file.
+[https @ 0xc2d640] Will reconnect at 483309 in 1 second(s), error=End of file.
+[https @ 0xc2d640] Will reconnect at 483309 in 3 second(s), error=End of file.
+[https @ 0xc2d640] Will reconnect at 483309 in 7 second(s), error=End of file.
+[https @ 0xc2d640] Will reconnect at 483309 in 0 second(s), error=End of file.
+[https @ 0xc2d640] Will reconnect at 483309 in 1 second(s), error=End of file.
+[https @ 0xc2d640] Will reconnect at 483309 in 3 second(s), error=End of file.
+[https @ 0xc2d640] Will reconnect at 483309 in 7 second(s), error=End of file.
+https://rr3---sn-ipoxu-un5el.googlevideo.com/videoplayback?expire=1753517378&ei=4jiEaM2PH525pt8PpvDfwAM&ip=2001%3Ab011%3A7800%3A1b6f%3Aedab%3A715e%3A80e2%3A7407&id=o-ABYpzEgV5Q9wdIVJ_avujilea8u673RAKmkc_-FeBk6i&itag=251&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&met=1753495778%2C&mh=BF&mm=31%2C29&mn=sn-ipoxu-un5el%2Csn-un57ene6&ms=au%2Crdu&mv=m&mvi=3&pl=52&rms=au%2Cau&initcwndbps=2596250&bui=AY1jyLO2rw1AdvQMpdGLR5txTnryqezMfZ3jpCEBDN-uIABLv0cseW4hizU7r77-OBnrUpGpj4jzwrlZ&vprv=1&svpuc=1&mime=audio%2Fwebm&ns=0kU1qqzCrMTEy8d8hx5WBhYQ&rqh=1&gir=yes&clen=483309&dur=30.021&lmt=1751686126192611&mt=1753495251&fvip=2&keepalive=yes&lmw=1&fexp=51542236%2C51543007&c=TVHTML5&sefc=1&txp=5532534&n=_102t2_R-PH8gw&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cbui%2Cvprv%2Csvpuc%2Cmime%2Cns%2Crqh%2Cgir%2Cclen%2Cdur%2Clmt&sig=AJfQdSswRQIhALWCAaa0eFU9v_YdF7DeqR7r-e8VEG8Z4riQ4fe3oj6wAiB7BSuI8oeNtjONlzn_MJesCiLzZfwGk70m8DC03NUqWw%3D%3D&lsparams=met%2Cmh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Crms%2Cinitcwndbps&lsig=APaTxxMwRAIgRr39061c3kWHjuG41aWlHY-JFa_gQpRk0b_NktDLs7ACIEU1S9WYZpz3Gey_s2WdqVSlnkZOKJMdHAcbkIM_NmMd: Input/output error
+2025-07-26 10:10:47 - Music - ERROR - [after_callback] 調用 after_playing 失敗: There is no current event loop in thread 'audio-player:0xb2559fb0'.
+2025-07-26 10:11:50 - Music - INFO - [on_voice_state_update] Bot 離開語音頻道: test
