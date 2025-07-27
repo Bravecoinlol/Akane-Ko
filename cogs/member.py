@@ -480,84 +480,66 @@ class MemberCog(commands.Cog):
     async def create_welcome_card(self, member, server_name):
         """生成歡迎卡片"""
         try:
-            # 載入配置
-            config = self.load_welcome_card_config()
-            
-            # 使用網頁儀表板配置或預設值
-            if config:
-                background_image = config.get('background_image', 'welcome_card.png')
-                font_file = config.get('font_file', 'Arial_1.ttf')
-                font_size = config.get('font_size', 60)
-                text_color = config.get('text_color', '#FFFFFF')
-                main_text_position = config.get('main_text_position', {'x': 400, 'y': 200})
-                subtitle_position = config.get('subtitle_position', {'x': 400, 'y': 300})
-            else:
-                # 使用舊版配置或預設值
-                background_image = '歡迎卡片範本.png'
-                font_file = 'Arial_1.ttf'
-                font_size = 60
-                text_color = '#FFFFFF'
-                main_text_position = {'x': 400, 'y': 200}
-                subtitle_position = {'x': 400, 'y': 300}
-
-            # 載入背景圖片
-            template_path = os.path.join(os.getcwd(), background_image)
+            # 只用背景圖 '歡迎卡片範本.png'
+            template_path = os.path.join(os.getcwd(), '歡迎卡片範本.png')
             if not os.path.exists(template_path):
-                logger.error(f"❌ 找不到背景圖片: {background_image}")
+                logger.error(f"❌ 找不到背景圖片: 歡迎卡片範本.png")
                 return None
 
-            base_image = Image.open(template_path).convert("RGBA").resize((1920, 1080))
-            
-            # 載入字體
-            try:
-                font_path = os.path.join(os.getcwd(), font_file)
-                if not os.path.exists(font_path):
-                    logger.error(f"❌ 找不到字體文件: {font_file}")
-                    font = ImageFont.load_default()
-                else:
-                    font = ImageFont.truetype(font_path, font_size)
-            except Exception as e:
-                logger.error(f"載入字體失敗: {e}")
-                font = ImageFont.load_default()
+            base_image = Image.open(template_path).convert("RGBA")
+
+            # 載入字型
+            font_path = os.path.join(os.getcwd(), 'Arial_1_Bold.ttf')
+            font_path_regular = os.path.join(os.getcwd(), 'Arial_1.ttf')
+            font_hello = ImageFont.truetype(font_path, 117) if os.path.exists(font_path) else ImageFont.load_default()
+            font_welcome = ImageFont.truetype(font_path, 124) if os.path.exists(font_path) else ImageFont.load_default()
+            font_username = ImageFont.truetype(font_path, 92) if os.path.exists(font_path) else ImageFont.load_default()
+            font_server = ImageFont.truetype(font_path_regular, 92) if os.path.exists(font_path_regular) else ImageFont.load_default()
+
 
             # 載入頭像
             avatar_url = member.avatar.url if member.avatar else member.default_avatar.url
             async with aiohttp.ClientSession() as session:
                 async with session.get(avatar_url) as resp:
                     avatar_bytes = await resp.read()
-            avatar = Image.open(BytesIO(avatar_bytes)).resize((400, 400)).convert("RGBA")
+            avatar_size = int(556.7)
+            avatar = Image.open(BytesIO(avatar_bytes)).resize((avatar_size, avatar_size)).convert("RGBA")
 
-            # 創建圓形遮罩
-            mask = Image.new("L", avatar.size, 0)
+            # 圓形遮罩（無黑邊）
+            mask = Image.new("L", (avatar_size, avatar_size), 0)
             draw_circle = ImageDraw.Draw(mask)
-            draw_circle.ellipse((0, 0, 400, 400), fill=255)
-            base_image.paste(avatar, (100, 340), mask)
+            draw_circle.ellipse((0, 0, avatar_size, avatar_size), fill=255)
+            # 頭像位置依範本左上（約 x:110, y:120）
+            base_image.paste(avatar, (110, 120), mask)
 
-            # 繪製文字
+
             draw = ImageDraw.Draw(base_image)
-            
-            # 轉換顏色格式
-            if text_color.startswith('#'):
-                text_color_rgb = tuple(int(text_color[i:i+2], 16) for i in (1, 3, 5))
-            else:
-                text_color_rgb = 'white'
-            
-            # 主文字
-            main_text = f"歡迎 {member.display_name} 加入！"
-            draw.text((main_text_position['x'], main_text_position['y']), main_text, 
-                     font=font, fill=text_color_rgb)
-            
-            # 副標題
-            subtitle = f"歡迎來到 {server_name}！"
-            subtitle_font = ImageFont.truetype(font_path, font_size // 2) if os.path.exists(font_path) else ImageFont.load_default()
-            draw.text((subtitle_position['x'], subtitle_position['y']), subtitle, 
-                     font=subtitle_font, fill=text_color_rgb)
+
+            # 文字描邊函數
+            def draw_text_with_outline(draw, pos, text, font, fill, outline_color, outline_width):
+                x, y = pos
+                # 描邊
+                for ox in range(-outline_width, outline_width+1):
+                    for oy in range(-outline_width, outline_width+1):
+                        if ox == 0 and oy == 0:
+                            continue
+                        draw.text((x+ox, y+oy), text, font=font, fill=outline_color)
+                # 主文字
+                draw.text((x, y), text, font=font, fill=fill)
+
+            # Hello! 橘色，粗黑邊
+            draw_text_with_outline(draw, (776.6, 180.8), "Hello!", font_hello, "#FF914D", "black", 6)
+            # 歡迎...... 白色，粗黑邊
+            draw_text_with_outline(draw, (776.6, 373.2), "歡迎......", font_welcome, "#FFFFFF", "black", 6)
+            # 使用者名稱 黃色，粗黑邊
+            draw_text_with_outline(draw, (47.9, 720.5), f"{member.display_name}", font_username, "#FFD600", "black", 6)
+            # 進來伺服器名稱 黃色，粗體字型，粗黑邊
+            draw_text_with_outline(draw, (47.9, 820.5), f"進來{server_name}!", font_username, "#FFD600", "black", 6)
 
             image_bytes = BytesIO()
             base_image.save(image_bytes, format='PNG')
             image_bytes.seek(0)
             return image_bytes
-
         except Exception as e:
             logger.error("生成歡迎卡時發生錯誤: %s", e)
             return None

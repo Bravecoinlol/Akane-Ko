@@ -111,6 +111,7 @@ class Analytics(commands.Cog):
             message.author.id,
             message.channel.id
         )
+        await self.bot.process_commands(message)
 
     @commands.Cog.listener()
     async def on_app_command(self, interaction: discord.Interaction):

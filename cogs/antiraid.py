@@ -315,6 +315,7 @@ class AntiRaid(commands.Cog):
                     await self.log_action("詐騙禁言", message.author, f"觸發詐騙模式: {', '.join(found_scam)}", duration)
                 except Exception as e:
                     logger.error(f"[AntiRaid] 禁言用戶失敗: {e}")
+        await self.bot.process_commands(message)
 
     # 管理命令
     @app_commands.command(name="antiraid", description="管理反惡意系統")

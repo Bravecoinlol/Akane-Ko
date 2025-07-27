@@ -22,8 +22,11 @@ class RoleButton(discord.ui.Button):
     async def callback(self, interaction: discord.Interaction):
         user = interaction.user
         guild = interaction.guild
+        
         try:
+            # 先回應互動，避免超時
             await interaction.response.defer(thinking=True)
+            
             action = None
             if self.role in user.roles:
                 await user.remove_roles(self.role)
@@ -33,7 +36,6 @@ class RoleButton(discord.ui.Button):
                     description=f"已移除身分組 **{self.role.name}**",
                     color=discord.Color.red()
                 )
-                embed.set_footer(text=f"用戶: {user.display_name}")
             else:
                 await user.add_roles(self.role)
                 action = "領取"
@@ -42,20 +44,17 @@ class RoleButton(discord.ui.Button):
                     description=f"已分配身分組 **{self.role.name}**",
                     color=discord.Color.green()
                 )
-                embed.set_footer(text=f"用戶: {user.display_name}")
-            # 發送公開訊息並於3秒後自動刪除
-            msg = await interaction.followup.send(embed=embed, ephemeral=False)
-            try:
-                await msg.delete(delay=3)
-            except Exception:
-                pass  # 若刪除失敗則忽略
-
+            
+            # 發送回應
+            await interaction.followup.send(embed=embed, ephemeral=True)
+            
             # role_update_channel 公開通知
             member_cog = interaction.client.get_cog('MemberCog')
             if member_cog:
                 guild_id = str(guild.id)
                 channel_id = member_cog.channel_settings.get(guild_id, {}).get('role_update_channel_id')
                 pm_enabled = member_cog.channel_settings.get(guild_id, {}).get('role_update_pm_enabled', False)
+                
                 if channel_id:
                     channel = guild.get_channel(channel_id) or interaction.client.get_channel(channel_id)
                     if channel:
@@ -65,6 +64,7 @@ class RoleButton(discord.ui.Button):
                             color=discord.Color.blue()
                         )
                         await channel.send(embed=notify_embed)
+                
                 if pm_enabled:
                     try:
                         pm_embed = discord.Embed(
@@ -75,21 +75,42 @@ class RoleButton(discord.ui.Button):
                         await user.send(embed=pm_embed)
                     except Exception:
                         pass
+                        
+        except discord.NotFound:
+            # 互動已失效，忽略
+            pass
+        except discord.Forbidden:
+            # 權限不足
+            try:
+                embed = discord.Embed(
+                    title="❌ 權限不足",
+                    description="無法修改身分組，請檢查 Bot 權限",
+                    color=discord.Color.red()
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+            except:
+                pass
         except Exception as e:
             logger.error(f"[RoleButton.callback] 操作失敗: {e}")
-            # 不再嘗試回覆互動，避免多次訊息或已失效錯誤
+            try:
+                embed = discord.Embed(
+                    title="❌ 操作失敗",
+                    description="處理身分組時發生錯誤，請稍後再試",
+                    color=discord.Color.red()
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+            except:
+                pass
 
 class PublicRoleSelectionView(discord.ui.View):
     def __init__(self, roles: List[discord.Role], max_buttons_per_row: int = 3):
         super().__init__(timeout=None)
         for i, role in enumerate(roles):
-            style = discord.ButtonStyle.primary
+            # 簡化顏色設定：根據角色位置輪流使用不同顏色
+            styles = [discord.ButtonStyle.primary, discord.ButtonStyle.secondary, discord.ButtonStyle.success]
+            style = styles[i % len(styles)]
             emoji = "🎭"
-            if role.color.value != 0:
-                if role.color.value < 0x800000:
-                    style = discord.ButtonStyle.secondary
-                elif role.color.value > 0xFFFF00:
-                    style = discord.ButtonStyle.success
+            
             button = RoleButton(role, role.name, emoji, style)
             button.row = i // max_buttons_per_row
             self.add_item(button)

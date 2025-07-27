@@ -110,37 +110,44 @@ class MinesweeperButton(discord.ui.Button):
         self.view = view
 
     async def callback(self, interaction: discord.Interaction):
-        if self.view.game_over:
-            await interaction.response.send_message("遊戲已經結束了喔～", ephemeral=True)
-            return
+        try:
+            if self.view.game_over:
+                await interaction.response.send_message("遊戲已經結束了喔～", ephemeral=True)
+                return
 
-        if self.game.reveal_cell(self.x, self.y):
-            self.label = "💣"
-            self.style = discord.ButtonStyle.danger
-            self.view.game_over = True
-            for item in self.view.children:
-                if isinstance(item, MinesweeperButton):
-                    cx, cy = item.x, item.y
-                    if (cx, cy) in self.game.bomb_locations:
-                        item.label = '💣'
-                        item.style = discord.ButtonStyle.danger
-                        item.disabled = True
-            await interaction.response.edit_message(content="💥 你踩到地雷啦！遊戲結束！", view=self.view)
-        else:
-            count = self.game._adjacent_bomb_count(self.x, self.y)
-            self.label = str(count) if count > 0 else '⬛'
-            self.disabled = True
-            self.style = discord.ButtonStyle.gray
-            # 判斷是否破關
-            if self._check_win():
+            if self.game.reveal_cell(self.x, self.y):
+                self.label = "💣"
+                self.style = discord.ButtonStyle.danger
                 self.view.game_over = True
-                # 記錄排行榜
-                cog = interaction.client.get_cog("MiniGames")
-                if cog and hasattr(cog, 'leaderboard_manager'):
-                    cog.leaderboard_manager.add_win('minesweeper', interaction.user.id)
-                await interaction.response.edit_message(content="🎉 恭喜你破關踩地雷！", view=self.view)
+                for item in self.view.children:
+                    if isinstance(item, MinesweeperButton):
+                        cx, cy = item.x, item.y
+                        if (cx, cy) in self.game.bomb_locations:
+                            item.label = '💣'
+                            item.style = discord.ButtonStyle.danger
+                            item.disabled = True
+                await interaction.response.edit_message(content="💥 你踩到地雷啦！遊戲結束！", view=self.view)
             else:
-                await interaction.response.edit_message(view=self.view)
+                count = self.game._adjacent_bomb_count(self.x, self.y)
+                self.label = str(count) if count > 0 else '⬛'
+                self.disabled = True
+                self.style = discord.ButtonStyle.gray
+                # 判斷是否破關
+                if self._check_win():
+                    self.view.game_over = True
+                    # 記錄排行榜
+                    cog = interaction.client.get_cog("MiniGames")
+                    if cog and hasattr(cog, 'leaderboard_manager'):
+                        cog.leaderboard_manager.add_win('minesweeper', interaction.user.id)
+                    await interaction.response.edit_message(content="🎉 恭喜你破關踩地雷！", view=self.view)
+                else:
+                    await interaction.response.edit_message(view=self.view)
+        except Exception as e:
+            logger.error(f"[MinesweeperButton] 回調處理失敗: {e}")
+            try:
+                await interaction.response.send_message("❌ 處理踩地雷時發生錯誤，請重試", ephemeral=True)
+            except:
+                pass
 
     def _check_win(self):
         # 沒有踩到地雷且所有非地雷格都被揭開
@@ -158,6 +165,14 @@ class MinesweeperGameView(discord.ui.View):
         for x in range(game.size):
             for y in range(game.size):
                 self.add_item(MinesweeperButton(x, y, game, self))
+
+    async def on_timeout(self):
+        try:
+            for child in self.children:
+                child.disabled = True
+            logger.info(f"[MinesweeperGameView] 遊戲超時，已結束")
+        except Exception as e:
+            logger.error(f"[MinesweeperGameView] 超時處理失敗: {e}")
 
 # 主小遊戲 Cog
 class MiniGames(commands.Cog):
@@ -202,7 +217,7 @@ class MiniGames(commands.Cog):
                 
             elif mode.value == "custom":
                 # 自定義數字模式
-                if interaction.channel_id in self.custom_numbers:
+                if interaction.channel.id in self.custom_numbers:
                     await interaction.response.send_message("❌ 此頻道已有進行中的自定義猜數字遊戲！", ephemeral=True)
                     return
                 
@@ -239,51 +254,53 @@ class MiniGames(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         """監聽訊息來處理猜數字遊戲"""
+        logger.info(f"[on_message] 收到訊息: {message.content}, author: {message.author}, reference: {message.reference}")
         try:
             # 忽略 Bot 訊息
             if message.author.bot:
+                logger.info("[on_message] 忽略 bot 訊息")
                 return
-                
             # 檢查是否為回覆訊息
             if not message.reference:
+                logger.info("[on_message] 非回覆訊息，忽略")
                 return
-                
             # 獲取被回覆的訊息
             try:
                 replied_message = await message.channel.fetch_message(message.reference.message_id)
-            except:
+            except Exception as e:
+                logger.info(f"[on_message] 無法取得被回覆訊息: {e}")
                 return
-                
             # 檢查被回覆的訊息是否為 Bot 的猜數字遊戲訊息
             if replied_message.author.id != self.bot.user.id:
+                logger.info("[on_message] 被回覆訊息不是 bot 發的，忽略")
                 return
-                
-            # 檢查訊息內容是否包含猜數字遊戲相關內容
-            if not any(keyword in replied_message.content.lower() for keyword in ["猜數字", "數字遊戲", "猜測數字", "遊戲開始", "想好了一個"]):
-                return
-                
             # 嘗試解析數字
             try:
                 guess = int(message.content.strip())
             except ValueError:
+                logger.info("[on_message] 輸入不是有效數字")
                 embed = discord.Embed(
-                    title="❌ 輸入錯誤",
-                    description="請輸入有效的數字",
+                    title="❌ 無效輸入",
+                    description="請輸入一個有效的數字",
                     color=discord.Color.red()
-                )
-                embed.add_field(
-                    name="正確格式",
-                    value="直接輸入數字，例如：`50`",
-                    inline=False
                 )
                 await message.reply(embed=embed, mention_author=False)
                 return
-                
             # 處理猜數字邏輯
+            logger.info(f"[on_message] 進入猜數字邏輯，guess={guess}")
             await self.process_guess(message, guess, replied_message)
-            
         except Exception as e:
             logger.error(f"[on_message] 處理猜數字回覆失敗: {e}")
+            try:
+                embed = discord.Embed(
+                    title="❌ 處理失敗",
+                    description="處理猜數字時發生錯誤",
+                    color=discord.Color.red()
+                )
+                await message.reply(embed=embed, mention_author=False)
+            except:
+                pass
+        await self.bot.process_commands(message)
 
     async def process_guess(self, message, guess, game_message):
         """處理猜數字邏輯"""
@@ -410,7 +427,7 @@ class MiniGames(commands.Cog):
             logger.error(f"[process_guess] 處理猜數字失敗: {e}")
             try:
                 embed = discord.Embed(
-                    title="❌ 處理錯誤",
+                    title="❌ 處理失敗",
                     description="處理猜數字時發生錯誤",
                     color=discord.Color.red()
                 )
@@ -421,11 +438,11 @@ class MiniGames(commands.Cog):
                 )
                 await message.reply(embed=embed, mention_author=False)
             except:
-                logger.error(f"[process_guess] 無法發送錯誤訊息: {e}")
+                pass
 
     @app_commands.command(name="結束猜數字", description="結束當前的自定義猜數字遊戲")
     async def end_guess_number(self, interaction: discord.Interaction):
-        custom_game = self.custom_numbers.get(interaction.channel_id)
+        custom_game = self.custom_numbers.get(interaction.channel.id)
         if not custom_game:
             await interaction.response.send_message("目前沒有進行中的自定義猜數字遊戲！", ephemeral=True)
             return
@@ -435,7 +452,7 @@ class MiniGames(commands.Cog):
             return
         
         number = custom_game['number']
-        del self.custom_numbers[interaction.channel_id]
+        del self.custom_numbers[interaction.channel.id]
         await interaction.response.send_message(f"遊戲已結束！正確答案是：{number}")
 
     @app_commands.command(name="剪刀石頭布", description="來場剪刀石頭布吧！")
@@ -568,25 +585,53 @@ class RPSView(discord.ui.View):
 
     @discord.ui.button(label="剪刀", emoji="✂️", style=discord.ButtonStyle.primary)
     async def scissor(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.resolve(interaction, "剪刀")
+        try:
+            await self.resolve(interaction, "剪刀")
+        except Exception as e:
+            logger.error(f"[RPSView] 剪刀選擇失敗: {e}")
+            try:
+                await interaction.response.send_message("❌ 選擇剪刀時發生錯誤，請重試", ephemeral=True)
+            except:
+                pass
 
     @discord.ui.button(label="石頭", emoji="✊", style=discord.ButtonStyle.success)
     async def rock(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.resolve(interaction, "石頭")
+        try:
+            await self.resolve(interaction, "石頭")
+        except Exception as e:
+            logger.error(f"[RPSView] 石頭選擇失敗: {e}")
+            try:
+                await interaction.response.send_message("❌ 選擇石頭時發生錯誤，請重試", ephemeral=True)
+            except:
+                pass
 
     @discord.ui.button(label="布", emoji="✋", style=discord.ButtonStyle.danger)
     async def paper(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.resolve(interaction, "布")
+        try:
+            await self.resolve(interaction, "布")
+        except Exception as e:
+            logger.error(f"[RPSView] 布選擇失敗: {e}")
+            try:
+                await interaction.response.send_message("❌ 選擇布時發生錯誤，請重試", ephemeral=True)
+            except:
+                pass
 
     async def resolve(self, interaction: discord.Interaction, user_choice: str):
-        choices = ["剪刀", "石頭", "布"]
-        bot_choice = random.choice(choices)
-        result = get_rps_result(user_choice, bot_choice)
-        if result == "你贏了！":
-            cog = interaction.client.get_cog("MiniGames")
-            if cog and hasattr(cog, 'leaderboard_manager'):
-                cog.leaderboard_manager.add_win('rps', interaction.user.id)
-        await interaction.response.edit_message(content=f"你出的是：{user_choice}，我出的是：{bot_choice}，結果：{result}", view=None)
+        try:
+            choices = ["剪刀", "石頭", "布"]
+            bot_choice = random.choice(choices)
+            result = get_rps_result(user_choice, bot_choice)
+            if result == "你贏了！":
+                cog = interaction.client.get_cog("MiniGames")
+                if cog and hasattr(cog, 'leaderboard_manager'):
+                    cog.leaderboard_manager.add_win('rps', interaction.user.id)
+            await interaction.response.edit_message(content=f"你出的是：{user_choice}，我出的是：{bot_choice}，結果：{result}", view=None)
+        except Exception as e:
+            logger.error(f"[RPSView] 處理剪刀石頭布失敗: {e}")
+            try:
+                await interaction.response.send_message("❌ 處理剪刀石頭布時發生錯誤，請重試", ephemeral=True)
+            except:
+                pass
 
 class TicTacToeRequestView(discord.ui.View):
     def __init__(self, challenger: discord.User, opponent: discord.User, cog):
@@ -594,13 +639,14 @@ class TicTacToeRequestView(discord.ui.View):
         self.challenger = challenger
         self.opponent = opponent
         self.cog = cog
-        self.message = None
 
     async def on_timeout(self):
-        if self.message:
+        try:
             for child in self.children:
                 child.disabled = True
-            await self.message.edit(content="⌛ 挑戰逾時未回應，取消對戰！", view=self)
+            logger.info(f"[TicTacToeRequestView] 挑戰逾時未回應，取消對戰")
+        except Exception as e:
+            logger.error(f"[TicTacToeRequestView] 超時處理失敗: {e}")
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         return True
@@ -625,20 +671,23 @@ class TicTacToeRequestView(discord.ui.View):
             try:
                 # 嘗試編輯原始訊息
                 await interaction.message.edit(content=f"🎮 比賽開始！{self.challenger.mention} (⭕) 對上 {self.opponent.mention} (❌)\n請 {self.challenger.mention} 先下棋！", view=view)
-                view.message = interaction.message
             except discord.Forbidden:
                 # 如果沒有編輯權限，發送新訊息
                 logger.warning(f"[TicTacToe] 沒有編輯訊息權限")
-                new_msg = await interaction.followup.send(content=f"🎮 比賽開始！{self.challenger.mention} (⭕) 對上 {self.opponent.mention} (❌)\n請 {self.challenger.mention} 先下棋！", view=view)
-                view.message = new_msg
+                await interaction.followup.send(content=f"🎮 比賽開始！{self.challenger.mention} (⭕) 對上 {self.opponent.mention} (❌)\n請 {self.challenger.mention} 先下棋！", view=view)
             except discord.HTTPException as e:
                 # 如果編輯失敗，發送新訊息
                 logger.error(f"[TicTacToe] 編輯訊息失敗: {e}")
-                new_msg = await interaction.followup.send(content=f"🎮 比賽開始！{self.challenger.mention} (⭕) 對上 {self.opponent.mention} (❌)\n請 {self.challenger.mention} 先下棋！", view=view)
-                view.message = new_msg
+                try:
+                    await interaction.followup.send(content=f"🎮 比賽開始！{self.challenger.mention} (⭕) 對上 {self.opponent.mention} (❌)\n請 {self.challenger.mention} 先下棋！", view=view)
+                except:
+                    pass
             except Exception as e:
                 logger.error(f"[TicTacToe] 未知錯誤: {e}")
-                await interaction.followup.send("❌ 啟動遊戲時發生錯誤，請重試", ephemeral=True)
+                try:
+                    await interaction.followup.send("❌ 啟動遊戲時發生錯誤，請重試", ephemeral=True)
+                except:
+                    pass
                 return
             
             # 記錄遊戲
@@ -647,7 +696,10 @@ class TicTacToeRequestView(discord.ui.View):
             
         except Exception as e:
             logger.error(f"[TicTacToe] 接受挑戰失敗: {e}")
-            await interaction.followup.send(f"❌ 接受挑戰失敗：{str(e)}", ephemeral=True)
+            try:
+                await interaction.followup.send(f"❌ 接受挑戰失敗：{str(e)}", ephemeral=True)
+            except:
+                pass
 
     @discord.ui.button(label="拒絕挑戰", style=discord.ButtonStyle.danger)
     async def decline(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -661,34 +713,35 @@ class TicTacToeRequestView(discord.ui.View):
             await interaction.response.edit_message(content=f"❌ {self.opponent.mention} 拒絕了 {self.challenger.mention} 的挑戰。", view=self)
         except Exception as e:
             logger.error(f"[TicTacToe] 拒絕挑戰失敗: {e}")
-            await interaction.response.send_message(f"❌ 拒絕挑戰失敗：{str(e)}", ephemeral=True)
+            try:
+                await interaction.response.send_message(f"❌ 拒絕挑戰失敗：{str(e)}", ephemeral=True)
+            except:
+                pass
 
 class MinesweeperModeView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=30)
-        self.message = None
 
     async def on_timeout(self):
-        if self.message:
+        try:
             for child in self.children:
                 child.disabled = True
-            await self.message.edit(content="⏱️ 沒有選擇模式，已取消遊戲。", view=self)
+            logger.info(f"[MinesweeperModeView] 沒有選擇模式，已取消遊戲")
+        except Exception as e:
+            logger.error(f"[MinesweeperModeView] 超時處理失敗: {e}")
 
     @discord.ui.button(label="單人模式", style=discord.ButtonStyle.primary)
     async def single_mode(self, interaction: discord.Interaction, button: discord.ui.Button):
         try:
             game = MinesweeperGame(size=5, bombs=5)
             view = MinesweeperGameView(game)
-
-            # 使用 original_response() 取得訊息並編輯
-            if self.message is None:
-                await interaction.response.send_message("💣 踩地雷遊戲開始！點擊格子來揭開，小心不要踩到地雷喔！", view=view)
-            else:
-                await interaction.response.edit_message(content="💣 踩地雷遊戲開始！點擊格子來揭開，小心不要踩到地雷喔！", view=view)
-                
+            await interaction.response.edit_message(content="💣 踩地雷遊戲開始！點擊格子來揭開，小心不要踩到地雷喔！", view=view)
         except Exception as e:
             logger.error(f"[Minesweeper] 啟動單人模式失敗: {e}")
-            await interaction.response.send_message(f"❌ 啟動遊戲失敗：{str(e)}", ephemeral=True)
+            try:
+                await interaction.response.send_message(f"❌ 啟動遊戲失敗：{str(e)}", ephemeral=True)
+            except:
+                pass
 
     @discord.ui.button(label="對戰模式", style=discord.ButtonStyle.success)
     async def versus_mode(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -696,7 +749,10 @@ class MinesweeperModeView(discord.ui.View):
             await interaction.response.send_message("💣 對戰模式功能正在開發中，敬請期待！", ephemeral=True)
         except Exception as e:
             logger.error(f"[Minesweeper] 對戰模式失敗: {e}")
-            await interaction.response.send_message(f"❌ 啟動對戰模式失敗：{str(e)}", ephemeral=True)
+            try:
+                await interaction.response.send_message(f"❌ 啟動對戰模式失敗：{str(e)}", ephemeral=True)
+            except:
+                pass
 
 class TicTacToeGameView(discord.ui.View):
     def __init__(self, player1, player2, cog):
@@ -706,21 +762,19 @@ class TicTacToeGameView(discord.ui.View):
         self.cog = cog
         self.board = [[None for _ in range(3)] for _ in range(3)]
         self.current = player1  # 先手
-        self.message = None
         self.game_over = False
         for x in range(3):
             for y in range(3):
                 self.add_item(TicTacToeButton(x, y, self))
 
     async def on_timeout(self):
-        if self.message:
-            try:
-                for child in self.children:
-                    child.disabled = True
-                await self.message.edit(content="⌛ 對戰逾時未完成，遊戲結束！", view=self)
-            except Exception as e:
-                logger.error(f"[TicTacToe] 逾時處理失敗: {e}")
-            self._cleanup()
+        try:
+            for child in self.children:
+                child.disabled = True
+            logger.info(f"[TicTacToeGameView] 對戰逾時未完成，遊戲結束")
+        except Exception as e:
+            logger.error(f"[TicTacToeGameView] 逾時處理失敗: {e}")
+        self._cleanup()
 
     def _cleanup(self):
         key = tuple(sorted([self.player1.id, self.player2.id]))
@@ -751,57 +805,64 @@ class TicTacToeButton(discord.ui.Button):
         self.view = view
 
     async def callback(self, interaction: discord.Interaction):
-        if self.view.game_over:
-            await interaction.response.send_message("遊戲已經結束了喔～", ephemeral=True)
-            return
-        if interaction.user != self.view.current:
-            await interaction.response.send_message("現在不是你的回合喔！", ephemeral=True)
-            return
-        
-        symbol = "⭕" if self.view.current == self.view.player1 else "❌"
-        self.label = symbol
-        self.disabled = True
-        self.style = discord.ButtonStyle.success if symbol == "⭕" else discord.ButtonStyle.danger
-        self.view.board[self.x][self.y] = symbol
-        
-        # 勝負判斷
-        if self.view.check_win(symbol):
-            self.view.game_over = True
-            for child in self.view.children:
-                child.disabled = True
-            # 記錄勝場
-            winner = self.view.current
-            if hasattr(self.view.cog, 'leaderboard_manager'):
-                self.view.cog.leaderboard_manager.add_win('tictactoe', winner.id)
+        try:
+            if self.view.game_over:
+                await interaction.response.send_message("遊戲已經結束了喔～", ephemeral=True)
+                return
+            if interaction.user != self.view.current:
+                await interaction.response.send_message("現在不是你的回合喔！", ephemeral=True)
+                return
             
+            symbol = "⭕" if self.view.current == self.view.player1 else "❌"
+            self.label = symbol
+            self.disabled = True
+            self.style = discord.ButtonStyle.success if symbol == "⭕" else discord.ButtonStyle.danger
+            self.view.board[self.x][self.y] = symbol
+            
+            # 勝負判斷
+            if self.view.check_win(symbol):
+                self.view.game_over = True
+                for child in self.view.children:
+                    child.disabled = True
+                # 記錄勝場
+                winner = self.view.current
+                if hasattr(self.view.cog, 'leaderboard_manager'):
+                    self.view.cog.leaderboard_manager.add_win('tictactoe', winner.id)
+                
+                try:
+                    await interaction.response.edit_message(content=f"🎉 {winner.mention} ({symbol}) 獲勝！", view=self.view)
+                except Exception as e:
+                    logger.error(f"[TicTacToe] 獲勝訊息編輯失敗: {e}")
+                    await interaction.response.send_message(f"🎉 {winner.mention} ({symbol}) 獲勝！", ephemeral=True)
+                
+                self.view._cleanup()
+            elif self.view.check_draw():
+                self.view.game_over = True
+                for child in self.view.children:
+                    child.disabled = True
+                
+                try:
+                    await interaction.response.edit_message(content="🤝 平手！", view=self.view)
+                except Exception as e:
+                    logger.error(f"[TicTacToe] 平手訊息編輯失敗: {e}")
+                    await interaction.response.send_message("🤝 平手！", ephemeral=True)
+                
+                self.view._cleanup()
+            else:
+                # 換人
+                self.view.current = self.view.player2 if self.view.current == self.view.player1 else self.view.player1
+                
+                try:
+                    await interaction.response.edit_message(content=f"請 {self.view.current.mention} 下棋！", view=self.view)
+                except Exception as e:
+                    logger.error(f"[TicTacToe] 換人訊息編輯失敗: {e}")
+                    await interaction.response.send_message(f"請 {self.view.current.mention} 下棋！", ephemeral=True)
+        except Exception as e:
+            logger.error(f"[TicTacToeButton] 回調處理失敗: {e}")
             try:
-                await interaction.response.edit_message(content=f"🎉 {winner.mention} ({symbol}) 獲勝！", view=self.view)
-            except Exception as e:
-                logger.error(f"[TicTacToe] 獲勝訊息編輯失敗: {e}")
-                await interaction.response.send_message(f"🎉 {winner.mention} ({symbol}) 獲勝！", ephemeral=True)
-            
-            self.view._cleanup()
-        elif self.view.check_draw():
-            self.view.game_over = True
-            for child in self.view.children:
-                child.disabled = True
-            
-            try:
-                await interaction.response.edit_message(content="🤝 平手！", view=self.view)
-            except Exception as e:
-                logger.error(f"[TicTacToe] 平手訊息編輯失敗: {e}")
-                await interaction.response.send_message("🤝 平手！", ephemeral=True)
-            
-            self.view._cleanup()
-        else:
-            # 換人
-            self.view.current = self.view.player2 if self.view.current == self.view.player1 else self.view.player1
-            
-            try:
-                await interaction.response.edit_message(content=f"請 {self.view.current.mention} 下棋！", view=self.view)
-            except Exception as e:
-                logger.error(f"[TicTacToe] 換人訊息編輯失敗: {e}")
-                await interaction.response.send_message(f"請 {self.view.current.mention} 下棋！", ephemeral=True)
+                await interaction.response.send_message("❌ 處理下棋時發生錯誤，請重試", ephemeral=True)
+            except:
+                pass
 
 def get_rps_result(user, bot):
     if user == bot:
@@ -825,44 +886,86 @@ class CustomNumberView(discord.ui.View):
         try:
             for child in self.children:
                 child.disabled = True
-            await self.message.edit(content="⏰ 設定超時，自定義猜數字遊戲已取消", view=self)
+            logger.info(f"[CustomNumberView] 設定超時，自定義猜數字遊戲已取消")
         except Exception as e:
             logger.error(f"[CustomNumberView] 超時處理失敗: {e}")
 
     @discord.ui.button(label="1-20", style=discord.ButtonStyle.primary, row=0)
     async def range_1_20(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.show_number_selector(interaction, 1, 20)
+        try:
+            await self.show_number_selector(interaction, 1, 20)
+        except Exception as e:
+            logger.error(f"[CustomNumberView] 1-20 範圍選擇失敗: {e}")
+            try:
+                await interaction.response.send_message("❌ 選擇範圍時發生錯誤，請重試", ephemeral=True)
+            except:
+                pass
 
     @discord.ui.button(label="21-40", style=discord.ButtonStyle.primary, row=0)
     async def range_21_40(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.show_number_selector(interaction, 21, 40)
+        try:
+            await self.show_number_selector(interaction, 21, 40)
+        except Exception as e:
+            logger.error(f"[CustomNumberView] 21-40 範圍選擇失敗: {e}")
+            try:
+                await interaction.response.send_message("❌ 選擇範圍時發生錯誤，請重試", ephemeral=True)
+            except:
+                pass
 
     @discord.ui.button(label="41-60", style=discord.ButtonStyle.primary, row=0)
     async def range_41_60(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.show_number_selector(interaction, 41, 60)
+        try:
+            await self.show_number_selector(interaction, 41, 60)
+        except Exception as e:
+            logger.error(f"[CustomNumberView] 41-60 範圍選擇失敗: {e}")
+            try:
+                await interaction.response.send_message("❌ 選擇範圍時發生錯誤，請重試", ephemeral=True)
+            except:
+                pass
 
     @discord.ui.button(label="61-80", style=discord.ButtonStyle.primary, row=1)
     async def range_61_80(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.show_number_selector(interaction, 61, 80)
+        try:
+            await self.show_number_selector(interaction, 61, 80)
+        except Exception as e:
+            logger.error(f"[CustomNumberView] 61-80 範圍選擇失敗: {e}")
+            try:
+                await interaction.response.send_message("❌ 選擇範圍時發生錯誤，請重試", ephemeral=True)
+            except:
+                pass
 
     @discord.ui.button(label="81-100", style=discord.ButtonStyle.primary, row=1)
     async def range_81_100(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.show_number_selector(interaction, 81, 100)
+        try:
+            await self.show_number_selector(interaction, 81, 100)
+        except Exception as e:
+            logger.error(f"[CustomNumberView] 81-100 範圍選擇失敗: {e}")
+            try:
+                await interaction.response.send_message("❌ 選擇範圍時發生錯誤，請重試", ephemeral=True)
+            except:
+                pass
 
     async def show_number_selector(self, interaction: discord.Interaction, start: int, end: int):
-        # 創建數字選擇器
-        view = NumberSelectorView(self.user, self.cog, start, end)
-        embed = discord.Embed(
-            title=f"🎯 選擇數字 ({start}-{end})",
-            description=f"請選擇 {start} 到 {end} 之間的數字作為正確答案",
-            color=discord.Color.blue()
-        )
-        embed.add_field(
-            name="遊戲說明",
-            value="設定完成後，其他玩家可以回覆遊戲訊息來猜測數字",
-            inline=False
-        )
-        await interaction.response.edit_message(embed=embed, view=view)
+        try:
+            # 創建數字選擇器
+            view = NumberSelectorView(self.user, self.cog, start, end)
+            embed = discord.Embed(
+                title=f"🎯 選擇數字 ({start}-{end})",
+                description=f"請選擇 {start} 到 {end} 之間的數字作為正確答案",
+                color=discord.Color.blue()
+            )
+            embed.add_field(
+                name="遊戲說明",
+                value="設定完成後，其他玩家可以回覆遊戲訊息來猜測數字",
+                inline=False
+            )
+            await interaction.response.edit_message(embed=embed, view=view)
+        except Exception as e:
+            logger.error(f"[CustomNumberView] 顯示數字選擇器失敗: {e}")
+            try:
+                await interaction.response.send_message("❌ 顯示數字選擇器時發生錯誤，請重試", ephemeral=True)
+            except:
+                pass
 
 class NumberSelectorView(discord.ui.View):
     def __init__(self, user: discord.User, cog, start: int, end: int):
@@ -893,7 +996,7 @@ class NumberSelectorView(discord.ui.View):
         async def callback(interaction: discord.Interaction):
             try:
                 # 設定自定義數字
-                self.cog.custom_numbers[interaction.channel_id] = {
+                self.cog.custom_numbers[interaction.channel.id] = {
                     'number': number,
                     'host': self.user.id
                 }
@@ -923,7 +1026,10 @@ class NumberSelectorView(discord.ui.View):
                 
             except Exception as e:
                 logger.error(f"[NumberSelectorView] 設定數字失敗: {e}")
+            try:
                 await interaction.response.send_message(f"❌ 設定數字失敗：{str(e)}", ephemeral=True)
+            except:
+                pass
         
         return callback
 
@@ -935,7 +1041,7 @@ class NumberSelectorView(discord.ui.View):
         try:
             for child in self.children:
                 child.disabled = True
-            await self.message.edit(content="⏰ 選擇超時，自定義猜數字遊戲已取消", view=self)
+            logger.info(f"[NumberSelectorView] 選擇超時，自定義猜數字遊戲已取消")
         except Exception as e:
             logger.error(f"[NumberSelectorView] 超時處理失敗: {e}")
 
