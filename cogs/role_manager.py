@@ -47,7 +47,7 @@ class RoleButton(discord.ui.Button):
             
             # 發送回應
             await interaction.followup.send(embed=embed, ephemeral=True)
-            
+
             # role_update_channel 公開通知
             member_cog = interaction.client.get_cog('MemberCog')
             if member_cog:
@@ -89,7 +89,7 @@ class RoleButton(discord.ui.Button):
                 )
                 await interaction.followup.send(embed=embed, ephemeral=True)
             except:
-                pass
+                        pass
         except Exception as e:
             logger.error(f"[RoleButton.callback] 操作失敗: {e}")
             try:
@@ -116,6 +116,20 @@ class PublicRoleSelectionView(discord.ui.View):
             self.add_item(button)
 
 class RoleManager(commands.Cog):
+    async def setup_persistent_views(self):
+        """Bot 啟動時自動註冊所有公開身分組面板的 View"""
+        for guild_id, role_ids in self.role_config.items():
+            guild = self.bot.get_guild(int(guild_id))
+            if not guild:
+                continue
+            roles = []
+            for role_id in role_ids:
+                role = guild.get_role(int(role_id))
+                if role:
+                    roles.append(role)
+            if roles:
+                view = PublicRoleSelectionView(roles)
+                self.bot.add_view(view)
     def __init__(self, bot):
         self.bot = bot
         self.role_config_path = 'role_config.json'
@@ -681,4 +695,6 @@ class CreatePanelButton(discord.ui.Button):
                 logger.error(f"[CreatePanelButton] 無法發送錯誤訊息: {send_error}")
 
 async def setup(bot):
-    await bot.add_cog(RoleManager(bot)) 
+    cog = RoleManager(bot)
+    await bot.add_cog(cog)
+    await cog.setup_persistent_views()
