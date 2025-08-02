@@ -536,10 +536,21 @@ class MemberCog(commands.Cog):
             # 進來伺服器名稱 黃色，粗體字型，粗黑邊
             draw_text_with_outline(draw, (47.9, 820.5), f"進來{server_name}!", font_username, "#FFD600", "black", 6)
 
+            logger.info(f"[WelcomeCard] base_image mode: {base_image.mode}, size: {base_image.size}")
+            # debug: 儲存一份到本地
+            try:
+                base_image.save("test_welcome_card.png")
+            except Exception as file_err:
+                logger.error(f"[WelcomeCard] 儲存本地 test_welcome_card.png 失敗: {file_err}")
+
             image_bytes = BytesIO()
-            base_image.save(image_bytes, format='PNG')
-            image_bytes.seek(0)
-            return image_bytes
+            try:
+                base_image.save(image_bytes, format='PNG')
+                image_bytes.seek(0)
+                return image_bytes
+            except Exception as e:
+                logger.error(f"[WelcomeCard] BytesIO 儲存失敗: {e}")
+                return None
         except Exception as e:
             logger.error("生成歡迎卡時發生錯誤: %s", e)
             return None
