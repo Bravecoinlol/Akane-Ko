@@ -1,3 +1,15 @@
+ROLE_PANEL_PATH = 'role_panel.json'
+
+def load_role_panels():
+    if not os.path.exists(ROLE_PANEL_PATH):
+        with open(ROLE_PANEL_PATH, 'w', encoding='utf-8') as f:
+            json.dump([], f)
+    with open(ROLE_PANEL_PATH, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+def save_role_panels(panels):
+    with open(ROLE_PANEL_PATH, 'w', encoding='utf-8') as f:
+        json.dump(panels, f, ensure_ascii=False, indent=2)
 import discord
 from discord.ext import commands
 from discord import app_commands
@@ -117,19 +129,21 @@ class PublicRoleSelectionView(discord.ui.View):
 
 class RoleManager(commands.Cog):
     async def setup_persistent_views(self):
-        """Bot 啟動時自動註冊所有公開身分組面板的 View"""
-        for guild_id, role_ids in self.role_config.items():
-            guild = self.bot.get_guild(int(guild_id))
-            if not guild:
+        """Bot 啟動時自動註冊所有公開身分組面板的 Persistent View"""
+        panels = load_role_panels()
+        for panel in panels:
+            guild = self.bot.get_guild(panel['guild_id'])
+            channel = guild.get_channel(panel['channel_id']) if guild else None
+            if not guild or not channel:
                 continue
             roles = []
-            for role_id in role_ids:
-                role = guild.get_role(int(role_id))
+            for role_id in panel['role_ids']:
+                role = guild.get_role(role_id)
                 if role:
                     roles.append(role)
             if roles:
                 view = PublicRoleSelectionView(roles)
-                self.bot.add_view(view)
+                self.bot.add_view(view, message_id=panel['message_id'])
     def __init__(self, bot):
         self.bot = bot
         self.role_config_path = 'role_config.json'
@@ -238,6 +252,18 @@ class RoleManager(commands.Cog):
                 )
             embed.set_footer(text=f"創建者: {interaction.user.display_name} | 點擊按鈕切換身分組")
             panel_message = await interaction.channel.send(embed=embed, view=view)
+
+            # 新增持久化面板紀錄
+            panels = load_role_panels()
+            panels = [p for p in panels if not (p['guild_id'] == interaction.guild.id and p['message_id'] == panel_message.id)]
+            panels.append({
+                'guild_id': interaction.guild.id,
+                'channel_id': interaction.channel.id,
+                'message_id': panel_message.id,
+                'role_ids': [role.id for role in found_roles]
+            })
+            save_role_panels(panels)
+
             response_embed = discord.Embed(
                 title="✅ 身分組面板已創建",
                 description="身分組選擇面板已成功創建！",
