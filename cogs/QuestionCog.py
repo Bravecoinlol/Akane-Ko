@@ -189,31 +189,36 @@ class QuestionCog(commands.Cog):
         
         if message.id in self.processed_messages:
             return
-        
-        user_id = str(message.author.id)
 
-        if message.reference:
-            ref_message_id = message.reference.message_id
-            if ref_message_id in self.questions:
-                question_data = self.questions[ref_message_id]
+        # 檢查是否為回覆訊息且回覆的是問題
+        if message.reference and message.reference.message_id in self.questions:
+            question_data = self.questions[message.reference.message_id]
+            
+            if message.content.lower() == question_data["answer"]:
+                reward = question_data["reward"]
+                await message.channel.send(f"{message.author.mention} 答對了！獲得 {reward} 金幣！ 🎉")
+                self.update_coins(message.author.id, reward)  # 更新金幣
+                self.save_coins()  # 立即保存金幣
+                del self.questions[message.reference.message_id]
+            else:
+                await message.channel.send(f"{message.author.mention} 答錯了，請再試一次！")
 
-                if message.content.lower() == question_data["answer"]:
-                    reward = question_data["reward"]
-                    await message.channel.send(f"{message.author.mention} 答對了！獲得 {reward} 金幣！ 🎉")
-                    await self.update_coins(message.author.id, reward)  # 更新金幣
-                    del self.questions[ref_message_id]
-                else:
-                    await message.channel.send(f"{message.author.mention} 答錯了，請再試一次！")
-
-                # 標記該訊息為已處理
-                self.processed_messages.add(message.id)
-                
-                # 如果已處理的訊息太多，清理舊的記錄
-                if len(self.processed_messages) > self.max_processed_messages:
-                    # 保留最新的 500 個記錄
-                    self.processed_messages = set(list(self.processed_messages)[-500:])
-        
-        await self.bot.process_commands(message)
+            # 標記該訊息為已處理
+            self.processed_messages.add(message.id)
+            
+            # 如果已處理的訊息太多，清理舊的記錄
+            if len(self.processed_messages) > self.max_processed_messages:
+                self.processed_messages = set(list(self.processed_messages)[-500:])
+            
+            return  # 如果是問題回覆，直接返回，不再處理其他命令
+            
+        try:
+            # 只處理非回覆訊息的其他命令
+            await self.bot.process_commands(message)
+        except Exception as e:
+            # 忽略其他命令處理過程中的錯誤
+            logger.error(f"Error processing commands: {e}")
+            pass
 
     @app_commands.command(name="give", description="將自己的金幣轉給其他人")
     async def give(self, interaction: discord.Interaction, recipient: discord.User, amount: int):

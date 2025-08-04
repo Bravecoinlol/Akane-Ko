@@ -4,6 +4,7 @@ from discord import app_commands
 import json
 import os
 import typing
+import unicodedata
 from PIL import Image, ImageDraw, ImageFont
 import aiohttp
 from io import BytesIO
@@ -495,6 +496,14 @@ class MemberCog(commands.Cog):
             font_welcome = ImageFont.truetype(font_path, 124) if os.path.exists(font_path) else ImageFont.load_default()
             font_username = ImageFont.truetype(font_path, 92) if os.path.exists(font_path) else ImageFont.load_default()
             font_server = ImageFont.truetype(font_path_regular, 92) if os.path.exists(font_path_regular) else ImageFont.load_default()
+            # Symbola 字型（for Unicode/emoji）
+            symbola_path = os.path.join(os.getcwd(), 'Symbola.otf')
+            font_symbola = None
+            if os.path.exists(symbola_path):
+                try:
+                    font_symbola = ImageFont.truetype(symbola_path, 92)
+                except Exception as e:
+                    logger.error(f"載入 Symbola.otf 失敗: {e}")
 
 
             # 載入頭像
@@ -533,8 +542,44 @@ class MemberCog(commands.Cog):
             draw_text_with_outline(draw, (776.6, 373.2), "歡迎......", font_welcome, "#FFFFFF", "black", 6)
             # 使用者名稱 黃色，粗黑邊
             draw_text_with_outline(draw, (47.9, 720.5), f"{member.display_name}", font_username, "#FFD600", "black", 6)
-            # 進來伺服器名稱 黃色，粗體字型，粗黑邊
-            draw_text_with_outline(draw, (47.9, 820.5), f"進來{server_name}!", font_username, "#FFD600", "black", 6)
+            # 進來伺服器名稱 黃色，前綴用原字型，server_name 逐字 fallback Symbola
+            x_base, y_base = 47.9, 820.5
+            prefix = "進來"
+            draw_text_with_outline(draw, (x_base, y_base), prefix, font_username, "#FFD600", "black", 6)
+            prefix_width = font_username.getlength(prefix) if hasattr(font_username, 'getlength') else font_username.getsize(prefix)[0]
+            # 逐字判斷 server_name+! 用哪個字型
+            x = x_base + prefix_width
+            text_to_draw = server_name + "!"
+            def is_emoji(ch):
+                code = ord(ch)
+                # emoji unicode block (partial, most common) + math alphanumeric symbols + letterlike symbols
+                return (
+                    0x1F300 <= code <= 0x1FAFF or  # Misc Symbols and Pictographs, Supplemental Symbols and Pictographs
+                    0x1F000 <= code <= 0x1F02F or  # Mahjong, Domino
+                    0x1F0A0 <= code <= 0x1F0FF or  # Playing Cards
+                    0x1F100 <= code <= 0x1F1FF or  # Enclosed Alphanumeric Supplement
+                    0x1F200 <= code <= 0x1F2FF or  # Enclosed Ideographic Supplement
+                    0x1F600 <= code <= 0x1F64F or  # Emoticons
+                    0x1F680 <= code <= 0x1F6FF or  # Transport and Map
+                    0x2600 <= code <= 0x26FF or    # Misc symbols
+                    0x2700 <= code <= 0x27BF or    # Dingbats
+                    0xFE00 <= code <= 0xFE0F or    # Variation Selectors
+                    0x1F900 <= code <= 0x1F9FF or  # Supplemental Symbols and Pictographs
+                    0x1D400 <= code <= 0x1D7FF or  # Mathematical Alphanumeric Symbols (花體/粗體/斜體/黑體)
+                    0x2100 <= code <= 0x214F       # Letterlike Symbols (ℬ等)
+                )
+
+            for ch in text_to_draw:
+                if font_symbola and is_emoji(ch):
+                    font_to_use = font_symbola
+                else:
+                    font_to_use = font_username
+                draw_text_with_outline(draw, (x, y_base), ch, font_to_use, "#FFD600", "black", 6)
+                if hasattr(font_to_use, 'getlength'):
+                    w = font_to_use.getlength(ch)
+                else:
+                    w = font_to_use.getsize(ch)[0]
+                x += w
 
             logger.info(f"[WelcomeCard] base_image mode: {base_image.mode}, size: {base_image.size}")
             # debug: 儲存一份到本地
